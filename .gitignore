@@ -1,0 +1,27 @@
+# Dependencies
+frontend/node_modules/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+
+# Environment
+.env
+backend/.env
+
+# Build
+frontend/dist/
+
+# Data (large files)
+data/tatoeba_raw/
+data/sentences.csv
+data/links.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
