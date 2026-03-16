@@ -3,10 +3,13 @@
 # 사용법: Lightsail SSH 터미널에서 실행
 
 set -e
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
 
 echo "=== 1. 시스템 업데이트 및 필수 패키지 설치 ==="
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y nginx certbot python3-certbot-nginx git
+sudo DEBIAN_FRONTEND=noninteractive apt update
+sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+sudo DEBIAN_FRONTEND=noninteractive apt install -y nginx certbot python3-certbot-nginx git
 
 echo "=== 2. Node.js 20 설치 ==="
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
