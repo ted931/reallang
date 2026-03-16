@@ -114,9 +114,9 @@ function switchTab(tab) {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
     <!-- 뒤로가기 -->
-    <button @click="goBack" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors mb-6 group animate-fade-in">
+    <button @click="goBack" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors mb-4 sm:mb-6 group animate-fade-in min-h-[44px]">
       <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
       </svg>
@@ -140,24 +140,24 @@ function switchTab(tab) {
 
     <div v-else-if="pattern">
       <!-- 헤더 -->
-      <div class="glass rounded-3xl p-6 sm:p-8 mb-6 animate-slide-up">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <span class="text-lg">{{ pattern.categoryIcon }}</span>
-          <span>{{ pattern.categoryName }}</span>
+      <div class="glass rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 animate-slide-up">
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-sm text-gray-500 mb-3 sm:mb-4">
+          <span class="text-base sm:text-lg">{{ pattern.categoryIcon }}</span>
+          <span class="text-xs sm:text-sm">{{ pattern.categoryName }}</span>
           <span class="text-gray-300">|</span>
-          <span :class="['px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r', getDifficultyColor(pattern.difficulty)]">
+          <span :class="['px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r', getDifficultyColor(pattern.difficulty)]">
             {{ getDifficultyLabel(pattern.difficulty) }} {{ pattern.difficulty }}
           </span>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{{ pattern.title }}</h1>
-        <p class="text-gray-500 leading-relaxed">{{ pattern.description }}</p>
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1.5 sm:mb-2 break-words">{{ pattern.title }}</h1>
+        <p class="text-sm sm:text-base text-gray-500 leading-relaxed">{{ pattern.description }}</p>
       </div>
 
       <!-- 탭 전환 -->
-      <div class="flex gap-1 p-1 bg-gray-100/60 rounded-2xl mb-6 animate-slide-up stagger-1">
+      <div class="flex gap-1 p-1 bg-gray-100/60 rounded-2xl mb-4 sm:mb-6 animate-slide-up stagger-1">
         <button
           @click="switchTab('examples')"
-          class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300"
+          class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-h-[44px]"
           :class="activeTab === 'examples'
             ? 'bg-white text-indigo-600 shadow-sm'
             : 'text-gray-500 hover:text-gray-700'"
@@ -169,7 +169,7 @@ function switchTab(tab) {
         </button>
         <button
           @click="switchTab('practice')"
-          class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300"
+          class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-h-[44px]"
           :class="activeTab === 'practice'
             ? 'bg-white text-indigo-600 shadow-sm'
             : 'text-gray-500 hover:text-gray-700'"
@@ -184,18 +184,18 @@ function switchTab(tab) {
       <!-- 예문 보기 탭 -->
       <div v-if="activeTab === 'examples'">
         <!-- 예문 캐러셀 (모바일 스와이프 형태) -->
-        <div class="mb-8 animate-slide-up stagger-2">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900">예문</h2>
+        <div class="mb-6 sm:mb-8 animate-slide-up stagger-2">
+          <div class="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 class="text-base sm:text-lg font-bold text-gray-900">예문</h2>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-400">{{ currentExampleIndex + 1 }} / {{ pattern.examples.length }}</span>
+              <span class="text-xs sm:text-sm text-gray-400">{{ currentExampleIndex + 1 }} / {{ pattern.examples.length }}</span>
               <div class="flex gap-1">
-                <button @click="prevExample" :disabled="currentExampleIndex === 0" class="w-8 h-8 rounded-full glass flex items-center justify-center disabled:opacity-30 hover:bg-gray-50 transition-colors">
+                <button @click="prevExample" :disabled="currentExampleIndex === 0" class="w-9 h-9 sm:w-8 sm:h-8 rounded-full glass flex items-center justify-center disabled:opacity-30 hover:bg-gray-50 transition-colors">
                   <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <button @click="nextExample" :disabled="currentExampleIndex === pattern.examples.length - 1" class="w-8 h-8 rounded-full glass flex items-center justify-center disabled:opacity-30 hover:bg-gray-50 transition-colors">
+                <button @click="nextExample" :disabled="currentExampleIndex === pattern.examples.length - 1" class="w-9 h-9 sm:w-8 sm:h-8 rounded-full glass flex items-center justify-center disabled:opacity-30 hover:bg-gray-50 transition-colors">
                   <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
@@ -205,13 +205,13 @@ function switchTab(tab) {
           </div>
 
           <!-- Carousel dots -->
-          <div class="flex gap-1.5 justify-center mb-4">
+          <div class="flex gap-1 sm:gap-1.5 justify-center mb-3 sm:mb-4 flex-wrap px-4">
             <button
               v-for="(ex, i) in pattern.examples"
               :key="i"
               @click="currentExampleIndex = i"
-              class="h-1.5 rounded-full transition-all duration-300"
-              :class="i === currentExampleIndex ? 'w-6 bg-gradient-to-r from-indigo-500 to-violet-500' : 'w-1.5 bg-gray-200 hover:bg-gray-300'"
+              class="h-1.5 rounded-full transition-all duration-300 min-w-[6px]"
+              :class="i === currentExampleIndex ? 'w-5 sm:w-6 bg-gradient-to-r from-indigo-500 to-violet-500' : 'w-1.5 bg-gray-200 hover:bg-gray-300'"
             ></button>
           </div>
 
@@ -224,14 +224,14 @@ function switchTab(tab) {
               class="glass rounded-2xl overflow-hidden"
             >
               <!-- 코드 블록 스타일 패턴 표시 -->
-              <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-5 sm:p-6">
+              <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-4 sm:p-5 md:p-6">
                 <div class="flex items-center gap-2 mb-3">
-                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-amber-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-                  <span class="text-xs text-slate-400 ml-2 font-mono">example_{{ index + 1 }}.en</span>
+                  <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-400"></div>
+                  <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400"></div>
+                  <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400"></div>
+                  <span class="text-[10px] sm:text-xs text-slate-400 ml-1 sm:ml-2 font-mono">example_{{ index + 1 }}.en</span>
                 </div>
-                <p class="text-lg sm:text-xl font-medium text-white font-mono leading-relaxed">
+                <p class="text-base sm:text-lg md:text-xl font-medium text-white font-mono leading-relaxed break-words">
                   <span class="text-indigo-400">&#34;</span>{{ example.english }}<span class="text-indigo-400">&#34;</span>
                 </p>
                 <!-- TTS 버튼 -->
@@ -260,34 +260,34 @@ function switchTab(tab) {
               </div>
 
               <!-- Korean + note -->
-              <div class="p-5 sm:p-6">
-                <p class="text-gray-700 text-lg mb-3">{{ example.korean }}</p>
-                <p v-if="example.note" class="text-sm text-indigo-600 bg-indigo-50 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <div class="p-4 sm:p-5 md:p-6">
+                <p class="text-gray-700 text-base sm:text-lg mb-2 sm:mb-3">{{ example.korean }}</p>
+                <p v-if="example.note" class="text-xs sm:text-sm text-indigo-600 bg-indigo-50 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full">
+                  <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {{ example.note }}
+                  <span class="break-words">{{ example.note }}</span>
                 </p>
 
                 <!-- Show Me (구조 분해 시각화) -->
                 <button
                   @click="toggleStructure(index)"
-                  class="mt-4 flex items-center gap-2 text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors group"
+                  class="mt-3 sm:mt-4 flex items-center gap-2 text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors group min-h-[44px]"
                 >
-                  <svg class="w-4 h-4 transition-transform" :class="showStructure === index ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <svg class="w-4 h-4 transition-transform shrink-0" :class="showStructure === index ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                   문장 구조 보기
                 </button>
 
                 <Transition name="page">
-                  <div v-if="showStructure === index" class="mt-3 p-4 bg-violet-50/50 rounded-xl border border-violet-100">
-                    <p class="text-xs text-violet-500 mb-3 font-medium">문장 구조 분석</p>
-                    <div class="flex flex-wrap gap-1.5">
+                  <div v-if="showStructure === index" class="mt-2 sm:mt-3 p-3 sm:p-4 bg-violet-50/50 rounded-xl border border-violet-100">
+                    <p class="text-[10px] sm:text-xs text-violet-500 mb-2 sm:mb-3 font-medium">문장 구조 분석</p>
+                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
                       <span
                         v-for="(part, pi) in getSentenceParts(example.english)"
                         :key="pi"
-                        :class="['px-2.5 py-1 rounded-lg text-sm font-medium border', part.color]"
+                        :class="['px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-xs sm:text-sm font-medium border break-all', part.color]"
                       >
                         {{ part.word }}
                       </span>
@@ -300,8 +300,8 @@ function switchTab(tab) {
         </div>
 
         <!-- 전체 예문 목록 (compact) -->
-        <div class="space-y-2 mb-8 animate-slide-up stagger-3">
-          <h2 class="text-lg font-bold text-gray-900 mb-3">전체 예문</h2>
+        <div class="space-y-2 mb-6 sm:mb-8 animate-slide-up stagger-3">
+          <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3">전체 예문</h2>
           <div
             v-for="(example, index) in pattern.examples"
             :key="'list-' + index"
@@ -342,11 +342,11 @@ function switchTab(tab) {
       </div>
 
       <!-- 학습 완료 버튼 -->
-      <div class="flex justify-center animate-slide-up stagger-4">
+      <div class="flex justify-center px-4 animate-slide-up stagger-4">
         <button
           v-if="!isLearned"
           @click="markComplete"
-          class="relative px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 min-w-[200px]"
+          class="relative w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 min-w-[200px] min-h-[48px]"
         >
           <span :class="completedAnimation ? 'opacity-0' : 'opacity-100'" class="transition-opacity">학습 완료로 표시하기</span>
           <!-- Check animation overlay -->
@@ -356,7 +356,7 @@ function switchTab(tab) {
             </svg>
           </span>
         </button>
-        <div v-else class="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-600 rounded-2xl font-medium border border-emerald-200 shadow-sm">
+        <div v-else class="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-600 rounded-2xl font-medium border border-emerald-200 shadow-sm min-h-[48px]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
           </svg>

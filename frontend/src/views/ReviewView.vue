@@ -142,17 +142,17 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <div class="mb-6 animate-fade-in">
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">복습하기</h1>
-      <p class="text-gray-500 mt-2">간격 반복(SRS)으로 배운 내용을 효과적으로 기억하세요.</p>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+    <div class="mb-4 sm:mb-6 animate-fade-in">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">복습하기</h1>
+      <p class="text-sm sm:text-base text-gray-500 mt-1.5 sm:mt-2">간격 반복(SRS)으로 배운 내용을 효과적으로 기억하세요.</p>
     </div>
 
     <!-- 복습 모드 선택 -->
-    <div class="flex gap-1 p-1 bg-gray-100/60 rounded-2xl mb-6 animate-slide-up">
+    <div class="flex gap-1 p-1 bg-gray-100/60 rounded-2xl mb-4 sm:mb-6 animate-slide-up">
       <button
         @click="switchMode('card')"
-        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300"
+        class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-h-[44px]"
         :class="reviewMode === 'card'
           ? 'bg-white text-indigo-600 shadow-sm'
           : 'text-gray-500 hover:text-gray-700'"
@@ -164,7 +164,7 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
       </button>
       <button
         @click="switchMode('slot')"
-        class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300"
+        class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-h-[44px]"
         :class="reviewMode === 'slot'
           ? 'bg-white text-indigo-600 shadow-sm'
           : 'text-gray-500 hover:text-gray-700'"
@@ -220,18 +220,18 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
           ></div>
         </div>
 
-        <div class="glass rounded-3xl p-8 sm:p-10 text-center">
-          <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-amber-200/50 animate-bounce-in">
-            <span class="text-4xl">🎉</span>
+        <div class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-center">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-amber-200/50 animate-bounce-in">
+            <span class="text-3xl sm:text-4xl">🎉</span>
           </div>
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">복습 완료!</h2>
-          <p class="text-gray-500 mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">복습 완료!</h2>
+          <p class="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
             {{ reviewItems.length }}문제 중 {{ correctCount }}개를 맞혔습니다.
           </p>
 
           <!-- Result ring -->
-          <div class="relative w-28 h-28 mx-auto mb-6">
-            <svg class="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 sm:mb-6">
+            <svg class="w-24 h-24 sm:w-28 sm:h-28 -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="6" class="text-gray-100" />
               <circle
                 cx="50" cy="50" r="42" fill="none" stroke="url(#resultGradient)" stroke-width="6"
@@ -248,27 +248,27 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
               </defs>
             </svg>
             <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-2xl font-bold text-gray-900">{{ accuracyPercent }}%</span>
+              <span class="text-xl sm:text-2xl font-bold text-gray-900">{{ accuracyPercent }}%</span>
             </div>
           </div>
 
           <!-- Result emoji summary -->
-          <div class="flex justify-center gap-2 mb-8">
-            <div v-for="(result, i) in sessionResults" :key="i" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" :class="result >= 3 ? 'bg-emerald-50' : 'bg-red-50'">
+          <div class="flex justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 flex-wrap">
+            <div v-for="(result, i) in sessionResults" :key="i" class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg" :class="result >= 3 ? 'bg-emerald-50' : 'bg-red-50'">
               {{ ratingButtons.find(b => b.rating === result)?.emoji }}
             </div>
           </div>
 
-          <div class="flex gap-3 justify-center">
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
             <button
               @click="restart"
-              class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl"
+              class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl min-h-[48px]"
             >
               다시 복습하기
             </button>
             <RouterLink
               to="/learn"
-              class="px-6 py-3 glass rounded-2xl font-medium text-gray-700 hover:bg-white/90 transition-all"
+              class="px-6 py-3 glass rounded-2xl font-medium text-gray-700 hover:bg-white/90 transition-all text-center min-h-[48px] flex items-center justify-center"
             >
               새로운 학습하기
             </RouterLink>
@@ -290,43 +290,43 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
         </div>
 
         <!-- 3D Flip Card -->
-        <div class="card-flip-container mb-6 animate-scale-in">
-          <div class="card-flip-inner rounded-3xl" :class="{ 'flipped': isFlipped }" style="min-height: 320px;">
+        <div class="card-flip-container mb-4 sm:mb-6 animate-scale-in">
+          <div class="card-flip-inner rounded-2xl sm:rounded-3xl" :class="{ 'flipped': isFlipped }" style="min-height: 280px;">
             <!-- Front (질문) -->
-            <div class="card-flip-front glass rounded-3xl overflow-hidden w-full h-full">
+            <div class="card-flip-front glass rounded-2xl sm:rounded-3xl overflow-hidden w-full h-full">
               <!-- 카테고리 정보 -->
-              <div class="px-6 py-3 border-b border-gray-100/50 flex items-center justify-between">
-                <span class="text-sm text-gray-500">{{ currentItem.categoryName }} · {{ currentItem.patternTitle }}</span>
-                <span v-if="currentItem.note" class="text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">{{ currentItem.note }}</span>
+              <div class="px-4 sm:px-6 py-2.5 sm:py-3 border-b border-gray-100/50 flex items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm text-gray-500 truncate">{{ currentItem.categoryName }} · {{ currentItem.patternTitle }}</span>
+                <span v-if="currentItem.note" class="text-[10px] sm:text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full shrink-0">{{ currentItem.note }}</span>
               </div>
 
               <!-- 문제 -->
-              <div class="p-8 sm:p-10 text-center flex flex-col items-center justify-center" style="min-height: 250px;">
+              <div class="p-5 sm:p-8 md:p-10 text-center flex flex-col items-center justify-center" style="min-height: 220px;">
                 <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-violet-100 rounded-2xl flex items-center justify-center mb-5">
                   <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p class="text-sm text-gray-400 mb-3">이 표현을 영어로 말해보세요</p>
-                <p class="text-xl sm:text-2xl font-medium text-gray-900 leading-relaxed">{{ currentItem.korean }}</p>
+                <p class="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">이 표현을 영어로 말해보세요</p>
+                <p class="text-lg sm:text-xl md:text-2xl font-medium text-gray-900 leading-relaxed break-words px-2">{{ currentItem.korean }}</p>
               </div>
             </div>
 
             <!-- Back (정답) -->
-            <div class="card-flip-back glass rounded-3xl overflow-hidden w-full">
-              <div class="px-6 py-3 border-b border-gray-100/50 flex items-center justify-between">
-                <span class="text-sm text-gray-500">{{ currentItem.categoryName }} · {{ currentItem.patternTitle }}</span>
-                <span class="text-xs text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">정답</span>
+            <div class="card-flip-back glass rounded-2xl sm:rounded-3xl overflow-hidden w-full">
+              <div class="px-4 sm:px-6 py-2.5 sm:py-3 border-b border-gray-100/50 flex items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm text-gray-500 truncate">{{ currentItem.categoryName }} · {{ currentItem.patternTitle }}</span>
+                <span class="text-[10px] sm:text-xs text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full font-medium shrink-0">정답</span>
               </div>
 
-              <div class="p-8 sm:p-10 text-center flex flex-col items-center justify-center" style="min-height: 250px;">
+              <div class="p-5 sm:p-8 md:p-10 text-center flex flex-col items-center justify-center" style="min-height: 220px;">
                 <div class="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center mb-5">
                   <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                 </div>
-                <p class="text-sm text-gray-400 mb-3">정답</p>
-                <p class="text-xl sm:text-2xl font-medium text-indigo-600 leading-relaxed">{{ currentItem.english }}</p>
+                <p class="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">정답</p>
+                <p class="text-lg sm:text-xl md:text-2xl font-medium text-indigo-600 leading-relaxed break-words px-2">{{ currentItem.english }}</p>
                 <!-- TTS 버튼 -->
                 <div v-if="ttsSupported" class="flex gap-2 mt-3 justify-center">
                   <button
@@ -358,25 +358,25 @@ const confettiPieces = Array.from({ length: 20 }, (_, i) => ({
 
         <!-- 버튼 영역 -->
         <div class="animate-slide-up stagger-2">
-          <div v-if="!showAnswer" class="flex justify-center">
+          <div v-if="!showAnswer" class="flex justify-center px-4">
             <button
               @click="reveal"
-              class="px-10 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px]"
+              class="w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px]"
             >
               정답 보기
             </button>
           </div>
           <div v-else>
-            <p class="text-center text-sm text-gray-400 mb-3">얼마나 잘 알고 있나요?</p>
-            <div class="flex gap-2 justify-center flex-wrap">
+            <p class="text-center text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">얼마나 잘 알고 있나요?</p>
+            <div class="grid grid-cols-5 gap-1.5 sm:flex sm:gap-2 sm:justify-center sm:flex-wrap px-1 sm:px-0">
               <button
                 v-for="btn in ratingButtons"
                 :key="btn.rating"
                 @click="answer(btn.rating)"
-                :class="['flex flex-col items-center gap-1 px-4 py-3 rounded-2xl font-medium border transition-all hover:-translate-y-0.5 active:translate-y-0 min-w-[56px] min-h-[48px]', btn.bg]"
+                :class="['flex flex-col items-center gap-0.5 sm:gap-1 px-2 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-medium border transition-all hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] sm:min-w-[56px]', btn.bg]"
               >
-                <span class="text-xl">{{ btn.emoji }}</span>
-                <span class="text-[10px]">{{ btn.label }}</span>
+                <span class="text-lg sm:text-xl">{{ btn.emoji }}</span>
+                <span class="text-[8px] sm:text-[10px] leading-tight text-center">{{ btn.label }}</span>
               </button>
             </div>
           </div>

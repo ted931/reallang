@@ -3,7 +3,6 @@ import HomeView from '../views/HomeView.vue'
 import LearnView from '../views/LearnView.vue'
 import PatternDetailView from '../views/PatternDetailView.vue'
 import ReviewView from '../views/ReviewView.vue'
-import ChatView from '../views/ChatView.vue'
 import StatsView from '../views/StatsView.vue'
 
 const routes = [
@@ -26,11 +25,6 @@ const routes = [
     path: '/review',
     name: 'Review',
     component: ReviewView,
-  },
-  {
-    path: '/chat',
-    name: 'Chat',
-    component: ChatView,
   },
   {
     path: '/stats',

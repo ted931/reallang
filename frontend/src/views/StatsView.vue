@@ -28,83 +28,83 @@ const categoryGradients = [
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-    <div class="mb-8 animate-fade-in">
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">학습 통계</h1>
-      <p class="text-gray-500 mt-2">나의 학습 현황과 성과를 한눈에 확인하세요.</p>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+    <div class="mb-6 sm:mb-8 animate-fade-in">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">학습 통계</h1>
+      <p class="text-sm sm:text-base text-gray-500 mt-1.5 sm:mt-2">나의 학습 현황과 성과를 한눈에 확인하세요.</p>
     </div>
 
     <!-- 로딩 스켈레톤 -->
-    <div v-if="progress.loading || lessons.loading" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
-      <div v-for="i in 4" :key="'skeleton-' + i" class="glass rounded-2xl p-5 animate-pulse">
-        <div class="w-12 h-12 bg-gray-200 rounded-2xl mb-3"></div>
-        <div class="h-6 bg-gray-200 rounded w-16 mb-1"></div>
-        <div class="h-4 bg-gray-200 rounded w-20"></div>
+    <div v-if="progress.loading || lessons.loading" class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
+      <div v-for="i in 4" :key="'skeleton-' + i" class="glass rounded-2xl p-3 sm:p-5 animate-pulse">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-xl sm:rounded-2xl mb-2 sm:mb-3"></div>
+        <div class="h-5 sm:h-6 bg-gray-200 rounded w-14 sm:w-16 mb-1"></div>
+        <div class="h-3 sm:h-4 bg-gray-200 rounded w-16 sm:w-20"></div>
       </div>
     </div>
 
     <!-- 주요 지표 -->
-    <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
-      <div class="glass rounded-2xl p-5 card-hover-sm animate-slide-up stagger-1">
-        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mb-3 shadow-md shadow-amber-200/50">
-          <span class="text-xl">🔥</span>
+    <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
+      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-1">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-amber-200/50">
+          <span class="text-lg sm:text-xl">🔥</span>
         </div>
-        <div class="text-2xl font-bold text-gray-900">{{ progress.streak }}일</div>
-        <div class="text-sm text-gray-500">연속 학습</div>
+        <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.streak }}일</div>
+        <div class="text-xs sm:text-sm text-gray-500">연속 학습</div>
       </div>
 
-      <div class="glass rounded-2xl p-5 card-hover-sm animate-slide-up stagger-2">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-3 shadow-md shadow-emerald-200/50">
-          <span class="text-xl">📚</span>
+      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-2">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-emerald-200/50">
+          <span class="text-lg sm:text-xl">📚</span>
         </div>
-        <div class="text-2xl font-bold text-gray-900">{{ progress.learnedPatterns.size }}</div>
-        <div class="text-sm text-gray-500">학습한 패턴</div>
+        <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.learnedPatterns.size }}</div>
+        <div class="text-xs sm:text-sm text-gray-500">학습한 패턴</div>
       </div>
 
-      <div class="glass rounded-2xl p-5 card-hover-sm animate-slide-up stagger-3">
-        <div class="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-2xl flex items-center justify-center mb-3 shadow-md shadow-violet-200/50">
-          <span class="text-xl">🔄</span>
+      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-3">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-violet-200/50">
+          <span class="text-lg sm:text-xl">🔄</span>
         </div>
-        <div class="text-2xl font-bold text-gray-900">{{ progress.totalReviews }}</div>
-        <div class="text-sm text-gray-500">총 복습 횟수</div>
+        <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.totalReviews }}</div>
+        <div class="text-xs sm:text-sm text-gray-500">총 복습 횟수</div>
       </div>
 
-      <div class="glass rounded-2xl p-5 card-hover-sm animate-slide-up stagger-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-2xl flex items-center justify-center mb-3 shadow-md shadow-indigo-200/50">
-          <span class="text-xl">🎯</span>
+      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-4">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-indigo-200/50">
+          <span class="text-lg sm:text-xl">🎯</span>
         </div>
-        <div class="text-2xl font-bold text-gray-900">{{ progress.accuracy }}%</div>
-        <div class="text-sm text-gray-500">복습 정확도</div>
+        <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.accuracy }}%</div>
+        <div class="text-xs sm:text-sm text-gray-500">복습 정확도</div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
       <!-- 주간 학습량 차트 -->
-      <div class="glass rounded-2xl p-6 animate-slide-up stagger-5">
-        <h2 class="text-lg font-bold text-gray-900 mb-6">주간 학습량</h2>
-        <div class="flex items-end justify-between gap-2 h-40">
+      <div class="glass rounded-2xl p-4 sm:p-6 animate-slide-up stagger-5">
+        <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">주간 학습량</h2>
+        <div class="flex items-end justify-between gap-1.5 sm:gap-2 h-32 sm:h-40">
           <div
             v-for="(day, i) in progress.weeklyData"
             :key="day.day"
             class="flex flex-col items-center flex-1"
           >
-            <div class="text-xs text-gray-500 mb-1 font-medium">{{ day.count }}</div>
+            <div class="text-[10px] sm:text-xs text-gray-500 mb-1 font-medium">{{ day.count }}</div>
             <div
-              class="w-full rounded-xl transition-all duration-500"
+              class="w-full rounded-lg sm:rounded-xl transition-all duration-500"
               :class="day.count > 0 ? 'bg-gradient-to-t from-indigo-500 to-violet-400 shadow-sm' : 'bg-gray-100'"
               :style="{
-                height: day.count > 0 ? Math.max((day.count / maxWeeklyCount) * 120, 8) + 'px' : '8px',
+                height: day.count > 0 ? Math.max((day.count / maxWeeklyCount) * 100, 8) + 'px' : '8px',
                 transitionDelay: (i * 80) + 'ms'
               }"
             ></div>
-            <div class="text-xs text-gray-400 mt-2 font-medium">{{ day.day }}</div>
+            <div class="text-[10px] sm:text-xs text-gray-400 mt-1.5 sm:mt-2 font-medium">{{ day.day }}</div>
           </div>
         </div>
       </div>
 
       <!-- 오늘의 목표 -->
-      <div class="glass rounded-2xl p-6 animate-slide-up stagger-6">
-        <h2 class="text-lg font-bold text-gray-900 mb-6">오늘의 목표</h2>
+      <div class="glass rounded-2xl p-4 sm:p-6 animate-slide-up stagger-6">
+        <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">오늘의 목표</h2>
         <div class="space-y-6">
           <!-- 일일 학습 목표 -->
           <div>
@@ -152,9 +152,9 @@ const categoryGradients = [
       </div>
 
       <!-- 카테고리별 학습 현황 -->
-      <div class="glass rounded-2xl p-6 lg:col-span-2 animate-slide-up">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">카테고리별 현황</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="glass rounded-2xl p-4 sm:p-6 lg:col-span-2 animate-slide-up">
+        <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">카테고리별 현황</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           <div
             v-for="(category, catIdx) in lessons.categories"
             :key="category.id"

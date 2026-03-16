@@ -256,22 +256,22 @@ onMounted(() => {
   <div class="space-y-6">
     <!-- 결과 화면 -->
     <div v-if="sessionComplete" class="animate-scale-in">
-      <div class="glass rounded-3xl p-8 sm:p-10 text-center">
+      <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-center">
         <!-- 등급 아이콘 -->
         <div
-          class="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-lg animate-bounce-in bg-gradient-to-br"
+          class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg animate-bounce-in bg-gradient-to-br"
           :class="resultGrade.color"
         >
-          <span class="text-4xl">{{ resultGrade.emoji }}</span>
+          <span class="text-3xl sm:text-4xl">{{ resultGrade.emoji }}</span>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ resultGrade.label }}</h2>
-        <p class="text-gray-500 mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{{ resultGrade.label }}</h2>
+        <p class="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
           {{ totalQuestions }}문제 중 {{ correctCount }}개를 맞혔습니다.
         </p>
 
         <!-- 결과 원형 그래프 -->
-        <div class="relative w-28 h-28 mx-auto mb-4">
-          <svg class="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
+        <div class="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4">
+          <svg class="w-24 h-24 sm:w-28 sm:h-28 -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="6" class="text-gray-100" />
             <circle
               cx="50" cy="50" r="42" fill="none" stroke="url(#slotDrillGradient)" stroke-width="6"
@@ -288,12 +288,12 @@ onMounted(() => {
             </defs>
           </svg>
           <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-2xl font-bold text-gray-900">{{ accuracyPercent }}%</span>
+            <span class="text-xl sm:text-2xl font-bold text-gray-900">{{ accuracyPercent }}%</span>
           </div>
         </div>
 
         <!-- 소요 시간 -->
-        <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-6">
+        <div class="flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -301,27 +301,27 @@ onMounted(() => {
         </div>
 
         <!-- 문제별 결과 -->
-        <div class="flex justify-center gap-2 mb-8">
+        <div class="flex justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 flex-wrap">
           <div
             v-for="(result, i) in results"
             :key="i"
-            class="w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all"
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-lg transition-all"
             :class="result.correct ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'"
           >
-            <svg v-if="result.correct" class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <svg v-if="result.correct" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            <svg v-else class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <svg v-else class="w-4 h-4 sm:w-5 sm:h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
         </div>
 
         <!-- 버튼 -->
-        <div class="flex gap-3 justify-center">
+        <div class="flex justify-center">
           <button
             @click="restart"
-            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px]"
           >
             다시 도전하기
           </button>
@@ -346,47 +346,47 @@ onMounted(() => {
       </div>
 
       <!-- 문제 번호 도트 인디케이터 -->
-      <div class="flex gap-2 justify-center mb-5">
+      <div class="flex gap-1.5 sm:gap-2 justify-center mb-4 sm:mb-5 flex-wrap px-4">
         <div
           v-for="i in totalQuestions"
           :key="i"
-          class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+          class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300"
           :class="[
             i - 1 < currentIndex
               ? (results[i - 1]?.correct ? 'bg-emerald-400' : 'bg-red-400')
               : i - 1 === currentIndex
-                ? 'bg-gradient-to-r from-indigo-500 to-violet-500 w-6'
+                ? 'bg-gradient-to-r from-indigo-500 to-violet-500 w-5 sm:w-6'
                 : 'bg-gray-200'
           ]"
         ></div>
       </div>
 
       <!-- 퀴즈 카드 -->
-      <div class="glass rounded-3xl overflow-hidden animate-scale-in" :key="currentIndex">
+      <div class="glass rounded-2xl sm:rounded-3xl overflow-hidden animate-scale-in" :key="currentIndex">
         <!-- 한글 힌트 상단 -->
-        <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-5 sm:p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-3 h-3 rounded-full bg-red-400"></div>
-            <div class="w-3 h-3 rounded-full bg-amber-400"></div>
-            <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-            <span class="text-xs text-slate-400 ml-2 font-mono">quiz_{{ currentIndex + 1 }}.fill</span>
+        <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-4 sm:p-5 md:p-6">
+          <div class="flex items-center gap-2 mb-2 sm:mb-3">
+            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-400"></div>
+            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400"></div>
+            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400"></div>
+            <span class="text-[10px] sm:text-xs text-slate-400 ml-1 sm:ml-2 font-mono">quiz_{{ currentIndex + 1 }}.fill</span>
           </div>
-          <p class="text-sm text-slate-400 mb-2">다음 뜻에 맞는 영어 단어를 채우세요</p>
-          <p class="text-lg sm:text-xl font-medium text-white leading-relaxed">
+          <p class="text-xs sm:text-sm text-slate-400 mb-1.5 sm:mb-2">다음 뜻에 맞는 영어 단어를 채우세요</p>
+          <p class="text-base sm:text-lg md:text-xl font-medium text-white leading-relaxed break-words">
             <span class="text-indigo-400">"</span>{{ currentItem.korean }}<span class="text-indigo-400">"</span>
           </p>
         </div>
 
         <!-- 빈칸 문장 + 입력 영역 -->
-        <div class="p-5 sm:p-6">
+        <div class="p-4 sm:p-5 md:p-6">
           <!-- 빈칸 문장 표시 -->
-          <div class="mb-6">
-            <p class="text-lg sm:text-xl font-medium text-gray-900 leading-relaxed tracking-wide">
+          <div class="mb-4 sm:mb-6">
+            <p class="text-base sm:text-lg md:text-xl font-medium text-gray-900 leading-relaxed tracking-wide break-words">
               <template v-for="(part, pi) in currentItem.blanked.split('___')" :key="pi">
                 <span>{{ part }}</span>
                 <span
                   v-if="pi < currentItem.blanked.split('___').length - 1"
-                  class="inline-block mx-1 min-w-[80px] border-b-2 text-center align-bottom pb-0.5 transition-colors duration-300"
+                  class="inline-block mx-0.5 sm:mx-1 min-w-[60px] sm:min-w-[80px] border-b-2 text-center align-bottom pb-0.5 transition-colors duration-300"
                   :class="{
                     'border-gray-300': answerState === 'idle',
                     'border-emerald-500 text-emerald-600': answerState === 'correct',
@@ -467,13 +467,13 @@ onMounted(() => {
             <div class="flex gap-2">
               <button
                 @click="retry"
-                class="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                class="flex-1 px-3 sm:px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl sm:rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] text-sm sm:text-base"
               >
                 다시 시도
               </button>
               <button
                 @click="goNext"
-                class="px-4 py-3 glass rounded-2xl font-medium text-gray-600 hover:bg-white/90 transition-all"
+                class="px-3 sm:px-4 py-3 glass rounded-xl sm:rounded-2xl font-medium text-gray-600 hover:bg-white/90 transition-all min-h-[48px] text-sm sm:text-base"
               >
                 건너뛰기
               </button>
@@ -503,7 +503,7 @@ onMounted(() => {
                 placeholder="빈칸에 들어갈 단어를 입력하세요"
                 autocomplete="off"
                 autocapitalize="off"
-                class="w-full px-4 py-3.5 bg-white/60 border-2 border-gray-200 rounded-2xl text-gray-900 font-medium placeholder:text-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all text-center text-lg tracking-wide"
+                class="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white/60 border-2 border-gray-200 rounded-xl sm:rounded-2xl text-gray-900 font-medium placeholder:text-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all text-center text-base sm:text-lg tracking-wide min-h-[48px]"
               />
             </div>
 
@@ -512,16 +512,16 @@ onMounted(() => {
               <button
                 @click="checkAnswer"
                 :disabled="!userAnswer.trim()"
-                class="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+                class="flex-1 px-3 sm:px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl sm:rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg min-h-[48px] text-sm sm:text-base"
               >
                 확인하기
               </button>
               <button
                 v-if="!hintUsed"
                 @click="showHint"
-                class="px-4 py-3 glass rounded-2xl font-medium text-amber-600 hover:bg-amber-50/60 transition-all border border-amber-200/50 flex items-center gap-1.5"
+                class="px-3 sm:px-4 py-3 glass rounded-xl sm:rounded-2xl font-medium text-amber-600 hover:bg-amber-50/60 transition-all border border-amber-200/50 flex items-center gap-1 sm:gap-1.5 min-h-[48px] text-sm sm:text-base"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
                 힌트

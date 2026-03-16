@@ -17,7 +17,6 @@ const navLinks = [
   { to: '/', label: '홈', icon: 'home' },
   { to: '/learn', label: '학습', icon: 'learn' },
   { to: '/review', label: '복습', icon: 'review' },
-  { to: '/chat', label: '대화', icon: 'chat' },
   { to: '/stats', label: '통계', icon: 'stats' },
 ]
 
@@ -28,7 +27,7 @@ const isActive = (to) => {
 </script>
 
 <template>
-  <div class="min-h-screen mesh-gradient">
+  <div class="min-h-screen mesh-gradient overflow-x-hidden">
     <!-- 상단 네비게이션 바 (데스크톱) -->
     <nav class="hidden md:block glass-strong sticky top-0 z-50 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,15 +104,15 @@ const isActive = (to) => {
     </div>
 
     <!-- 메인 컨텐츠 -->
-    <main class="pb-24 md:pb-8">
+    <main class="pb-28 md:pb-8">
       <Transition name="page" mode="out-in">
         <RouterView :key="route.path" />
       </Transition>
     </main>
 
     <!-- 모바일 하단 탭 바 -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-white/20 bottom-tab-bar">
-      <div class="flex justify-around items-center px-2 pt-2 pb-2">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-[9999] glass-strong border-t border-white/20 bottom-tab-bar">
+      <div class="flex justify-around items-center px-1 pt-2 pb-2">
         <RouterLink
           v-for="link in navLinks"
           :key="link.to"

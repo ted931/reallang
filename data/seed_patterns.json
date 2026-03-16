@@ -2299,6 +2299,1570 @@
           "source": "manual"
         }
       ]
+    },
+    {
+      "category": "Phone",
+      "subcategory": "Answering",
+      "pattern_template": "Hello, this is + [name] speaking",
+      "explanation_ko": "전화를 받을 때 자신을 밝히는 패턴",
+      "dev_analogy": "socket.on('connect', () => identify(name))",
+      "cefr_level": "A2",
+      "difficulty_order": 51,
+      "examples": [
+        {
+          "sentence_en": "Hello, this is Ted speaking.",
+          "sentence_ko": "여보세요, 저는 Ted입니다.",
+          "native_tip": "전화에서는 'I am Ted'이 아니라 'This is Ted'이라고 해요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Hello, this is the front desk speaking.",
+          "sentence_ko": "여보세요, 프런트 데스크입니다.",
+          "native_tip": "호텔이나 회사에서 전화 받을 때 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Good morning, this is Dr. Kim's office.",
+          "sentence_ko": "좋은 아침입니다, 김 박사 사무실입니다.",
+          "native_tip": "병원 전화에서 자주 듣는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Hi, this is Sarah from customer service.",
+          "sentence_ko": "안녕하세요, 고객 서비스의 Sarah입니다.",
+          "native_tip": "'from + 부서'로 소속을 밝힐 수 있어요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Thank you for calling. This is Mike speaking. How may I help you?",
+          "sentence_ko": "전화 주셔서 감사합니다. Mike입니다. 어떻게 도와드릴까요?",
+          "native_tip": "정중한 비즈니스 전화 응대의 기본 템플릿이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Phone",
+      "subcategory": "Asking for Someone",
+      "pattern_template": "May I speak to + [name/person]?",
+      "explanation_ko": "통화하고 싶은 사람을 요청하는 패턴",
+      "dev_analogy": "api.request('/user/{name}', method='CONNECT')",
+      "cefr_level": "A2",
+      "difficulty_order": 52,
+      "examples": [
+        {
+          "sentence_en": "May I speak to Mr. Johnson, please?",
+          "sentence_ko": "Johnson씨와 통화할 수 있을까요?",
+          "native_tip": "'Can I speak to'보다 'May I speak to'가 더 정중해요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Could I speak to the manager?",
+          "sentence_ko": "매니저와 통화할 수 있을까요?",
+          "native_tip": "'Could I'를 쓰면 한층 더 정중한 표현이 돼요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Is there someone I can talk to about my order?",
+          "sentence_ko": "제 주문에 대해 이야기할 수 있는 분이 계신가요?",
+          "native_tip": "특정 담당자를 모를 때 쓰기 좋은 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'd like to speak with someone in the billing department.",
+          "sentence_ko": "청구 부서 담당자와 통화하고 싶습니다.",
+          "native_tip": "'speak with'와 'speak to'는 같은 의미예요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Could you put me through to extension 302?",
+          "sentence_ko": "내선 302번으로 연결해 주시겠어요?",
+          "native_tip": "'put me through to'는 '연결해 주다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Phone",
+      "subcategory": "Leaving Message",
+      "pattern_template": "Could you tell + [person] that + [message]?",
+      "explanation_ko": "메시지를 남기는 패턴",
+      "dev_analogy": "messageQueue.push({to: person, body: message})",
+      "cefr_level": "B1",
+      "difficulty_order": 53,
+      "examples": [
+        {
+          "sentence_en": "Could you tell her that I called?",
+          "sentence_ko": "제가 전화했다고 전해 주시겠어요?",
+          "native_tip": "가장 기본적인 메시지 남기기 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can I leave a message?",
+          "sentence_ko": "메시지를 남길 수 있을까요?",
+          "native_tip": "상대방이 부재중일 때 쓰는 기본 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Please tell him to call me back at 010-1234-5678.",
+          "sentence_ko": "010-1234-5678로 다시 전화해 달라고 전해 주세요.",
+          "native_tip": "'call me back'은 '다시 전화하다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Would you mind asking her to email me the report?",
+          "sentence_ko": "그녀에게 보고서를 이메일로 보내달라고 해주시겠어요?",
+          "native_tip": "'Would you mind ~ing'은 매우 정중한 부탁 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll try again later. No message, thanks.",
+          "sentence_ko": "나중에 다시 전화할게요. 메시지는 괜찮습니다.",
+          "native_tip": "메시지를 남기지 않을 때 쓰는 자연스러운 마무리예요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Phone",
+      "subcategory": "Phone Reservation",
+      "pattern_template": "I'd like to make a reservation for + [details]",
+      "explanation_ko": "전화로 예약하는 패턴",
+      "dev_analogy": "reservation.create({...details})",
+      "cefr_level": "A2",
+      "difficulty_order": 54,
+      "examples": [
+        {
+          "sentence_en": "I'd like to make a reservation for two at 7 PM.",
+          "sentence_ko": "오후 7시에 2명 예약하고 싶습니다.",
+          "native_tip": "'for + 인원 + at + 시간' 순서로 말해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can I book a table for this Saturday?",
+          "sentence_ko": "이번 토요일에 테이블 예약할 수 있나요?",
+          "native_tip": "'book'과 'reserve'는 같은 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I need to make an appointment with Dr. Lee.",
+          "sentence_ko": "이 박사님 진료 예약을 하고 싶습니다.",
+          "native_tip": "병원은 'reservation'이 아니라 'appointment'를 써요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you have any available slots tomorrow morning?",
+          "sentence_ko": "내일 오전에 가능한 시간이 있나요?",
+          "native_tip": "'slot'은 예약 가능한 시간대를 뜻해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'd like to change my reservation from Friday to Saturday.",
+          "sentence_ko": "금요일 예약을 토요일로 변경하고 싶습니다.",
+          "native_tip": "'change A from B to C' 패턴으로 변경을 요청할 수 있어요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Phone",
+      "subcategory": "Connection Issues",
+      "pattern_template": "I'm sorry, I can't + [hear/understand] you",
+      "explanation_ko": "통화 품질 문제 시 쓰는 패턴",
+      "dev_analogy": "if (signal.quality < threshold) throw new Error('bad connection')",
+      "cefr_level": "B1",
+      "difficulty_order": 55,
+      "examples": [
+        {
+          "sentence_en": "I'm sorry, I can't hear you. Could you speak up?",
+          "sentence_ko": "죄송한데 잘 안 들려요. 좀 크게 말씀해 주시겠어요?",
+          "native_tip": "'speak up'은 '더 크게 말하다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "You're breaking up. Can you say that again?",
+          "sentence_ko": "끊기고 있어요. 다시 말씀해 주시겠어요?",
+          "native_tip": "'breaking up'은 통화가 끊기는 것을 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I think we have a bad connection. Let me call you back.",
+          "sentence_ko": "연결 상태가 안 좋은 것 같아요. 다시 전화할게요.",
+          "native_tip": "'bad connection'은 통화 품질이 나쁠 때 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Could you repeat that? I didn't catch what you said.",
+          "sentence_ko": "다시 말씀해 주시겠어요? 못 알아들었어요.",
+          "native_tip": "'I didn't catch that'은 '못 알아들었다'의 자연스러운 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Sorry, you're cutting out. Can you move to a better spot?",
+          "sentence_ko": "죄송한데 끊기고 있어요. 다른 곳으로 이동해 주시겠어요?",
+          "native_tip": "'cutting out'도 'breaking up'과 같은 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Social",
+      "subcategory": "Making Plans",
+      "pattern_template": "Are you free + [time]? Let's + [activity]",
+      "explanation_ko": "약속을 잡는 패턴",
+      "dev_analogy": "if (calendar.isAvailable(time)) schedule(activity)",
+      "cefr_level": "A1",
+      "difficulty_order": 56,
+      "examples": [
+        {
+          "sentence_en": "Are you free this weekend? Let's grab coffee.",
+          "sentence_ko": "이번 주말 시간 돼? 커피 마시자.",
+          "native_tip": "'grab coffee'는 커피를 가볍게 마시자는 캐주얼한 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Are you doing anything tonight? Let's go see a movie.",
+          "sentence_ko": "오늘 밤에 뭐 해? 영화 보러 가자.",
+          "native_tip": "'Are you doing anything'은 'Are you free'보다 더 캐주얼해요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you have any plans for Friday? We should hang out.",
+          "sentence_ko": "금요일에 계획 있어? 놀자.",
+          "native_tip": "'hang out'은 '놀다, 시간을 보내다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I was wondering if you'd like to join us for dinner.",
+          "sentence_ko": "저녁에 같이 할래요?",
+          "native_tip": "'I was wondering if'는 정중하게 제안하는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "How about we meet up at the park around 3?",
+          "sentence_ko": "3시쯤 공원에서 만나는 거 어때?",
+          "native_tip": "'meet up'은 '만나다'의 캐주얼한 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Social",
+      "subcategory": "Expressing Interest",
+      "pattern_template": "I'm really into + [noun/-ing]",
+      "explanation_ko": "관심사/취미를 표현하는 패턴",
+      "dev_analogy": "user.interests.push(hobby)",
+      "cefr_level": "A2",
+      "difficulty_order": 57,
+      "examples": [
+        {
+          "sentence_en": "I'm really into Korean dramas these days.",
+          "sentence_ko": "요즘 한국 드라마에 푹 빠져 있어요.",
+          "native_tip": "'into'는 '~에 관심이 있다, 빠져 있다'라는 뜻이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've been really into cooking lately.",
+          "sentence_ko": "최근에 요리에 빠져 있어요.",
+          "native_tip": "'I've been into'는 최근 들어 빠진 것을 강조해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Are you into sports at all?",
+          "sentence_ko": "스포츠에 관심 있어요?",
+          "native_tip": "'at all'을 붙이면 '혹시라도'라는 뉘앙스가 돼요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I used to be into gaming, but now I prefer reading.",
+          "sentence_ko": "예전에는 게임에 빠져 있었는데 지금은 독서를 더 좋아해요.",
+          "native_tip": "'used to be into'는 과거의 관심사를 표현해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What kind of music are you into?",
+          "sentence_ko": "어떤 종류의 음악을 좋아해요?",
+          "native_tip": "'What kind of ~ are you into?'는 취향을 물어볼 때 쓰는 자연스러운 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Social",
+      "subcategory": "Agreeing and Disagreeing",
+      "pattern_template": "I see your point, but + [opinion]",
+      "explanation_ko": "정중하게 반대 의견을 말하는 패턴",
+      "dev_analogy": "review.addComment({acknowledge: true, disagree: opinion})",
+      "cefr_level": "B1",
+      "difficulty_order": 58,
+      "examples": [
+        {
+          "sentence_en": "I see your point, but I think we should wait.",
+          "sentence_ko": "무슨 말인지 알겠는데, 기다려야 할 것 같아요.",
+          "native_tip": "상대 의견을 인정하고 나서 반박하면 훨씬 부드러워요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "That's a good idea, but have you considered the cost?",
+          "sentence_ko": "좋은 생각이지만, 비용은 생각해 보셨나요?",
+          "native_tip": "칭찬 + but + 질문은 부드러운 반대 공식이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I totally agree with you on that.",
+          "sentence_ko": "그 점은 완전히 동의해요.",
+          "native_tip": "'totally'를 넣으면 강한 동의를 표현할 수 있어요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm not sure I agree. What about the deadline?",
+          "sentence_ko": "동의하기 어려운데요. 마감 기한은 어떻고요?",
+          "native_tip": "'I'm not sure I agree'는 직접적으로 'I disagree'보다 부드러워요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "You have a point there, but let me offer another perspective.",
+          "sentence_ko": "일리가 있지만, 다른 관점을 제시할게요.",
+          "native_tip": "'offer another perspective'는 비즈니스에서 자주 쓰는 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Social",
+      "subcategory": "Inviting",
+      "pattern_template": "Would you like to come to + [event]?",
+      "explanation_ko": "초대하는 패턴",
+      "dev_analogy": "event.sendInvite(user, eventDetails)",
+      "cefr_level": "A2",
+      "difficulty_order": 59,
+      "examples": [
+        {
+          "sentence_en": "Would you like to come to my birthday party?",
+          "sentence_ko": "내 생일 파티에 올래?",
+          "native_tip": "'Would you like to come'은 정중한 초대 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "We're having a barbecue on Sunday. Want to join?",
+          "sentence_ko": "일요일에 바베큐 하는데, 같이 할래?",
+          "native_tip": "'Want to join?'은 캐주얼한 초대 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "You're welcome to bring a friend if you'd like.",
+          "sentence_ko": "원하면 친구 데려와도 돼요.",
+          "native_tip": "'You're welcome to'는 '~해도 좋다'라는 허락의 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm throwing a housewarming party. I'd love it if you could make it.",
+          "sentence_ko": "집들이 하는데, 와주면 좋겠어요.",
+          "native_tip": "'make it'은 '참석하다, 올 수 있다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "There's a concert next week. Interested?",
+          "sentence_ko": "다음 주에 콘서트 있는데, 관심 있어?",
+          "native_tip": "짧게 'Interested?'만 물어도 자연스러운 초대가 돼요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Social",
+      "subcategory": "Small Talk",
+      "pattern_template": "Have you + [past participle] + lately?",
+      "explanation_ko": "스몰토크에서 근황을 묻는 패턴",
+      "dev_analogy": "user.getRecentActivity(topic)",
+      "cefr_level": "B1",
+      "difficulty_order": 60,
+      "examples": [
+        {
+          "sentence_en": "Have you watched any good movies lately?",
+          "sentence_ko": "최근에 좋은 영화 봤어요?",
+          "native_tip": "스몰토크를 시작할 때 아주 좋은 질문이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Have you been to any new restaurants?",
+          "sentence_ko": "새로운 식당 가 본 적 있어요?",
+          "native_tip": "'Have you been to'는 경험을 묻는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Have you heard about the new cafe downtown?",
+          "sentence_ko": "시내에 새로 생긴 카페 들었어요?",
+          "native_tip": "'Have you heard about'은 화제를 꺼낼 때 쓰기 좋아요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What have you been up to these days?",
+          "sentence_ko": "요즘 뭐 하고 지내요?",
+          "native_tip": "'What have you been up to?'는 'How are you?'보다 구체적인 안부 인사예요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Have you tried that new Thai place on Main Street?",
+          "sentence_ko": "메인 스트리트에 새로 생긴 태국 음식점 가 봤어요?",
+          "native_tip": "'have you tried'는 경험을 묻는 자연스러운 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Health",
+      "subcategory": "At the Gym",
+      "pattern_template": "I'd like to sign up for + [membership/class]",
+      "explanation_ko": "헬스장/운동 등록 패턴",
+      "dev_analogy": "gym.register(membershipType)",
+      "cefr_level": "A2",
+      "difficulty_order": 61,
+      "examples": [
+        {
+          "sentence_en": "I'd like to sign up for a monthly membership.",
+          "sentence_ko": "월간 회원권을 등록하고 싶어요.",
+          "native_tip": "'sign up for'는 '등록하다'라는 뜻이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you offer a free trial?",
+          "sentence_ko": "무료 체험이 있나요?",
+          "native_tip": "헬스장이나 서비스에서 'free trial'은 매우 흔한 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What classes do you have on weekday mornings?",
+          "sentence_ko": "평일 아침에 어떤 수업이 있나요?",
+          "native_tip": "'What classes do you have'로 프로그램을 물어볼 수 있어요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm interested in personal training sessions.",
+          "sentence_ko": "개인 트레이닝에 관심이 있어요.",
+          "native_tip": "'personal training'은 1:1 운동 지도를 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can I freeze my membership for a month?",
+          "sentence_ko": "회원권을 한 달 동안 일시 정지할 수 있나요?",
+          "native_tip": "'freeze'는 회원권 '일시 정지'를 뜻하는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Health",
+      "subcategory": "Describing Symptoms",
+      "pattern_template": "I've been having + [symptom] for + [duration]",
+      "explanation_ko": "증상을 설명하는 패턴",
+      "dev_analogy": "healthLog.report({symptom, duration})",
+      "cefr_level": "B1",
+      "difficulty_order": 62,
+      "examples": [
+        {
+          "sentence_en": "I've been having headaches for about a week.",
+          "sentence_ko": "일주일 정도 두통이 있었어요.",
+          "native_tip": "'I've been having'은 지속적인 증상을 설명할 때 쓰는 완료진행 시제예요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've had a sore throat since yesterday.",
+          "sentence_ko": "어제부터 목이 아팠어요.",
+          "native_tip": "'since'는 시작 시점, 'for'는 기간을 나타내요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "My back has been bothering me for a few days.",
+          "sentence_ko": "며칠째 허리가 안 좋아요.",
+          "native_tip": "'bother'는 '괴롭히다, 불편하게 하다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I feel dizzy every time I stand up.",
+          "sentence_ko": "일어설 때마다 어지러워요.",
+          "native_tip": "'every time + 주어 + 동사'는 '~할 때마다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I haven't been sleeping well lately.",
+          "sentence_ko": "최근에 잠을 잘 못 자고 있어요.",
+          "native_tip": "수면 문제를 이야기할 때 자주 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Health",
+      "subcategory": "Pharmacy",
+      "pattern_template": "Do you have anything for + [symptom]?",
+      "explanation_ko": "약국에서 약을 요청하는 패턴",
+      "dev_analogy": "pharmacy.search({condition: symptom})",
+      "cefr_level": "A2",
+      "difficulty_order": 63,
+      "examples": [
+        {
+          "sentence_en": "Do you have anything for a headache?",
+          "sentence_ko": "두통약 있나요?",
+          "native_tip": "'anything for ~'는 '~에 좋은 약이 있나요'라는 뜻이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I need some cold medicine, please.",
+          "sentence_ko": "감기약이 필요해요.",
+          "native_tip": "'cold medicine'은 감기약의 일반적인 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "How often should I take this?",
+          "sentence_ko": "이 약을 얼마나 자주 먹어야 하나요?",
+          "native_tip": "'How often'은 빈도를 묻는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Are there any side effects I should know about?",
+          "sentence_ko": "알아야 할 부작용이 있나요?",
+          "native_tip": "'side effects'는 '부작용'이에요. 약 복용 전 꼭 물어보세요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can I take this with other medication?",
+          "sentence_ko": "다른 약과 함께 복용해도 되나요?",
+          "native_tip": "'medication'은 'medicine'보다 더 격식 있는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Health",
+      "subcategory": "Healthy Lifestyle",
+      "pattern_template": "I'm trying to + [healthy habit]",
+      "explanation_ko": "건강한 생활습관을 표현하는 패턴",
+      "dev_analogy": "lifestyle.setGoal(healthyHabit)",
+      "cefr_level": "A2",
+      "difficulty_order": 64,
+      "examples": [
+        {
+          "sentence_en": "I'm trying to eat healthier.",
+          "sentence_ko": "더 건강하게 먹으려고 노력 중이에요.",
+          "native_tip": "'I'm trying to'는 노력 중인 것을 표현하는 자연스러운 표현이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm trying to work out at least three times a week.",
+          "sentence_ko": "일주일에 최소 3번은 운동하려고 해요.",
+          "native_tip": "'work out'은 '운동하다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've been cutting back on sugar.",
+          "sentence_ko": "설탕 섭취를 줄이고 있어요.",
+          "native_tip": "'cut back on'은 '~을 줄이다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I started doing yoga to reduce stress.",
+          "sentence_ko": "스트레스를 줄이려고 요가를 시작했어요.",
+          "native_tip": "'to + 동사'로 목적을 표현할 수 있어요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I need to get more sleep. I've been staying up too late.",
+          "sentence_ko": "잠을 더 자야 해요. 너무 늦게까지 깨어 있었거든요.",
+          "native_tip": "'stay up'은 '깨어 있다, 안 자다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Health",
+      "subcategory": "Mental Health",
+      "pattern_template": "I've been feeling + [emotion] because + [reason]",
+      "explanation_ko": "감정 상태와 이유를 표현하는 패턴",
+      "dev_analogy": "mood.setState({emotion, reason})",
+      "cefr_level": "B1",
+      "difficulty_order": 65,
+      "examples": [
+        {
+          "sentence_en": "I've been feeling stressed because of work.",
+          "sentence_ko": "일 때문에 스트레스를 받고 있어요.",
+          "native_tip": "'because of + 명사'와 'because + 절'의 차이를 기억하세요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm feeling a bit overwhelmed with everything.",
+          "sentence_ko": "모든 것에 좀 압도당하는 느낌이에요.",
+          "native_tip": "'overwhelmed'는 '감당이 안 되는' 감정을 표현해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've been anxious about my job interview.",
+          "sentence_ko": "면접 때문에 불안했어요.",
+          "native_tip": "'anxious about'은 '~에 대해 불안한'이라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I think I need to take a break and recharge.",
+          "sentence_ko": "쉬면서 재충전이 필요한 것 같아요.",
+          "native_tip": "'recharge'는 '재충전하다'로 일상에서 자주 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Talking to friends always makes me feel better.",
+          "sentence_ko": "친구들과 이야기하면 항상 기분이 좋아져요.",
+          "native_tip": "'make me feel better'는 기분 전환을 표현하는 기본 패턴이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Tech",
+      "subcategory": "Tech Support",
+      "pattern_template": "I'm having trouble with + [device/software]",
+      "explanation_ko": "기술 문제를 설명하는 패턴",
+      "dev_analogy": "console.error(`Issue with ${component}`)",
+      "cefr_level": "B1",
+      "difficulty_order": 66,
+      "examples": [
+        {
+          "sentence_en": "I'm having trouble with my Wi-Fi connection.",
+          "sentence_ko": "와이파이 연결에 문제가 있어요.",
+          "native_tip": "'having trouble with'는 '~에 문제가 있다'라는 매우 유용한 패턴이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "My phone keeps crashing. Can you take a look?",
+          "sentence_ko": "폰이 자꾸 멈춰요. 좀 봐주시겠어요?",
+          "native_tip": "'keeps ~ing'은 반복되는 문제를 설명할 때 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Have you tried turning it off and on again?",
+          "sentence_ko": "껐다가 다시 켜 보셨어요?",
+          "native_tip": "IT 지원의 가장 유명한 첫 번째 질문이에요!",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I think my laptop has a virus. It's running really slow.",
+          "sentence_ko": "노트북에 바이러스가 있는 것 같아요. 엄청 느려요.",
+          "native_tip": "'running slow'에서 'slow'는 부사로 쓰여요. 구어체에서는 'slowly' 대신 'slow'를 많이 써요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "The app won't load. I've already cleared the cache.",
+          "sentence_ko": "앱이 안 열려요. 캐시는 이미 지웠어요.",
+          "native_tip": "'won't'는 '~하려 하지 않는다'는 뉘앙스를 가져요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Tech",
+      "subcategory": "Online Services",
+      "pattern_template": "How do I + [tech action]?",
+      "explanation_ko": "온라인 서비스 사용법을 묻는 패턴",
+      "dev_analogy": "docs.search(action)",
+      "cefr_level": "A2",
+      "difficulty_order": 67,
+      "examples": [
+        {
+          "sentence_en": "How do I change my password?",
+          "sentence_ko": "비밀번호를 어떻게 바꾸나요?",
+          "native_tip": "'How do I ~'는 방법을 물어보는 가장 기본적인 패턴이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "How do I cancel my subscription?",
+          "sentence_ko": "구독을 어떻게 취소하나요?",
+          "native_tip": "'subscription'은 정기 구독, 'cancel'은 취소하다예요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Where can I download the latest version?",
+          "sentence_ko": "최신 버전을 어디서 다운로드할 수 있나요?",
+          "native_tip": "'latest version'은 '최신 버전'이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I forgot my username. How can I recover it?",
+          "sentence_ko": "아이디를 잊어버렸어요. 어떻게 복구할 수 있나요?",
+          "native_tip": "'recover'는 '복구하다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Is there a way to export my data?",
+          "sentence_ko": "데이터를 내보낼 수 있는 방법이 있나요?",
+          "native_tip": "'Is there a way to ~'는 가능 여부를 묻는 정중한 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Tech",
+      "subcategory": "IT Interview",
+      "pattern_template": "I have experience with + [technology/skill]",
+      "explanation_ko": "IT 면접에서 경험을 표현하는 패턴",
+      "dev_analogy": "resume.skills.includes(technology)",
+      "cefr_level": "B2",
+      "difficulty_order": 68,
+      "examples": [
+        {
+          "sentence_en": "I have three years of experience with Python and JavaScript.",
+          "sentence_ko": "Python과 JavaScript로 3년간 일한 경험이 있습니다.",
+          "native_tip": "'have + 기간 + of experience with'는 경력 소개의 기본 패턴이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm proficient in React and have worked with Vue as well.",
+          "sentence_ko": "React에 능숙하고 Vue로도 작업한 경험이 있습니다.",
+          "native_tip": "'proficient in'은 '~에 능숙한'이라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "In my previous role, I led a team of five developers.",
+          "sentence_ko": "이전 직장에서 5명의 개발자 팀을 이끌었습니다.",
+          "native_tip": "'In my previous role'로 경력을 소개하면 전문적으로 들려요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm passionate about building scalable applications.",
+          "sentence_ko": "확장 가능한 애플리케이션을 만드는 것에 열정이 있습니다.",
+          "native_tip": "'passionate about'은 면접에서 열정을 보여주는 핵심 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I thrive in fast-paced environments and enjoy solving complex problems.",
+          "sentence_ko": "빠르게 변하는 환경에서 잘 적응하고 복잡한 문제 해결을 즐깁니다.",
+          "native_tip": "'thrive in'은 '~에서 잘 해내다'라는 면접 필수 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Tech",
+      "subcategory": "Explaining Technical Concepts",
+      "pattern_template": "Basically, what + [tech thing] does is + [explanation]",
+      "explanation_ko": "기술 개념을 쉽게 설명하는 패턴",
+      "dev_analogy": "docs.explain(concept, {level: 'beginner'})",
+      "cefr_level": "B2",
+      "difficulty_order": 69,
+      "examples": [
+        {
+          "sentence_en": "Basically, what the API does is connect two different systems.",
+          "sentence_ko": "기본적으로 API가 하는 일은 두 개의 다른 시스템을 연결하는 거예요.",
+          "native_tip": "'Basically'로 시작하면 복잡한 개념을 쉽게 설명하려는 의도를 보여줘요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Think of it as a digital filing cabinet for your data.",
+          "sentence_ko": "데이터를 위한 디지털 서류함이라고 생각하면 돼요.",
+          "native_tip": "'Think of it as'는 비유로 설명할 때 쓰는 좋은 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "In simple terms, machine learning is when computers learn from data.",
+          "sentence_ko": "간단히 말하면, 머신러닝은 컴퓨터가 데이터로부터 배우는 거예요.",
+          "native_tip": "'In simple terms'는 복잡한 것을 쉽게 설명할 때 쓰는 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "The cloud is basically just someone else's computer.",
+          "sentence_ko": "클라우드는 기본적으로 다른 사람의 컴퓨터예요.",
+          "native_tip": "IT에서 유명한 비유예요. 비유를 잘 쓰면 설명이 쉬워져요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "It works like a translator between different programming languages.",
+          "sentence_ko": "다른 프로그래밍 언어 사이의 번역기처럼 작동해요.",
+          "native_tip": "'works like ~'는 비유로 설명하는 패턴이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Tech",
+      "subcategory": "Collaboration",
+      "pattern_template": "Let's set up a + [meeting/call] to discuss + [topic]",
+      "explanation_ko": "IT 협업에서 미팅을 잡는 패턴",
+      "dev_analogy": "calendar.createEvent({type: 'meeting', topic})",
+      "cefr_level": "B1",
+      "difficulty_order": 70,
+      "examples": [
+        {
+          "sentence_en": "Let's set up a call to discuss the project timeline.",
+          "sentence_ko": "프로젝트 일정을 논의하기 위해 통화를 잡읍시다.",
+          "native_tip": "'set up a call'은 통화를 잡다라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can we schedule a code review for this afternoon?",
+          "sentence_ko": "오늘 오후에 코드 리뷰 일정을 잡을 수 있을까요?",
+          "native_tip": "'schedule'은 일정을 잡다라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll share my screen and walk you through the demo.",
+          "sentence_ko": "화면을 공유하고 데모를 보여드릴게요.",
+          "native_tip": "'walk someone through'는 '단계별로 보여주다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Could you create a ticket for that bug?",
+          "sentence_ko": "그 버그에 대한 티켓을 만들어 주시겠어요?",
+          "native_tip": "IT에서 'ticket'은 이슈 추적 시스템의 항목이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll push the changes and send you a pull request.",
+          "sentence_ko": "변경사항을 push하고 풀 리퀘스트를 보낼게요.",
+          "native_tip": "개발팀 일상 대화에서 자주 쓰이는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "subcategory": "At the Movies",
+      "pattern_template": "Two tickets for + [movie], please",
+      "explanation_ko": "영화관에서 티켓을 구매하는 패턴",
+      "dev_analogy": "ticketService.purchase({movie, quantity: 2})",
+      "cefr_level": "A1",
+      "difficulty_order": 71,
+      "examples": [
+        {
+          "sentence_en": "Two tickets for the 7 PM showing, please.",
+          "sentence_ko": "오후 7시 상영 티켓 두 장 주세요.",
+          "native_tip": "'showing'은 영화 상영 시간을 뜻해요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Is there anything still available for tonight?",
+          "sentence_ko": "오늘 밤에 아직 남은 좌석이 있나요?",
+          "native_tip": "'available'은 '이용 가능한'이라는 뜻이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'd like seats in the middle, if possible.",
+          "sentence_ko": "가능하면 가운데 좌석으로 주세요.",
+          "native_tip": "'if possible'을 붙이면 요청이 더 자연스러워요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you sell popcorn combos?",
+          "sentence_ko": "팝콘 콤보를 파나요?",
+          "native_tip": "영화관에서 'combo'는 음료+팝콘 세트를 뜻해요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What time does the last showing end?",
+          "sentence_ko": "마지막 상영은 몇 시에 끝나나요?",
+          "native_tip": "'last showing'은 마지막 상영을 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "subcategory": "Discussing Entertainment",
+      "pattern_template": "Have you seen/read + [title]? It's + [adjective]",
+      "explanation_ko": "영화/책/드라마를 추천하는 패턴",
+      "dev_analogy": "review.create({title, rating: adjective})",
+      "cefr_level": "A2",
+      "difficulty_order": 72,
+      "examples": [
+        {
+          "sentence_en": "Have you seen the new Marvel movie? It's amazing.",
+          "sentence_ko": "새 마블 영화 봤어? 진짜 대박이야.",
+          "native_tip": "영화/TV 추천은 스몰토크에서 가장 흔한 화제 중 하나예요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I just finished reading that book. It was a page-turner.",
+          "sentence_ko": "그 책 방금 다 읽었어. 손에서 놓을 수가 없었어.",
+          "native_tip": "'page-turner'는 재미있어서 멈출 수 없는 책을 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've been binge-watching this Korean drama. You should check it out.",
+          "sentence_ko": "이 한국 드라마 정주행하고 있어. 한번 봐봐.",
+          "native_tip": "'binge-watch'는 드라마를 몰아서 보는 것을 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "The ending really caught me off guard.",
+          "sentence_ko": "결말이 정말 예상 밖이었어.",
+          "native_tip": "'caught me off guard'는 '나를 놀라게 했다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I heard it got great reviews. Is it worth watching?",
+          "sentence_ko": "평이 좋다고 들었는데, 볼 만해?",
+          "native_tip": "'Is it worth ~ing?'는 '~할 가치가 있어?'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "subcategory": "Museum and Gallery",
+      "pattern_template": "What does this + [artwork] represent?",
+      "explanation_ko": "미술관/박물관에서 작품에 대해 묻는 패턴",
+      "dev_analogy": "exhibit.getDescription(artwork)",
+      "cefr_level": "B1",
+      "difficulty_order": 73,
+      "examples": [
+        {
+          "sentence_en": "What does this painting represent?",
+          "sentence_ko": "이 그림은 무엇을 나타내나요?",
+          "native_tip": "'represent'는 '나타내다, 상징하다'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "When was this piece created?",
+          "sentence_ko": "이 작품은 언제 만들어졌나요?",
+          "native_tip": "미술 작품을 'piece'라고 부르기도 해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Is photography allowed in this gallery?",
+          "sentence_ko": "이 갤러리에서 사진 촬영이 가능한가요?",
+          "native_tip": "'Is ~ allowed?'는 허용 여부를 묻는 정중한 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'm really drawn to the use of color in this one.",
+          "sentence_ko": "이 작품의 색감에 정말 끌려요.",
+          "native_tip": "'drawn to'는 '~에 끌리다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you have an audio guide available in Korean?",
+          "sentence_ko": "한국어 오디오 가이드가 있나요?",
+          "native_tip": "해외 박물관에서 한국어 가이드를 물어볼 때 쓸 수 있어요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "subcategory": "Concerts and Events",
+      "pattern_template": "Where can I get tickets for + [event]?",
+      "explanation_ko": "공연/이벤트 티켓을 구하는 패턴",
+      "dev_analogy": "ticketAPI.find({event, available: true})",
+      "cefr_level": "A2",
+      "difficulty_order": 74,
+      "examples": [
+        {
+          "sentence_en": "Where can I get tickets for the jazz festival?",
+          "sentence_ko": "재즈 페스티벌 티켓은 어디서 살 수 있어요?",
+          "native_tip": "'get tickets for'는 '~의 티켓을 구하다'라는 뜻이에요.",
+          "difficulty": 1,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Are there any seats left for tonight's concert?",
+          "sentence_ko": "오늘 밤 콘서트 좌석이 남아 있나요?",
+          "native_tip": "'seats left'는 '남은 좌석'이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "How long does the show usually last?",
+          "sentence_ko": "공연은 보통 얼마나 걸리나요?",
+          "native_tip": "'How long does ~ last?'는 소요 시간을 묻는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Is there a dress code for this event?",
+          "sentence_ko": "이 행사에 복장 규정이 있나요?",
+          "native_tip": "'dress code'는 복장 규정을 뜻해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "The performance was absolutely breathtaking.",
+          "sentence_ko": "공연이 정말 숨이 멎을 정도로 멋졌어요.",
+          "native_tip": "'breathtaking'은 '숨이 멎을 만큼 멋진'이라는 최고의 칭찬이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "subcategory": "Sharing Culture",
+      "pattern_template": "In my country, we + [cultural practice]",
+      "explanation_ko": "자국 문화를 소개하는 패턴",
+      "dev_analogy": "culture.share({country: 'Korea', practice})",
+      "cefr_level": "B1",
+      "difficulty_order": 75,
+      "examples": [
+        {
+          "sentence_en": "In Korea, we take off our shoes before entering a house.",
+          "sentence_ko": "한국에서는 집에 들어가기 전에 신발을 벗어요.",
+          "native_tip": "'In my country, we ~'는 문화 차이를 설명할 때 좋은 시작 문장이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "We have a holiday called Chuseok. It's like Thanksgiving.",
+          "sentence_ko": "추석이라는 명절이 있어요. 추수감사절과 비슷해요.",
+          "native_tip": "'It's like ~'로 비교하면 상대방이 이해하기 쉬워요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "It's considered rude to pour your own drink in Korean culture.",
+          "sentence_ko": "한국 문화에서는 자기 술을 직접 따르는 것이 예의에 어긋나요.",
+          "native_tip": "'It's considered ~'는 '~으로 여겨진다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "We use both a solar and lunar calendar for holidays.",
+          "sentence_ko": "명절에 양력과 음력 달력을 모두 사용해요.",
+          "native_tip": "'solar calendar'는 양력, 'lunar calendar'는 음력이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Korean BBQ is meant to be a social experience, not just a meal.",
+          "sentence_ko": "한국 바베큐는 단순한 식사가 아니라 사교적 경험이에요.",
+          "native_tip": "'is meant to be'는 '~이도록 되어 있다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Greeting",
+      "subcategory": "Formal Introduction",
+      "pattern_template": "Allow me to introduce + [person/myself]",
+      "explanation_ko": "격식 있는 소개 패턴",
+      "dev_analogy": "formal.introduce(entity, {protocol: 'business'})",
+      "cefr_level": "B1",
+      "difficulty_order": 76,
+      "examples": [
+        {
+          "sentence_en": "Allow me to introduce myself. I'm the project manager.",
+          "sentence_ko": "자기소개를 하겠습니다. 프로젝트 매니저입니다.",
+          "native_tip": "'Allow me to'는 매우 격식 있는 표현으로, 비즈니스 상황에 적합해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'd like to introduce you to our new team member.",
+          "sentence_ko": "새로운 팀원을 소개해 드리겠습니다.",
+          "native_tip": "'introduce A to B'는 'A를 B에게 소개하다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "It's a pleasure to finally meet you in person.",
+          "sentence_ko": "드디어 직접 만나 뵙게 되어 기쁩니다.",
+          "native_tip": "'in person'은 '직접, 대면으로'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I've heard great things about you from our CEO.",
+          "sentence_ko": "CEO님으로부터 좋은 말씀 많이 들었습니다.",
+          "native_tip": "'I've heard great things about you'는 비즈니스 인사에서 자주 쓰는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Please, call me Ted. We don't need to be so formal.",
+          "sentence_ko": "Ted라고 부르세요. 격식을 차릴 필요 없어요.",
+          "native_tip": "소개 후 분위기를 편하게 만들 때 쓰는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Daily",
+      "subcategory": "Describing Past Events",
+      "pattern_template": "I was just about to + [verb] when + [event]",
+      "explanation_ko": "과거 일을 생생하게 묘사하는 패턴",
+      "dev_analogy": "timeline.push({planned: action, interrupted: event})",
+      "cefr_level": "B1",
+      "difficulty_order": 77,
+      "examples": [
+        {
+          "sentence_en": "I was just about to leave when it started raining.",
+          "sentence_ko": "나가려던 참에 비가 오기 시작했어요.",
+          "native_tip": "'was just about to'는 '막 ~하려던 참이었다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I was going to call you, but my phone died.",
+          "sentence_ko": "전화하려고 했는데 폰 배터리가 나갔어요.",
+          "native_tip": "'my phone died'는 배터리가 다 됐다는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "We were having dinner when the power went out.",
+          "sentence_ko": "저녁 먹고 있었는데 정전이 됐어요.",
+          "native_tip": "'the power went out'은 정전을 뜻하는 자연스러운 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I had just fallen asleep when someone knocked on the door.",
+          "sentence_ko": "막 잠들었는데 누가 문을 두드렸어요.",
+          "native_tip": "'had just + 과거분사'는 '막 ~한 직후'를 표현해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I ran into an old friend while I was grocery shopping.",
+          "sentence_ko": "장 보다가 오랜 친구를 우연히 만났어요.",
+          "native_tip": "'ran into'는 '우연히 만나다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Daily",
+      "subcategory": "Hypothetical Situations",
+      "pattern_template": "If I could + [verb], I would + [verb]",
+      "explanation_ko": "가정법으로 상상하는 패턴",
+      "dev_analogy": "if (hypothetical) { return dream; }",
+      "cefr_level": "B2",
+      "difficulty_order": 78,
+      "examples": [
+        {
+          "sentence_en": "If I could travel anywhere, I would go to Iceland.",
+          "sentence_ko": "어디든 갈 수 있다면 아이슬란드에 갈 거예요.",
+          "native_tip": "'If I could ~, I would ~'는 가정법 과거로 현재 불가능한 상상을 표현해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "If I had more time, I would learn another language.",
+          "sentence_ko": "시간이 더 있으면 다른 언어를 배울 텐데.",
+          "native_tip": "'If I had ~'는 현재 없는 것을 가정하는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What would you do if you won the lottery?",
+          "sentence_ko": "복권에 당첨되면 뭘 하겠어요?",
+          "native_tip": "가정법 질문은 대화를 재미있게 만드는 좋은 소재예요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I wish I could speak English more fluently.",
+          "sentence_ko": "영어를 더 유창하게 할 수 있으면 좋겠어요.",
+          "native_tip": "'I wish I could'는 현재 할 수 없는 것에 대한 소망이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "If I were you, I would accept the job offer.",
+          "sentence_ko": "내가 너라면 그 일자리 제안을 받아들이겠어.",
+          "native_tip": "'If I were you'에서 'was'가 아닌 'were'를 쓰는 것이 문법적으로 맞아요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Ordering",
+      "subcategory": "Splitting the Bill",
+      "pattern_template": "Could we get + [separate/split] checks?",
+      "explanation_ko": "계산을 나눠서 하는 패턴",
+      "dev_analogy": "bill.split(guests.length)",
+      "cefr_level": "B1",
+      "difficulty_order": 79,
+      "examples": [
+        {
+          "sentence_en": "Could we get separate checks, please?",
+          "sentence_ko": "따로 계산해 주시겠어요?",
+          "native_tip": "미국에서는 'separate checks'를 흔히 요청해요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Let's split the bill evenly.",
+          "sentence_ko": "계산을 균등하게 나누자.",
+          "native_tip": "'split the bill'은 계산을 나누다라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll get this one. You can get the next round.",
+          "sentence_ko": "이번은 내가 낼게. 다음에 네가 내.",
+          "native_tip": "'I'll get this one'은 '내가 계산할게'라는 캐주얼한 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Can you put the appetizers on one tab and the rest on another?",
+          "sentence_ko": "전채를 하나의 탭에, 나머지는 다른 탭에 올려주시겠어요?",
+          "native_tip": "'tab'은 식당에서 '계산서'를 뜻해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "It's on me tonight. Don't worry about it.",
+          "sentence_ko": "오늘은 내가 쏠게. 걱정하지 마.",
+          "native_tip": "'It's on me'는 '내가 낼게'라는 뜻이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Travel",
+      "subcategory": "Travel Stories",
+      "pattern_template": "The best part about + [place] was + [experience]",
+      "explanation_ko": "여행 경험을 공유하는 패턴",
+      "dev_analogy": "trip.highlight = experience",
+      "cefr_level": "B2",
+      "difficulty_order": 80,
+      "examples": [
+        {
+          "sentence_en": "The best part about Paris was the street food.",
+          "sentence_ko": "파리에서 가장 좋았던 건 길거리 음식이에요.",
+          "native_tip": "'The best part about ~'는 하이라이트를 이야기할 때 좋은 시작이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "You won't believe what happened to me in Thailand.",
+          "sentence_ko": "태국에서 무슨 일이 있었는지 못 믿을 거야.",
+          "native_tip": "'You won't believe'는 이야기를 시작할 때 호기심을 유발하는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I ended up staying an extra week because I loved it so much.",
+          "sentence_ko": "너무 좋아서 결국 일주일 더 머물렀어요.",
+          "native_tip": "'ended up ~ing'은 '결국 ~하게 되다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "If you ever go to Japan, you have to try the ramen.",
+          "sentence_ko": "일본에 가면 꼭 라멘 먹어봐야 해.",
+          "native_tip": "'If you ever go to ~, you have to ~'는 추천할 때 쓰는 패턴이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Traveling solo really helped me grow as a person.",
+          "sentence_ko": "혼자 여행하면서 정말 많이 성장했어요.",
+          "native_tip": "'grow as a person'은 '인간적으로 성장하다'라는 뜻이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Business",
+      "subcategory": "Giving Feedback",
+      "pattern_template": "I appreciate + [positive], and I think + [improvement]",
+      "explanation_ko": "건설적 피드백을 주는 패턴",
+      "dev_analogy": "codeReview.comment({praise: positive, suggestion: improvement})",
+      "cefr_level": "B2",
+      "difficulty_order": 81,
+      "examples": [
+        {
+          "sentence_en": "I appreciate the effort you put into this. One suggestion would be to add more data.",
+          "sentence_ko": "노력에 감사해요. 데이터를 더 추가하면 좋겠어요.",
+          "native_tip": "긍정적인 것을 먼저 말하고 개선점을 제시하는 '샌드위치 피드백'이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Great job on the presentation. Next time, try to keep it under 15 minutes.",
+          "sentence_ko": "발표 잘하셨어요. 다음에는 15분 이내로 해보세요.",
+          "native_tip": "'Great job on ~'으로 칭찬 후 개선점을 부드럽게 전달할 수 있어요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "This is a solid start. Have you considered approaching it from a different angle?",
+          "sentence_ko": "좋은 시작이에요. 다른 각도에서 접근하는 건 어떨까요?",
+          "native_tip": "'Have you considered ~'는 부드러운 제안 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I think the report is well-structured, but the conclusion needs more support.",
+          "sentence_ko": "보고서 구조는 잘 됐는데 결론에 근거가 더 필요해요.",
+          "native_tip": "'well-structured'는 '구조가 잘 된'이라는 칭찬이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Overall, this looks good. Let me highlight a couple of areas for improvement.",
+          "sentence_ko": "전반적으로 좋아요. 개선할 부분 몇 가지를 짚어볼게요.",
+          "native_tip": "'highlight areas for improvement'는 비즈니스 피드백의 핵심 표현이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Business",
+      "subcategory": "Handling Deadlines",
+      "pattern_template": "I need this by + [deadline]. Is that doable?",
+      "explanation_ko": "마감 기한을 설정하는 패턴",
+      "dev_analogy": "task.setDeadline(date); task.checkFeasibility()",
+      "cefr_level": "B1",
+      "difficulty_order": 82,
+      "examples": [
+        {
+          "sentence_en": "I need the report by Friday. Is that doable?",
+          "sentence_ko": "금요일까지 보고서가 필요해요. 가능할까요?",
+          "native_tip": "'Is that doable?'은 '가능할까요?'라는 캐주얼한 비즈니스 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "We're running behind schedule. Can we push the deadline?",
+          "sentence_ko": "일정이 뒤처지고 있어요. 마감을 미룰 수 있을까요?",
+          "native_tip": "'push the deadline'은 '마감을 미루다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll need an extension. Can I have until Monday?",
+          "sentence_ko": "연장이 필요해요. 월요일까지 가능할까요?",
+          "native_tip": "'extension'은 기한 연장이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Let's prioritize the most urgent tasks first.",
+          "sentence_ko": "가장 급한 작업부터 우선순위를 정합시다.",
+          "native_tip": "'prioritize'는 '우선순위를 정하다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'll do my best to meet the deadline, but I might need help.",
+          "sentence_ko": "마감을 맞추도록 최선을 다하겠지만 도움이 필요할 수도 있어요.",
+          "native_tip": "'meet the deadline'은 '마감을 맞추다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Shopping",
+      "subcategory": "Negotiating",
+      "pattern_template": "Is there any way to get a + [discount/deal]?",
+      "explanation_ko": "할인을 요청하는 패턴",
+      "dev_analogy": "price.negotiate({discount: true})",
+      "cefr_level": "B1",
+      "difficulty_order": 83,
+      "examples": [
+        {
+          "sentence_en": "Is there any way to get a discount on this?",
+          "sentence_ko": "이거 할인 받을 수 있는 방법이 있나요?",
+          "native_tip": "'Is there any way to ~'는 정중하게 가능 여부를 묻는 표현이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "Do you price match with other stores?",
+          "sentence_ko": "다른 가게 가격에 맞춰주시나요?",
+          "native_tip": "'price match'는 경쟁사 가격에 맞추는 것을 뜻해요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "If I buy two, can I get a better deal?",
+          "sentence_ko": "두 개 사면 더 싸게 해주실 수 있나요?",
+          "native_tip": "'a better deal'은 '더 좋은 거래 조건'이에요.",
+          "difficulty": 2,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "That's a bit out of my budget. Can you do any better?",
+          "sentence_ko": "예산이 좀 초과되네요. 좀 더 깎아주실 수 있나요?",
+          "native_tip": "'out of my budget'은 '예산 초과'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I saw it cheaper online. Can you match that price?",
+          "sentence_ko": "온라인에서 더 싸게 봤는데, 그 가격에 맞춰주실 수 있나요?",
+          "native_tip": "온라인 가격을 근거로 흥정할 때 쓸 수 있는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        }
+      ]
+    },
+    {
+      "category": "Emergency",
+      "subcategory": "Insurance and Claims",
+      "pattern_template": "I need to file a + [claim/report] for + [incident]",
+      "explanation_ko": "보험/분실 관련 신고 패턴",
+      "dev_analogy": "insurance.file({type: 'claim', incident})",
+      "cefr_level": "B2",
+      "difficulty_order": 84,
+      "examples": [
+        {
+          "sentence_en": "I need to file an insurance claim for a car accident.",
+          "sentence_ko": "교통사고에 대한 보험 청구를 해야 합니다.",
+          "native_tip": "'file a claim'은 '청구서를 제출하다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "My luggage was damaged during the flight. Who do I contact?",
+          "sentence_ko": "비행 중에 짐이 파손됐어요. 누구에게 연락하면 되나요?",
+          "native_tip": "'was damaged'는 수동태로 파손 상황을 설명하는 표현이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "I'd like to report a theft. My wallet was stolen.",
+          "sentence_ko": "도난 신고를 하고 싶어요. 지갑을 도난당했어요.",
+          "native_tip": "'report a theft'는 '도난 신고를 하다'라는 뜻이에요.",
+          "difficulty": 3,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "What documents do I need to submit for the claim?",
+          "sentence_ko": "청구에 어떤 서류가 필요한가요?",
+          "native_tip": "'submit'은 '제출하다'라는 뜻이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        },
+        {
+          "sentence_en": "How long does it usually take to process the claim?",
+          "sentence_ko": "청구 처리에 보통 얼마나 걸리나요?",
+          "native_tip": "'process'는 '처리하다'라는 뜻이에요.",
+          "difficulty": 4,
+          "source": "manual"
+        }
+      ]
     }
   ],
   "scenes": [
@@ -2405,6 +3969,60 @@
       "pattern_categories": [
         "Travel",
         "Daily"
+      ]
+    },
+    {
+      "name_ko": "전화로 레스토랑 예약하기",
+      "name_en": "Making a Phone Reservation",
+      "description": "전화로 레스토랑에 예약을 하는 상황",
+      "visual_layout": "[You + Phone] → [Ring Ring] → [Restaurant Staff]",
+      "cefr_level": "A2",
+      "pattern_categories": [
+        "Phone",
+        "Ordering"
+      ]
+    },
+    {
+      "name_ko": "대학교 수업 듣기",
+      "name_en": "Taking a University Class",
+      "description": "해외 대학교에서 수업을 듣고 교수와 대화하는 상황",
+      "visual_layout": "[Campus] → [Lecture Hall] → [Professor + Students]",
+      "cefr_level": "B1",
+      "pattern_categories": [
+        "Daily",
+        "Business"
+      ]
+    },
+    {
+      "name_ko": "헬스장 등록하기",
+      "name_en": "Signing Up at a Gym",
+      "description": "헬스장에 방문해서 회원 등록을 하는 상황",
+      "visual_layout": "[Entrance] → [Front Desk] → [Tour of Gym] → [Sign Up]",
+      "cefr_level": "A2",
+      "pattern_categories": [
+        "Health"
+      ]
+    },
+    {
+      "name_ko": "IT 회사 면접 보기",
+      "name_en": "IT Job Interview",
+      "description": "IT 회사에서 기술 면접을 보는 상황",
+      "visual_layout": "[Lobby] → [Interview Room] → [Interviewer + You + Whiteboard]",
+      "cefr_level": "B2",
+      "pattern_categories": [
+        "Business",
+        "Tech"
+      ]
+    },
+    {
+      "name_ko": "영화관에서 영화 보기",
+      "name_en": "At the Movie Theater",
+      "description": "영화관에서 티켓을 사고 영화를 보는 상황",
+      "visual_layout": "[Ticket Counter] → [Concession Stand] → [Theater Room]",
+      "cefr_level": "A1",
+      "pattern_categories": [
+        "Culture",
+        "Ordering"
       ]
     }
   ]
