@@ -144,11 +144,8 @@ export const useLessonsStore = defineStore('lessons', () => {
         categories.value = groupPatternsIntoCategories(apiPatterns)
       }
     } catch (err) {
-      console.warn('Failed to fetch patterns from API, using fallback data:', err.message)
-      error.value = err.message || 'Failed to load patterns'
-      if (categories.value.length === 0) {
-        categories.value = [...FALLBACK_DATA]
-      }
+      // API 없이 임베디드 데이터 사용 - 에러 표시 안 함
+      console.warn('Using embedded data:', err.message)
     } finally {
       loading.value = false
     }

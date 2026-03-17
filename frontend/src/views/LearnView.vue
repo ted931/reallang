@@ -128,10 +128,6 @@ const categoryGradients = [
       </div>
     </div>
 
-    <!-- 에러 메시지 (API 실패 시 안내, 폴백 데이터로 계속 동작) -->
-    <div v-if="lessons.error && !lessons.loading" class="mb-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 animate-fade-in">
-      서버와의 연결에 실패했습니다. 오프라인 데이터를 사용합니다.
-    </div>
 
     <!-- 카테고리 카드 그리드 -->
     <div v-if="!lessons.loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-8">
