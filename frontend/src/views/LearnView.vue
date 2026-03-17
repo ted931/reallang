@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useLessonsStore } from '../stores/lessons'
 import { useProgressStore } from '../stores/progress'
@@ -8,6 +8,7 @@ const lessons = useLessonsStore()
 const progress = useProgressStore()
 
 const expandedCategory = ref(null)
+const patternListRef = ref(null)
 const selectedLevel = ref('all')
 
 const levelTabs = [
@@ -38,6 +39,11 @@ onMounted(async () => {
 
 function toggleCategory(id) {
   expandedCategory.value = expandedCategory.value === id ? null : id
+  if (expandedCategory.value) {
+    nextTick(() => {
+      patternListRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
 }
 
 function getCategoryProgress(category) {
@@ -147,7 +153,7 @@ function getPatternPreview(pattern) {
 
     <!-- 선택된 카테고리의 패턴 목록 -->
     <Transition name="page">
-      <div v-if="expandedCategory" class="mb-8 animate-fade-in">
+      <div v-if="expandedCategory" ref="patternListRef" class="mb-8 animate-fade-in">
         <div v-for="category in filteredCategories.filter(c => c.id === expandedCategory)" :key="category.id">
           <!-- 카테고리 헤더 -->
           <div class="flex items-center justify-between mb-4">
