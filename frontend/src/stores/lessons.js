@@ -4,30 +4,67 @@ import api from '../api/index.js'
 import seedData from '../data/seed_patterns.json'
 
 // ── Category icon mapping (Backend has no icon, so we map by name) ──
-const CATEGORY_ICONS = {
-  'Greeting': '👋',
-  'Daily Life': '💬',
-  'Business': '💼',
-  'Travel': '✈️',
-  'Shopping': '🛒',
-  'Restaurant': '🍽️',
-  'Health': '🏥',
-  'Education': '📖',
-  'Technology': '💻',
-  'Entertainment': '🎬',
-  'Phone': '📞',
-  'Social': '🤝',
-  'Tech': '💻',
-  'Culture': '🎭',
-  'Ordering': '🛎️',
-  '일상 회화': '💬',
-  '비즈니스': '💼',
-  '여행': '✈️',
+const CATEGORY_MAP = {
+  'Greeting': { icon: '👋', ko: '인사' },
+  'Daily': { icon: '💬', ko: '일상 회화' },
+  'Daily Life': { icon: '💬', ko: '일상 회화' },
+  'Business': { icon: '💼', ko: '비즈니스' },
+  'Travel': { icon: '✈️', ko: '여행' },
+  'Shopping': { icon: '🛒', ko: '쇼핑' },
+  'Restaurant': { icon: '🍽️', ko: '식당' },
+  'Ordering': { icon: '🍽️', ko: '주문·식당' },
+  'Health': { icon: '🏥', ko: '건강' },
+  'Hospital & Pharmacy': { icon: '🏥', ko: '병원·약국' },
+  'Education': { icon: '📖', ko: '교육' },
+  'Technology': { icon: '💻', ko: '기술' },
+  'Tech': { icon: '💻', ko: '기술' },
+  'Entertainment': { icon: '🎬', ko: '엔터테인먼트' },
+  'Entertainment & Hobbies': { icon: '🎬', ko: '취미·여가' },
+  'Phone': { icon: '📞', ko: '전화' },
+  'Social': { icon: '🤝', ko: '사교' },
+  'Culture': { icon: '🎭', ko: '문화' },
+  'Emergency': { icon: '🚨', ko: '긴급상황' },
+  'Weather': { icon: '🌤️', ko: '날씨' },
+  'Weather & Seasons': { icon: '🌤️', ko: '날씨' },
+  'Directions': { icon: '🧭', ko: '길찾기' },
+  'Directions & Navigation': { icon: '🧭', ko: '길찾기' },
+  'Complaints': { icon: '📢', ko: '불만·민원' },
+  'Complaints & Problems': { icon: '📢', ko: '불만·민원' },
+  'Appointments': { icon: '📅', ko: '약속·일정' },
+  'Appointments & Scheduling': { icon: '📅', ko: '약속·일정' },
+  'Small Talk & Socializing': { icon: '🗣️', ko: '스몰토크' },
+  'Hotel & Accommodation': { icon: '🏨', ko: '숙소' },
+  'Work & Office': { icon: '💼', ko: '직장' },
+  'Banking & Money': { icon: '🏦', ko: '금융' },
+  'Immigration & Customs': { icon: '🛂', ko: '출입국' },
+  'Gym & Fitness': { icon: '💪', ko: '운동' },
+  'Moving & Housing': { icon: '🏠', ko: '주거' },
+  'Job Interview': { icon: '🤵', ko: '면접' },
+  'Dating & Relationships': { icon: '💕', ko: '연애' },
+  'Online Shopping & Delivery': { icon: '📦', ko: '온라인쇼핑' },
+  'Pets & Animals': { icon: '🐾', ko: '반려동물' },
+  'SNS & Technology': { icon: '📱', ko: 'SNS·기기' },
+  'Cleaning & Laundry': { icon: '🧺', ko: '세탁·청소' },
+  'Post Office & Shipping': { icon: '📮', ko: '우체국' },
+  'Car & Driving': { icon: '🚗', ko: '자동차' },
+  'Salon & Beauty': { icon: '💇', ko: '미용실' },
+  'Sports & Games': { icon: '⚽', ko: '스포츠' },
+  'Library & Books': { icon: '📚', ko: '도서관' },
+  'Cooking & Kitchen': { icon: '🍳', ko: '요리' },
+  'Photography & Art': { icon: '📷', ko: '사진·예술' },
+  'Congratulations & Celebrations': { icon: '🎉', ko: '축하' },
+  'Advice & Suggestions': { icon: '💡', ko: '조언' },
+  'Negotiations & Bargaining': { icon: '🤝', ko: '협상' },
+  'Education & Study': { icon: '📖', ko: '학습' },
 }
 const DEFAULT_ICON = '📚'
 
 function getCategoryIcon(name) {
-  return CATEGORY_ICONS[name] || DEFAULT_ICON
+  return (CATEGORY_MAP[name] || {}).icon || DEFAULT_ICON
+}
+
+function getCategoryKoName(name) {
+  return (CATEGORY_MAP[name] || {}).ko || name
 }
 
 // ── CEFR level to Korean difficulty mapping ──
@@ -69,7 +106,8 @@ function groupPatternsIntoCategories(apiPatterns) {
     if (!catMap.has(catName)) {
       catMap.set(catName, {
         id: catIdCounter++,
-        name: catName,
+        name: getCategoryKoName(catName),
+        nameEn: catName,
         icon: getCategoryIcon(catName),
         patterns: [],
       })

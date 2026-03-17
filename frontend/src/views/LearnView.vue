@@ -18,10 +18,8 @@ const levelTabs = [
   { key: 'B2', label: 'B2 중상급', color: 'from-rose-400 to-red-500' },
 ]
 
-// 레벨 필터링된 카테고리
 const filteredCategories = computed(() => {
   if (selectedLevel.value === 'all') return lessons.categories
-
   return lessons.categories
     .map(cat => ({
       ...cat,
@@ -30,7 +28,6 @@ const filteredCategories = computed(() => {
     .filter(cat => cat.patterns.length > 0)
 })
 
-// 필터된 총 패턴 수
 const filteredPatternCount = computed(() => {
   return filteredCategories.value.reduce((sum, cat) => sum + cat.patterns.length, 0)
 })
@@ -48,32 +45,22 @@ function getCategoryProgress(category) {
   return Math.round((learned / category.patterns.length) * 100)
 }
 
-function getCefrColor(cefr) {
+function getCefrBg(cefr) {
   switch (cefr) {
-    case 'A1': return 'from-emerald-400 to-green-500 text-white'
-    case 'A2': return 'from-teal-400 to-cyan-500 text-white'
-    case 'B1': return 'from-amber-400 to-orange-500 text-white'
-    case 'B2': return 'from-rose-400 to-red-500 text-white'
-    default: return 'from-gray-400 to-gray-500 text-white'
+    case 'A1': return 'bg-emerald-100 text-emerald-700'
+    case 'A2': return 'bg-teal-100 text-teal-700'
+    case 'B1': return 'bg-amber-100 text-amber-700'
+    case 'B2': return 'bg-rose-100 text-rose-700'
+    default: return 'bg-gray-100 text-gray-600'
   }
 }
 
-function getDifficultyColor(difficulty) {
-  switch (difficulty) {
-    case '초급': return 'from-emerald-400 to-teal-500 text-white'
-    case '중급': return 'from-amber-400 to-orange-500 text-white'
-    case '고급': return 'from-rose-400 to-red-500 text-white'
-    default: return 'from-gray-400 to-gray-500 text-white'
+// 패턴 제목에서 첫 번째 예문 영어를 보여주기
+function getPatternPreview(pattern) {
+  if (pattern.examples && pattern.examples.length > 0) {
+    return pattern.examples[0].english
   }
-}
-
-function getDifficultyLabel(difficulty) {
-  switch (difficulty) {
-    case '초급': return 'A1-A2'
-    case '중급': return 'B1-B2'
-    case '고급': return 'C1-C2'
-    default: return ''
-  }
+  return pattern.title
 }
 
 const categoryGradients = [
@@ -82,6 +69,9 @@ const categoryGradients = [
   'from-emerald-500 to-teal-500',
   'from-rose-500 to-pink-500',
   'from-cyan-500 to-blue-500',
+  'from-purple-500 to-fuchsia-500',
+  'from-lime-500 to-green-500',
+  'from-orange-500 to-red-500',
 ]
 </script>
 
@@ -90,7 +80,7 @@ const categoryGradients = [
     <!-- Header -->
     <div class="mb-6 sm:mb-8 animate-fade-in">
       <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">학습하기</h1>
-      <p class="text-sm sm:text-base text-gray-500 mt-1.5 sm:mt-2">카테고리별로 영어 패턴과 표현을 학습하세요.</p>
+      <p class="text-sm sm:text-base text-gray-500 mt-1">레벨을 선택하고 원하는 카테고리를 학습하세요</p>
     </div>
 
     <!-- 레벨 필터 탭 -->
@@ -100,129 +90,136 @@ const categoryGradients = [
           v-for="tab in levelTabs"
           :key="tab.key"
           @click="selectedLevel = tab.key"
-          class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200"
+          class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200"
           :class="selectedLevel === tab.key
-            ? `bg-gradient-to-r ${tab.color} text-white shadow-md scale-105`
-            : 'bg-white/60 text-gray-500 hover:bg-white/80 border border-gray-200'"
+            ? `bg-gradient-to-r ${tab.color} text-white shadow-md scale-[1.02]`
+            : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'"
         >
           {{ tab.label }}
         </button>
       </div>
-      <p class="text-xs text-gray-400 mt-2">
-        {{ filteredPatternCount }}개 패턴
-        <span v-if="selectedLevel !== 'all'"> ({{ selectedLevel }})</span>
+      <p class="text-xs text-gray-400 mt-2.5">
+        총 <strong class="text-gray-600">{{ filteredPatternCount }}</strong>개 패턴
+        <span v-if="selectedLevel !== 'all'" class="ml-1">· {{ selectedLevel }} 레벨</span>
       </p>
     </div>
 
-    <!-- 로딩 스켈레톤 -->
-    <div v-if="lessons.loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-8">
-      <div v-for="i in 3" :key="'skeleton-' + i" class="glass rounded-2xl p-6 animate-pulse">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 bg-gray-200 rounded-2xl"></div>
-          <div class="flex-1">
-            <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
-            <div class="h-3 bg-gray-200 rounded w-16"></div>
-          </div>
-        </div>
-        <div class="h-2 bg-gray-200 rounded-full"></div>
+    <!-- 로딩 -->
+    <div v-if="lessons.loading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      <div v-for="i in 8" :key="'skeleton-' + i" class="glass rounded-2xl p-5 animate-pulse">
+        <div class="w-10 h-10 bg-gray-200 rounded-xl mb-3"></div>
+        <div class="h-4 bg-gray-200 rounded w-20 mb-1.5"></div>
+        <div class="h-3 bg-gray-200 rounded w-12"></div>
       </div>
     </div>
 
-
     <!-- 카테고리 카드 그리드 -->
-    <div v-if="!lessons.loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-8">
+    <div v-if="!lessons.loading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
       <div
         v-for="(category, catIdx) in filteredCategories"
         :key="category.id"
         class="animate-slide-up"
-        :class="'stagger-' + (catIdx + 1)"
       >
         <button
           @click="toggleCategory(category.id)"
           class="w-full text-left group"
         >
-          <div class="relative overflow-hidden rounded-2xl p-6 card-hover-sm cursor-pointer" :class="expandedCategory === category.id ? 'glass-strong shadow-lg ring-2 ring-indigo-200' : 'glass'">
-            <!-- Gradient accent bar -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r" :class="categoryGradients[catIdx % categoryGradients.length]"></div>
+          <div
+            class="relative overflow-hidden rounded-2xl p-4 sm:p-5 transition-all duration-200 cursor-pointer"
+            :class="expandedCategory === category.id
+              ? 'bg-white shadow-lg ring-2 ring-indigo-300 scale-[1.02]'
+              : 'bg-white/70 hover:bg-white hover:shadow-md border border-gray-100'"
+          >
+            <!-- Icon -->
+            <div class="text-2xl sm:text-3xl mb-2.5">{{ category.icon }}</div>
 
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center text-2xl shadow-md" :class="categoryGradients[catIdx % categoryGradients.length]">
-                  {{ category.icon }}
-                </div>
-                <div>
-                  <h2 class="text-lg font-bold text-gray-900">{{ category.name }}</h2>
-                  <span class="text-xs text-gray-400">{{ category.patterns.length }}개 패턴</span>
-                </div>
-              </div>
-              <svg
-                class="w-5 h-5 text-gray-400 transition-transform duration-300"
-                :class="expandedCategory === category.id ? 'rotate-180' : ''"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
+            <!-- Name -->
+            <h2 class="text-sm sm:text-base font-bold text-gray-900 leading-tight">{{ category.name }}</h2>
+
+            <!-- Count + Progress -->
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-[11px] text-gray-400">{{ category.patterns.length }}개</span>
+              <span v-if="getCategoryProgress(category) > 0" class="text-[11px] font-medium text-indigo-500">
+                {{ getCategoryProgress(category) }}%
+              </span>
             </div>
 
-            <!-- Progress bar -->
-            <div class="flex items-center gap-3">
-              <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                <div
-                  class="h-full rounded-full bg-gradient-to-r transition-all duration-500"
-                  :class="categoryGradients[catIdx % categoryGradients.length]"
-                  :style="{ width: getCategoryProgress(category) + '%' }"
-                ></div>
-              </div>
-              <span class="text-xs font-medium text-gray-500">{{ getCategoryProgress(category) }}%</span>
+            <!-- Mini progress bar -->
+            <div class="mt-1.5 bg-gray-100 rounded-full h-1 overflow-hidden">
+              <div
+                class="h-full rounded-full bg-gradient-to-r transition-all duration-500"
+                :class="categoryGradients[catIdx % categoryGradients.length]"
+                :style="{ width: getCategoryProgress(category) + '%' }"
+              ></div>
             </div>
           </div>
         </button>
+      </div>
+    </div>
 
-        <!-- Expanded pattern list -->
-        <Transition name="page">
-          <div v-if="expandedCategory === category.id" class="mt-3 space-y-2">
+    <!-- 선택된 카테고리의 패턴 목록 -->
+    <Transition name="page">
+      <div v-if="expandedCategory" class="mb-8 animate-fade-in">
+        <div v-for="category in filteredCategories.filter(c => c.id === expandedCategory)" :key="category.id">
+          <!-- 카테고리 헤더 -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">{{ category.icon }}</span>
+              <div>
+                <h2 class="text-lg font-bold text-gray-900">{{ category.name }}</h2>
+                <p class="text-xs text-gray-400">{{ category.patterns.length }}개 패턴</p>
+              </div>
+            </div>
+            <button @click="expandedCategory = null" class="text-xs text-gray-400 hover:text-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+              접기
+            </button>
+          </div>
+
+          <!-- 패턴 카드 그리드 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             <RouterLink
               v-for="(pattern, idx) in category.patterns"
-              :key="pattern.id"
-              :to="`/learn/${pattern.id}`"
-              class="block glass rounded-xl p-3 sm:p-4 card-hover-sm group animate-slide-up min-h-[48px]"
-              :class="'stagger-' + (idx + 1)"
+              :key="pattern.id || idx"
+              :to="`/learn/${pattern.id || pattern.difficultyOrder}`"
+              class="group block"
             >
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                  <div class="flex items-center shrink-0">
-                    <span v-if="progress.isLearned(pattern.id)" class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                      <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+              <div class="bg-white rounded-xl p-3.5 sm:p-4 border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all duration-200">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex-1 min-w-0">
+                    <!-- 패턴 제목 (한국어 설명) -->
+                    <h3 class="text-sm font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
+                      {{ pattern.description }}
+                    </h3>
+                    <!-- 영어 미리보기 -->
+                    <p class="text-xs text-gray-500 mt-1 truncate italic">
+                      "{{ getPatternPreview(pattern) }}"
+                    </p>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0 mt-0.5">
+                    <!-- CEFR 뱃지만 -->
+                    <span :class="['text-[10px] px-2 py-0.5 rounded-md font-bold', getCefrBg(pattern.cefrLevel)]">
+                      {{ pattern.cefrLevel }}
+                    </span>
+                    <!-- 학습 완료 체크 -->
+                    <span v-if="progress.isLearned(pattern.id)" class="text-emerald-500">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <span v-else class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                      <span class="w-2 h-2 bg-gray-300 rounded-full"></span>
-                    </span>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <h3 class="font-medium text-sm sm:text-base text-gray-900 group-hover:text-indigo-600 transition-colors truncate">{{ pattern.title }}</h3>
-                    <p class="text-[10px] sm:text-xs text-gray-400 mt-0.5 truncate">{{ pattern.description }}</p>
                   </div>
                 </div>
-                <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                  <!-- CEFR level badge -->
-                  <span v-if="pattern.cefrLevel" :class="['text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-bold bg-gradient-to-r', getCefrColor(pattern.cefrLevel)]">
-                    {{ pattern.cefrLevel }}
-                  </span>
-                  <span :class="['text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-medium bg-gradient-to-r', getDifficultyColor(pattern.difficulty)]">
-                    {{ pattern.difficulty }}
-                  </span>
-                  <svg class="w-4 h-4 text-gray-300 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <!-- 예문 수 + 화살표 -->
+                <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-50">
+                  <span class="text-[10px] text-gray-400">예문 {{ pattern.examples.length }}개</span>
+                  <svg class="w-3.5 h-3.5 text-gray-300 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
               </div>
-              <div class="mt-1.5 sm:mt-2 text-[10px] sm:text-xs text-gray-400 pl-8 sm:pl-9">예문 {{ pattern.examples.length }}개</div>
             </RouterLink>
           </div>
-        </Transition>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
