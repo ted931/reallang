@@ -190,18 +190,13 @@ function useSuggestion(suggestion) {
         :key="scenario.id"
         @click="selectScenario(scenario)"
         :class="[
-          'group relative overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-4 text-left transition-all duration-300 min-h-[48px]',
+          'group relative overflow-hidden rounded-xl p-3 sm:p-4 text-left transition-colors border min-h-[48px]',
           selectedScenario?.id === scenario.id
-            ? 'glass-strong ring-2 ring-indigo-200 shadow-md'
-            : 'glass card-hover-sm',
+            ? 'bg-white border-indigo-500 shadow-sm'
+            : 'bg-white border-gray-200 hover:border-indigo-300',
         ]"
       >
-        <div
-          :class="[
-            'w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br flex items-center justify-center text-lg sm:text-xl mb-1.5 sm:mb-2.5 shadow-md',
-            scenario.gradient,
-          ]"
-        >
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-50 flex items-center justify-center text-lg sm:text-xl mb-1.5 sm:mb-2.5">
           {{ scenario.icon }}
         </div>
         <h3 class="font-semibold text-xs sm:text-sm text-gray-900">{{ scenario.title }}</h3>
@@ -213,7 +208,7 @@ function useSuggestion(suggestion) {
 
     <!-- 채팅 영역 -->
     <div
-      class="glass rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col animate-slide-up stagger-2"
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col animate-slide-up"
       style="height: calc(100vh - 340px); min-height: 350px"
       :style="{ height: 'calc(100dvh - 340px)' }"
     >
@@ -228,7 +223,7 @@ function useSuggestion(suggestion) {
           <!-- AI avatar -->
           <div
             v-if="message.role === 'assistant'"
-            class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center shrink-0 mr-1.5 sm:mr-2 mt-1 shadow-sm"
+            class="w-7 h-7 sm:w-8 sm:h-8 bg-indigo-600 rounded-full flex items-center justify-center shrink-0 mr-1.5 sm:mr-2 mt-1"
           >
             <svg
               class="w-4 h-4 text-white"
@@ -251,8 +246,8 @@ function useSuggestion(suggestion) {
               :class="[
                 'rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3',
                 message.role === 'user'
-                  ? 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-br-lg shadow-md shadow-indigo-200/50'
-                  : 'bg-white/80 text-gray-900 rounded-bl-lg shadow-sm border border-gray-100/50',
+                  ? 'bg-indigo-600 text-white rounded-br-lg'
+                  : 'bg-gray-50 text-gray-900 rounded-bl-lg border border-gray-200',
               ]"
             >
               <p class="text-xs sm:text-sm md:text-base whitespace-pre-line leading-relaxed break-words">
@@ -272,7 +267,7 @@ function useSuggestion(suggestion) {
               <button
                 v-if="message.role === 'assistant' && ttsSupported && extractEnglish(message.content)"
                 @click="speak(extractEnglish(message.content))"
-                class="w-7 h-7 rounded-full bg-white/60 backdrop-blur border border-gray-200/60 flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 transition-all"
+                class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                 :class="{ 'animate-pulse': isSpeaking }"
                 title="영어 발음 듣기"
               >
@@ -290,7 +285,7 @@ function useSuggestion(suggestion) {
               <div
                 v-for="(correction, cIdx) in message.corrections"
                 :key="cIdx"
-                class="bg-white/90 rounded-xl border border-gray-200/60 p-2.5 sm:p-3 shadow-sm"
+                class="bg-white rounded-xl border border-gray-200 p-2.5 sm:p-3"
               >
                 <div class="flex items-center gap-1.5 mb-1.5 sm:mb-2">
                   <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -341,7 +336,7 @@ function useSuggestion(suggestion) {
         <!-- 로딩 표시 (typing indicator) -->
         <div v-if="isLoading" class="flex justify-start animate-fade-in">
           <div
-            class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center shrink-0 mr-2 mt-1 shadow-sm"
+            class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center shrink-0 mr-2 mt-1"
           >
             <svg
               class="w-4 h-4 text-white"
@@ -357,7 +352,7 @@ function useSuggestion(suggestion) {
               />
             </svg>
           </div>
-          <div class="bg-white/80 rounded-2xl rounded-bl-lg px-5 py-4 shadow-sm border border-gray-100/50">
+          <div class="bg-gray-50 rounded-xl rounded-bl-lg px-5 py-4 border border-gray-200">
             <div class="flex gap-1.5 items-center">
               <span
                 class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
@@ -377,21 +372,21 @@ function useSuggestion(suggestion) {
       </div>
 
       <!-- 입력 영역 -->
-      <div class="border-t border-gray-100/50 p-2.5 sm:p-4 bg-white/50">
+      <div class="border-t border-gray-200 p-2.5 sm:p-4 bg-white">
         <div class="flex gap-2 items-end">
           <div class="flex-1 relative">
             <textarea
               v-model="inputMessage"
               @keydown="handleKeydown"
               placeholder="영어로 메시지를 입력하세요..."
-              class="w-full resize-none glass rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent placeholder:text-gray-400 min-h-[44px]"
+              class="w-full resize-none bg-white border border-gray-200 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 placeholder:text-gray-400 min-h-[44px]"
               rows="1"
             ></textarea>
           </div>
           <button
             @click="sendMessage"
             :disabled="!inputMessage.trim() || isLoading"
-            class="w-11 h-11 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-xl sm:rounded-2xl flex items-center justify-center hover:from-indigo-700 hover:to-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-indigo-200/50 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 shrink-0"
+            class="w-11 h-11 sm:w-12 sm:h-12 bg-indigo-600 text-white rounded-lg flex items-center justify-center hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
           >
             <svg
               class="w-5 h-5"

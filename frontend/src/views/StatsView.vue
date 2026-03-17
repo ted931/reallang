@@ -18,12 +18,12 @@ const maxWeeklyCount = computed(() => {
   return Math.max(...progress.weeklyData.map(d => d.count), 1)
 })
 
-const categoryGradients = [
-  'from-indigo-500 to-violet-500',
-  'from-amber-500 to-orange-500',
-  'from-emerald-500 to-teal-500',
-  'from-rose-500 to-pink-500',
-  'from-cyan-500 to-blue-500',
+const categoryColors = [
+  'bg-indigo-500',
+  'bg-amber-500',
+  'bg-emerald-500',
+  'bg-rose-500',
+  'bg-cyan-500',
 ]
 </script>
 
@@ -36,41 +36,41 @@ const categoryGradients = [
 
     <!-- 로딩 스켈레톤 -->
     <div v-if="progress.loading || lessons.loading" class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
-      <div v-for="i in 4" :key="'skeleton-' + i" class="glass rounded-2xl p-3 sm:p-5 animate-pulse">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-xl sm:rounded-2xl mb-2 sm:mb-3"></div>
-        <div class="h-5 sm:h-6 bg-gray-200 rounded w-14 sm:w-16 mb-1"></div>
-        <div class="h-3 sm:h-4 bg-gray-200 rounded w-16 sm:w-20"></div>
+      <div v-for="i in 4" :key="'skeleton-' + i" class="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 animate-pulse">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-lg mb-2 sm:mb-3"></div>
+        <div class="h-5 sm:h-6 bg-gray-100 rounded w-14 sm:w-16 mb-1"></div>
+        <div class="h-3 sm:h-4 bg-gray-100 rounded w-16 sm:w-20"></div>
       </div>
     </div>
 
     <!-- 주요 지표 -->
     <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
-      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-1">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-amber-200/50">
+      <div class="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 animate-slide-up">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
           <span class="text-lg sm:text-xl">🔥</span>
         </div>
         <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.streak }}일</div>
         <div class="text-xs sm:text-sm text-gray-500">연속 학습</div>
       </div>
 
-      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-2">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-emerald-200/50">
+      <div class="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 animate-slide-up">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
           <span class="text-lg sm:text-xl">📚</span>
         </div>
         <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.learnedPatterns.size }}</div>
         <div class="text-xs sm:text-sm text-gray-500">학습한 패턴</div>
       </div>
 
-      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-3">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-violet-200/50">
+      <div class="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 animate-slide-up">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
           <span class="text-lg sm:text-xl">🔄</span>
         </div>
         <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.totalReviews }}</div>
         <div class="text-xs sm:text-sm text-gray-500">총 복습 횟수</div>
       </div>
 
-      <div class="glass rounded-2xl p-3 sm:p-5 card-hover-sm animate-slide-up stagger-4">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-3 shadow-md shadow-indigo-200/50">
+      <div class="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 animate-slide-up">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
           <span class="text-lg sm:text-xl">🎯</span>
         </div>
         <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ progress.accuracy }}%</div>
@@ -80,7 +80,7 @@ const categoryGradients = [
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
       <!-- 주간 학습량 차트 -->
-      <div class="glass rounded-2xl p-4 sm:p-6 animate-slide-up stagger-5">
+      <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 animate-slide-up">
         <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">주간 학습량</h2>
         <div class="flex items-end justify-between gap-1.5 sm:gap-2 h-32 sm:h-40">
           <div
@@ -91,7 +91,7 @@ const categoryGradients = [
             <div class="text-[10px] sm:text-xs text-gray-500 mb-1 font-medium">{{ day.count }}</div>
             <div
               class="w-full rounded-lg sm:rounded-xl transition-all duration-500"
-              :class="day.count > 0 ? 'bg-gradient-to-t from-indigo-500 to-violet-400 shadow-sm' : 'bg-gray-100'"
+              :class="day.count > 0 ? 'bg-indigo-500' : 'bg-gray-100'"
               :style="{
                 height: day.count > 0 ? Math.max((day.count / maxWeeklyCount) * 100, 8) + 'px' : '8px',
                 transitionDelay: (i * 80) + 'ms'
@@ -103,7 +103,7 @@ const categoryGradients = [
       </div>
 
       <!-- 오늘의 목표 -->
-      <div class="glass rounded-2xl p-4 sm:p-6 animate-slide-up stagger-6">
+      <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 animate-slide-up">
         <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">오늘의 목표</h2>
         <div class="space-y-6">
           <!-- 일일 학습 목표 -->
@@ -114,7 +114,7 @@ const categoryGradients = [
             </div>
             <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
               <div
-                class="bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full h-3 transition-all duration-700"
+                class="bg-indigo-500 rounded-full h-3 transition-all duration-700"
                 :style="{ width: progress.dailyProgress + '%' }"
               ></div>
             </div>
@@ -128,7 +128,7 @@ const categoryGradients = [
             </div>
             <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
               <div
-                class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full h-3 transition-all duration-700"
+                class="bg-emerald-500 rounded-full h-3 transition-all duration-700"
                 :style="{ width: lessons.totalPatterns > 0 ? (progress.learnedPatterns.size / lessons.totalPatterns) * 100 + '%' : '0%' }"
               ></div>
             </div>
@@ -143,7 +143,7 @@ const categoryGradients = [
             <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
               <div
                 class="rounded-full h-3 transition-all duration-700"
-                :class="progress.accuracy >= 80 ? 'bg-gradient-to-r from-emerald-400 to-green-500' : progress.accuracy >= 50 ? 'bg-gradient-to-r from-amber-400 to-yellow-500' : 'bg-gradient-to-r from-rose-400 to-red-500'"
+                :class="progress.accuracy >= 80 ? 'bg-emerald-500' : progress.accuracy >= 50 ? 'bg-amber-500' : 'bg-rose-500'"
                 :style="{ width: progress.accuracy + '%' }"
               ></div>
             </div>
@@ -152,18 +152,18 @@ const categoryGradients = [
       </div>
 
       <!-- 카테고리별 학습 현황 -->
-      <div class="glass rounded-2xl p-4 sm:p-6 lg:col-span-2 animate-slide-up">
+      <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 lg:col-span-2 animate-slide-up">
         <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">카테고리별 현황</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           <div
             v-for="(category, catIdx) in lessons.categories"
             :key="category.id"
-            class="relative overflow-hidden rounded-xl p-4 glass card-hover-sm"
+            class="relative overflow-hidden rounded-xl p-4 bg-white border border-gray-200"
           >
             <!-- Accent bar -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r" :class="categoryGradients[catIdx % categoryGradients.length]"></div>
+            <div class="absolute top-0 left-0 right-0 h-1" :class="categoryColors[catIdx % categoryColors.length]"></div>
             <div class="flex items-center gap-2 mb-3 mt-1">
-              <div class="w-9 h-9 rounded-xl bg-gradient-to-br flex items-center justify-center text-lg shadow-sm" :class="categoryGradients[catIdx % categoryGradients.length]">
+              <div class="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center text-lg">
                 {{ category.icon }}
               </div>
               <span class="font-medium text-gray-900">{{ category.name }}</span>
@@ -178,7 +178,7 @@ const categoryGradients = [
                 :class="[
                   'h-2 flex-1 rounded-full transition-colors duration-500',
                   progress.isLearned(pattern.id)
-                    ? 'bg-gradient-to-r ' + categoryGradients[catIdx % categoryGradients.length]
+                    ? categoryColors[catIdx % categoryColors.length]
                     : 'bg-gray-200'
                 ]"
               ></div>

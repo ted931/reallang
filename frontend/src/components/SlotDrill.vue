@@ -80,9 +80,6 @@ function generateBlank(sentence) {
 
   const words = sentence.replace(/[.!?]/g, '').split(' ')
 
-  // 패턴 템플릿에서 변수 부분을 찾아서 해당 단어를 빈칸으로 만들기
-  // 기본 전략: 문장의 핵심 동사/명사를 찾아서 빈칸으로 만들기
-  // 일반적인 기능어(관사, 전치사 등)를 제외하고 의미 있는 단어 선택
   const functionWords = new Set([
     'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'my', 'your', 'his', 'her', 'our', 'their',
     'a', 'an', 'the', 'is', 'am', 'are', 'was', 'were', 'be', 'been', 'being',
@@ -91,25 +88,20 @@ function generateBlank(sentence) {
     'from', 'that', 'this', 'not', 'but', 'and', 'or', 'if', 'so', 'no', 'yes',
   ])
 
-  // 의미 있는 단어들 (2글자 이상, 기능어 아닌 것) 중 하나를 선택
   const candidates = words.filter(w => w.length > 2 && !functionWords.has(w.toLowerCase()))
 
   let targetWord
   if (candidates.length > 0) {
-    // 문장 뒤쪽에 있는 단어를 우선 (보통 핵심 내용어가 뒤에 위치)
     targetWord = candidates[Math.floor(candidates.length / 2)]
   } else {
-    // 후보가 없으면 마지막 단어 사용
     targetWord = words[words.length - 1]
   }
 
-  // 원래 문장에서 해당 단어 위치를 찾아 빈칸으로 치환
   const originalWords = sentence.split(' ')
   const targetIndex = originalWords.findIndex(w => w.replace(/[.!?,]/g, '') === targetWord)
 
   if (targetIndex >= 0) {
     const blankedWords = [...originalWords]
-    // 구두점 보존
     const punctuation = originalWords[targetIndex].match(/[.!?,]+$/)?.[0] || ''
     blankedWords[targetIndex] = '___' + punctuation
     return {
@@ -118,7 +110,6 @@ function generateBlank(sentence) {
     }
   }
 
-  // fallback: 마지막 단어를 빈칸으로
   const lastWord = originalWords[originalWords.length - 1]
   const punct = lastWord.match(/[.!?,]+$/)?.[0] || ''
   const cleanLast = lastWord.replace(/[.!?,]+$/, '')
@@ -181,7 +172,6 @@ function goNext() {
       time: elapsedTime.value,
     })
   } else {
-    // 다음 문제로 넘어간 뒤 input에 포커스
     setTimeout(() => {
       inputRef.value?.focus()
     }, 100)
@@ -237,11 +227,11 @@ function restart() {
 // 결과 등급
 const resultGrade = computed(() => {
   const pct = accuracyPercent.value
-  if (pct === 100) return { label: '완벽해요!', emoji: '🏆', color: 'from-amber-400 to-yellow-500' }
-  if (pct >= 80) return { label: '훌륭해요!', emoji: '🌟', color: 'from-emerald-400 to-teal-500' }
-  if (pct >= 60) return { label: '잘했어요!', emoji: '👍', color: 'from-blue-400 to-indigo-500' }
-  if (pct >= 40) return { label: '조금 더 연습해요!', emoji: '💪', color: 'from-orange-400 to-amber-500' }
-  return { label: '다시 도전해요!', emoji: '🔄', color: 'from-rose-400 to-red-500' }
+  if (pct === 100) return { label: '완벽해요!', emoji: '🏆' }
+  if (pct >= 80) return { label: '훌륭해요!', emoji: '🌟' }
+  if (pct >= 60) return { label: '잘했어요!', emoji: '👍' }
+  if (pct >= 40) return { label: '조금 더 연습해요!', emoji: '💪' }
+  return { label: '다시 도전해요!', emoji: '🔄' }
 })
 
 onMounted(() => {
@@ -255,13 +245,10 @@ onMounted(() => {
 <template>
   <div class="space-y-6">
     <!-- 결과 화면 -->
-    <div v-if="sessionComplete" class="animate-scale-in">
-      <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-center">
+    <div v-if="sessionComplete" class="animate-fade-in">
+      <div class="bg-white border border-gray-200 rounded-xl p-5 sm:p-8 md:p-10 text-center">
         <!-- 등급 아이콘 -->
-        <div
-          class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg animate-bounce-in bg-gradient-to-br"
-          :class="resultGrade.color"
-        >
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-5">
           <span class="text-3xl sm:text-4xl">{{ resultGrade.emoji }}</span>
         </div>
         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{{ resultGrade.label }}</h2>
@@ -274,18 +261,12 @@ onMounted(() => {
           <svg class="w-24 h-24 sm:w-28 sm:h-28 -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="6" class="text-gray-100" />
             <circle
-              cx="50" cy="50" r="42" fill="none" stroke="url(#slotDrillGradient)" stroke-width="6"
+              cx="50" cy="50" r="42" fill="none" :stroke="accuracyPercent >= 60 ? '#4f46e5' : '#f59e0b'" stroke-width="6"
               stroke-linecap="round"
               :stroke-dasharray="264"
               :stroke-dashoffset="264 * (1 - accuracyPercent / 100)"
               class="transition-all duration-1000"
             />
-            <defs>
-              <linearGradient id="slotDrillGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" :stop-color="accuracyPercent >= 60 ? '#10b981' : '#f59e0b'" />
-                <stop offset="100%" :stop-color="accuracyPercent >= 60 ? '#06d6a0' : '#f97316'" />
-              </linearGradient>
-            </defs>
           </svg>
           <div class="absolute inset-0 flex items-center justify-center">
             <span class="text-xl sm:text-2xl font-bold text-gray-900">{{ accuracyPercent }}%</span>
@@ -305,7 +286,7 @@ onMounted(() => {
           <div
             v-for="(result, i) in results"
             :key="i"
-            class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-lg transition-all"
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-lg transition-all"
             :class="result.correct ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'"
           >
             <svg v-if="result.correct" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -321,7 +302,7 @@ onMounted(() => {
         <div class="flex justify-center">
           <button
             @click="restart"
-            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px]"
+            class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors min-h-[48px]"
           >
             다시 도전하기
           </button>
@@ -339,7 +320,7 @@ onMounted(() => {
         </div>
         <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
           <div
-            class="bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full h-2 transition-all duration-500"
+            class="bg-indigo-600 rounded-full h-2 transition-all duration-500"
             :style="{ width: progressPercent + '%' }"
           ></div>
         </div>
@@ -355,25 +336,19 @@ onMounted(() => {
             i - 1 < currentIndex
               ? (results[i - 1]?.correct ? 'bg-emerald-400' : 'bg-red-400')
               : i - 1 === currentIndex
-                ? 'bg-gradient-to-r from-indigo-500 to-violet-500 w-5 sm:w-6'
+                ? 'bg-indigo-600 w-5 sm:w-6'
                 : 'bg-gray-200'
           ]"
         ></div>
       </div>
 
       <!-- 퀴즈 카드 -->
-      <div class="glass rounded-2xl sm:rounded-3xl overflow-hidden animate-scale-in" :key="currentIndex">
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden animate-fade-in" :key="currentIndex">
         <!-- 한글 힌트 상단 -->
-        <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-4 sm:p-5 md:p-6">
-          <div class="flex items-center gap-2 mb-2 sm:mb-3">
-            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-400"></div>
-            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400"></div>
-            <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400"></div>
-            <span class="text-[10px] sm:text-xs text-slate-400 ml-1 sm:ml-2 font-mono">quiz_{{ currentIndex + 1 }}.fill</span>
-          </div>
-          <p class="text-xs sm:text-sm text-slate-400 mb-1.5 sm:mb-2">다음 뜻에 맞는 영어 단어를 채우세요</p>
-          <p class="text-base sm:text-lg md:text-xl font-medium text-white leading-relaxed break-words">
-            <span class="text-indigo-400">"</span>{{ currentItem.korean }}<span class="text-indigo-400">"</span>
+        <div class="bg-gray-50 border-b border-gray-200 p-4 sm:p-5 md:p-6">
+          <p class="text-xs sm:text-sm text-gray-500 mb-1.5 sm:mb-2">다음 뜻에 맞는 영어 단어를 채우세요</p>
+          <p class="text-lg sm:text-xl font-medium text-gray-900 leading-relaxed break-words">
+            {{ currentItem.korean }}
           </p>
         </div>
 
@@ -393,7 +368,7 @@ onMounted(() => {
                     'border-red-400 text-red-500': answerState === 'wrong',
                   }"
                 >
-                  <span v-if="answerState === 'correct'" class="font-bold animate-bounce-in">
+                  <span v-if="answerState === 'correct'" class="font-bold">
                     {{ currentItem.answer }}
                   </span>
                   <span v-else-if="answerState === 'wrong'" class="font-bold line-through opacity-60">
@@ -405,7 +380,7 @@ onMounted(() => {
           </div>
 
           <!-- 노트 -->
-          <p v-if="currentItem.note" class="text-sm text-indigo-600 bg-indigo-50 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full mb-4">
+          <p v-if="currentItem.note" class="text-sm text-indigo-600 bg-indigo-50 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg mb-4">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -413,9 +388,9 @@ onMounted(() => {
           </p>
 
           <!-- 정답일 때: 체크 애니메이션 -->
-          <div v-if="answerState === 'correct'" class="flex items-center gap-3 p-4 bg-emerald-50 rounded-2xl border border-emerald-200 animate-slide-up">
-            <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center animate-bounce-in shadow-md shadow-emerald-200">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+          <div v-if="answerState === 'correct'" class="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-200 animate-slide-up">
+            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
@@ -427,8 +402,8 @@ onMounted(() => {
             <button
               v-if="ttsSupported"
               @click="speak(currentItem.original)"
-              class="w-9 h-9 rounded-full bg-white/60 backdrop-blur border border-emerald-200 flex items-center justify-center hover:bg-emerald-100 transition-all shrink-0"
-              :class="{ 'animate-pulse': isSpeaking }"
+              class="w-9 h-9 rounded-lg bg-white border border-emerald-200 flex items-center justify-center hover:bg-emerald-50 transition-colors shrink-0"
+              :class="{ 'opacity-60': isSpeaking }"
               title="발음 듣기"
             >
               <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -439,9 +414,9 @@ onMounted(() => {
 
           <!-- 오답일 때 -->
           <div v-else-if="answerState === 'wrong'" class="space-y-3 animate-slide-up">
-            <div class="flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-200">
-              <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-red-200">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+            <div class="flex items-center gap-3 p-4 bg-red-50 rounded-xl border border-red-200">
+              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
@@ -455,8 +430,8 @@ onMounted(() => {
               <button
                 v-if="ttsSupported"
                 @click="speak(currentItem.original)"
-                class="w-9 h-9 rounded-full bg-white/60 backdrop-blur border border-red-200 flex items-center justify-center hover:bg-red-100 transition-all shrink-0"
-                :class="{ 'animate-pulse': isSpeaking }"
+                class="w-9 h-9 rounded-lg bg-white border border-red-200 flex items-center justify-center hover:bg-red-50 transition-colors shrink-0"
+                :class="{ 'opacity-60': isSpeaking }"
                 title="발음 듣기"
               >
                 <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -467,13 +442,13 @@ onMounted(() => {
             <div class="flex gap-2">
               <button
                 @click="retry"
-                class="flex-1 px-3 sm:px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl sm:rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] text-sm sm:text-base"
+                class="flex-1 px-3 sm:px-4 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors min-h-[48px] text-sm sm:text-base"
               >
                 다시 시도
               </button>
               <button
                 @click="goNext"
-                class="px-3 sm:px-4 py-3 glass rounded-xl sm:rounded-2xl font-medium text-gray-600 hover:bg-white/90 transition-all min-h-[48px] text-sm sm:text-base"
+                class="px-3 sm:px-4 py-3 bg-white border border-gray-200 rounded-lg font-medium text-gray-600 hover:bg-gray-50 transition-colors min-h-[48px] text-sm sm:text-base"
               >
                 건너뛰기
               </button>
@@ -483,7 +458,7 @@ onMounted(() => {
           <!-- 입력 영역 (idle 상태) -->
           <div v-else class="space-y-3">
             <!-- 힌트 표시 -->
-            <div v-if="hintUsed" class="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 animate-fade-in">
+            <div v-if="hintUsed" class="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 animate-fade-in">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
@@ -503,7 +478,7 @@ onMounted(() => {
                 placeholder="빈칸에 들어갈 단어를 입력하세요"
                 autocomplete="off"
                 autocapitalize="off"
-                class="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white/60 border-2 border-gray-200 rounded-xl sm:rounded-2xl text-gray-900 font-medium placeholder:text-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all text-center text-base sm:text-lg tracking-wide min-h-[48px]"
+                class="w-full px-3 sm:px-4 py-3 sm:py-3.5 bg-white border-2 border-gray-200 rounded-lg text-gray-900 font-medium placeholder:text-gray-300 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 transition-all text-center text-base sm:text-lg tracking-wide min-h-[48px]"
               />
             </div>
 
@@ -512,14 +487,14 @@ onMounted(() => {
               <button
                 @click="checkAnswer"
                 :disabled="!userAnswer.trim()"
-                class="flex-1 px-3 sm:px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl sm:rounded-2xl font-medium hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg min-h-[48px] text-sm sm:text-base"
+                class="flex-1 px-3 sm:px-4 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed min-h-[48px] text-sm sm:text-base"
               >
                 확인하기
               </button>
               <button
                 v-if="!hintUsed"
                 @click="showHint"
-                class="px-3 sm:px-4 py-3 glass rounded-xl sm:rounded-2xl font-medium text-amber-600 hover:bg-amber-50/60 transition-all border border-amber-200/50 flex items-center gap-1 sm:gap-1.5 min-h-[48px] text-sm sm:text-base"
+                class="px-3 sm:px-4 py-3 bg-white border border-amber-200 rounded-lg font-medium text-amber-600 hover:bg-amber-50 transition-colors flex items-center gap-1 sm:gap-1.5 min-h-[48px] text-sm sm:text-base"
               >
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -533,8 +508,8 @@ onMounted(() => {
     </div>
 
     <!-- 예문이 없을 때 -->
-    <div v-else class="glass rounded-3xl p-8 text-center animate-fade-in">
-      <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+    <div v-else class="bg-white border border-gray-200 rounded-xl p-8 text-center animate-fade-in">
+      <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4">
         <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
         </svg>

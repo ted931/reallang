@@ -11,11 +11,11 @@ const expandedCategory = ref(null)
 const selectedLevel = ref('all')
 
 const levelTabs = [
-  { key: 'all', label: '전체', color: 'from-gray-500 to-gray-600' },
-  { key: 'A1', label: 'A1 입문', color: 'from-emerald-400 to-green-500' },
-  { key: 'A2', label: 'A2 초급', color: 'from-teal-400 to-cyan-500' },
-  { key: 'B1', label: 'B1 중급', color: 'from-amber-400 to-orange-500' },
-  { key: 'B2', label: 'B2 중상급', color: 'from-rose-400 to-red-500' },
+  { key: 'all', label: '전체' },
+  { key: 'A1', label: 'A1 입문' },
+  { key: 'A2', label: 'A2 초급' },
+  { key: 'B1', label: 'B1 중급' },
+  { key: 'B2', label: 'B2 중상급' },
 ]
 
 const filteredCategories = computed(() => {
@@ -47,11 +47,11 @@ function getCategoryProgress(category) {
 
 function getCefrBg(cefr) {
   switch (cefr) {
-    case 'A1': return 'bg-emerald-100 text-emerald-700'
-    case 'A2': return 'bg-teal-100 text-teal-700'
-    case 'B1': return 'bg-amber-100 text-amber-700'
-    case 'B2': return 'bg-rose-100 text-rose-700'
-    default: return 'bg-gray-100 text-gray-600'
+    case 'A1': return 'bg-emerald-50 text-emerald-600'
+    case 'A2': return 'bg-teal-50 text-teal-600'
+    case 'B1': return 'bg-amber-50 text-amber-600'
+    case 'B2': return 'bg-rose-50 text-rose-600'
+    default: return 'bg-gray-50 text-gray-600'
   }
 }
 
@@ -62,17 +62,6 @@ function getPatternPreview(pattern) {
   }
   return pattern.title
 }
-
-const categoryGradients = [
-  'from-indigo-500 to-violet-500',
-  'from-amber-500 to-orange-500',
-  'from-emerald-500 to-teal-500',
-  'from-rose-500 to-pink-500',
-  'from-cyan-500 to-blue-500',
-  'from-purple-500 to-fuchsia-500',
-  'from-lime-500 to-green-500',
-  'from-orange-500 to-red-500',
-]
 </script>
 
 <template>
@@ -90,10 +79,10 @@ const categoryGradients = [
           v-for="tab in levelTabs"
           :key="tab.key"
           @click="selectedLevel = tab.key"
-          class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           :class="selectedLevel === tab.key
-            ? `bg-gradient-to-r ${tab.color} text-white shadow-md scale-[1.02]`
-            : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'"
+            ? 'bg-indigo-600 text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
         >
           {{ tab.label }}
         </button>
@@ -106,10 +95,10 @@ const categoryGradients = [
 
     <!-- 로딩 -->
     <div v-if="lessons.loading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
-      <div v-for="i in 8" :key="'skeleton-' + i" class="glass rounded-2xl p-5 animate-pulse">
-        <div class="w-10 h-10 bg-gray-200 rounded-xl mb-3"></div>
-        <div class="h-4 bg-gray-200 rounded w-20 mb-1.5"></div>
-        <div class="h-3 bg-gray-200 rounded w-12"></div>
+      <div v-for="i in 8" :key="'skeleton-' + i" class="bg-white border border-gray-200 rounded-xl p-5 animate-pulse">
+        <div class="w-10 h-10 bg-gray-100 rounded-lg mb-3"></div>
+        <div class="h-4 bg-gray-100 rounded w-20 mb-1.5"></div>
+        <div class="h-3 bg-gray-100 rounded w-12"></div>
       </div>
     </div>
 
@@ -125,10 +114,10 @@ const categoryGradients = [
           class="w-full text-left group"
         >
           <div
-            class="relative overflow-hidden rounded-2xl p-4 sm:p-5 transition-all duration-200 cursor-pointer"
+            class="relative overflow-hidden rounded-xl p-4 sm:p-5 transition-colors cursor-pointer"
             :class="expandedCategory === category.id
-              ? 'bg-white shadow-lg ring-2 ring-indigo-300 scale-[1.02]'
-              : 'bg-white/70 hover:bg-white hover:shadow-md border border-gray-100'"
+              ? 'bg-indigo-50 border border-indigo-500'
+              : 'bg-white border border-gray-200 hover:border-indigo-300'"
           >
             <!-- Icon -->
             <div class="text-2xl sm:text-3xl mb-2.5">{{ category.icon }}</div>
@@ -147,8 +136,7 @@ const categoryGradients = [
             <!-- Mini progress bar -->
             <div class="mt-1.5 bg-gray-100 rounded-full h-1 overflow-hidden">
               <div
-                class="h-full rounded-full bg-gradient-to-r transition-all duration-500"
-                :class="categoryGradients[catIdx % categoryGradients.length]"
+                class="h-full rounded-full bg-indigo-500 transition-all duration-500"
                 :style="{ width: getCategoryProgress(category) + '%' }"
               ></div>
             </div>
@@ -183,7 +171,7 @@ const categoryGradients = [
               :to="`/learn/${pattern.id || pattern.difficultyOrder}`"
               class="group block"
             >
-              <div class="bg-white rounded-xl p-3.5 sm:p-4 border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all duration-200">
+              <div class="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 hover:border-indigo-300 transition-colors">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex-1 min-w-0">
                     <!-- 패턴 제목 (한국어 설명) -->
@@ -196,7 +184,7 @@ const categoryGradients = [
                     </p>
                   </div>
                   <div class="flex items-center gap-1.5 shrink-0 mt-0.5">
-                    <!-- CEFR 뱃지만 -->
+                    <!-- CEFR 뱃지 -->
                     <span :class="['text-[10px] px-2 py-0.5 rounded-md font-bold', getCefrBg(pattern.cefrLevel)]">
                       {{ pattern.cefrLevel }}
                     </span>
@@ -209,7 +197,7 @@ const categoryGradients = [
                   </div>
                 </div>
                 <!-- 예문 수 + 화살표 -->
-                <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-50">
+                <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-100">
                   <span class="text-[10px] text-gray-400">예문 {{ pattern.examples.length }}개</span>
                   <svg class="w-3.5 h-3.5 text-gray-300 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
