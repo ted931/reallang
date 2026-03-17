@@ -100,6 +100,7 @@ function mapPatternFromApi(apiPattern) {
 function groupPatternsIntoCategories(apiPatterns) {
   const catMap = new Map()
   let catIdCounter = 1
+  let patternIdCounter = 1
 
   for (const p of apiPatterns) {
     const catName = p.category
@@ -112,7 +113,13 @@ function groupPatternsIntoCategories(apiPatterns) {
         patterns: [],
       })
     }
-    catMap.get(catName).patterns.push(mapPatternFromApi(p))
+    const mapped = mapPatternFromApi(p)
+    // Assign auto-incremented ID if seed data has no id
+    if (mapped.id == null) {
+      mapped.id = patternIdCounter
+    }
+    patternIdCounter++
+    catMap.get(catName).patterns.push(mapped)
   }
 
   return Array.from(catMap.values())
