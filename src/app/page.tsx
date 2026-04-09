@@ -1,166 +1,167 @@
-const PROJECTS = [
+const TRAVEL_FLOW = [
   {
-    name: "제주패스 프로모션",
-    href: "/jejupass/",
-    description: "소상공인을 위한 무료 홍보 플랫폼. SNS 콘텐츠 자동 생성, 사업자 OCR 인증.",
-    tech: ["Next.js", "OpenAI"],
-    status: "LIVE" as const,
-    emoji: "🏪",
-    color: "from-orange-500 to-rose-500",
-  },
-  {
-    name: "Mini XD",
-    href: "/mini-xd/",
-    description: "디자인 스크린샷을 HTML+Tailwind 코드로 변환하는 AI 도구. 채팅으로 수정 가능.",
-    tech: ["GPT-4o", "Tailwind"],
-    status: "LIVE" as const,
-    emoji: "🎨",
-    color: "from-violet-500 to-purple-600",
-  },
-  {
-    name: "제주 날씨 지도",
-    href: "/weather/",
-    description: "제주도 10개 지역 실시간 기상 정보. 기온, 강수, 풍속을 한눈에.",
-    tech: ["기상청 API", "VWorld"],
-    status: "LIVE" as const,
+    step: 1,
+    label: "날씨 확인",
     emoji: "🌤️",
+    title: "지금 제주 날씨는?",
+    description: "10개 지역 실시간 기온·강수·풍속. 맑은 곳과 비 오는 곳을 한눈에.",
+    href: "/weather/",
+    cta: "날씨 보기",
     color: "from-sky-400 to-cyan-500",
   },
   {
-    name: "Creative Sandbox",
-    href: "/sandbox/",
-    description: "무한 캔버스에서 AI와 대화하며 위젯을 만드는 아이디어 놀이터.",
-    tech: ["tldraw", "Supabase"],
-    status: "BETA" as const,
-    emoji: "🧪",
-    color: "from-emerald-500 to-teal-500",
-  },
-  {
-    name: "제주 지도 플랫폼",
-    href: "/map/",
-    description: "13개 카테고리로 제주 맛집, 카페, 관광지, 올레길 등을 지도에서 탐색.",
-    tech: ["VWorld", "공공데이터"],
-    status: "LIVE" as const,
-    emoji: "🗺️",
-    color: "from-green-500 to-emerald-600",
-  },
-  {
-    name: "AI 여행 플래너",
-    href: "/travel/",
-    description: "자연어로 입력하면 AI가 제주 맞춤 일정을 자동 생성. 숙소, 맛집, 액티비티까지.",
-    tech: ["GPT-4o", "공공데이터"],
-    status: "NEW" as const,
-    emoji: "✈️",
-    color: "from-emerald-500 to-green-600",
-  },
-  {
-    name: "AI 코스 메이커",
-    href: "/course/",
-    description: "취향 기반 3가지 최적 코스 자동 설계. 동선, 이동시간, 비용 비교.",
-    tech: ["GPT-4o", "VWorld"],
-    status: "NEW" as const,
+    step: 2,
+    label: "코스 만들기",
     emoji: "🧭",
+    title: "AI가 3가지 코스를 추천",
+    description: "취향·인원·예산에 맞는 최적 코스를 30초 만에. 동선·이동시간·비용 비교.",
+    href: "/course/",
+    cta: "코스 만들기",
     color: "from-violet-500 to-indigo-600",
   },
   {
+    step: 3,
+    label: "일정 짜기",
+    emoji: "✈️",
+    title: "AI 맞춤 여행 일정",
+    description: "자연어로 입력하면 숙소·맛집·관광지·액티비티 일정을 자동 구성.",
+    href: "/travel/",
+    cta: "일정 만들기",
+    color: "from-emerald-500 to-green-600",
+  },
+  {
+    step: 4,
+    label: "장소 탐색",
+    emoji: "🗺️",
+    title: "제주 지도에서 발견",
+    description: "카페·맛집·해변·올레길 등 13개 카테고리. 카카오맵 연동 길찾기.",
+    href: "/map/",
+    cta: "지도 보기",
+    color: "from-green-500 to-emerald-600",
+  },
+];
+
+const TOOLS = [
+  {
     name: "통합 대시보드",
     href: "/dashboard/",
-    description: "매출, 예약, CS 현황을 실시간 모니터링. KPI 카드, 차트, 티켓 관리.",
-    tech: ["Supabase", "실시간"],
-    status: "NEW" as const,
     emoji: "📊",
-    color: "from-indigo-500 to-blue-600",
+    description: "매출·예약·CS 현황",
+    badge: "운영",
   },
   {
     name: "AI CS 챗봇",
     href: "/chatbot/",
-    description: "제주패스 예약/취소/환불 FAQ를 AI가 즉시 답변. GPT-4o 기반 자동 상담.",
-    tech: ["GPT-4o", "FAQ RAG"],
-    status: "NEW" as const,
     emoji: "💬",
-    color: "from-sky-500 to-blue-600",
+    description: "예약/취소/환불 즉시 답변",
+    badge: "CS",
+  },
+  {
+    name: "제주패스 프로모션",
+    href: "/jejupass/",
+    emoji: "🏪",
+    description: "자영업자 무료 홍보",
+    badge: "파트너",
+  },
+  {
+    name: "Mini XD",
+    href: "/mini-xd/",
+    emoji: "🎨",
+    description: "디자인→코드 변환",
+    badge: "도구",
+  },
+  {
+    name: "Creative Sandbox",
+    href: "/sandbox/",
+    emoji: "🧪",
+    description: "AI 아이디어 놀이터",
+    badge: "실험",
   },
 ];
 
-const STATUS_STYLE = {
-  LIVE: "bg-emerald-100 text-emerald-700",
-  BETA: "bg-amber-100 text-amber-700",
-  NEW: "bg-violet-100 text-violet-700",
-};
-
 export default function PortalPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero */}
-      <header className="bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 py-12 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Kaflix 아이디어 놀이터</h1>
-          <p className="text-gray-500 mt-2">작은 아이디어가 모이는 곳</p>
-          <p className="text-sm text-gray-400 mt-1">
-            사내 프로젝트를 빠르게 프로토타이핑하고 테스트합니다
+      <header className="bg-gradient-to-b from-sky-50 to-white border-b border-gray-100">
+        <div className="max-w-4xl mx-auto px-6 py-14 text-center">
+          <p className="text-sm text-sky-600 font-medium mb-2">제주패스 x AI</p>
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+            제주 여행,<br />어디서부터 시작할까?
+          </h1>
+          <p className="text-gray-500 mt-3 text-lg">
+            날씨 확인 → 코스 추천 → 일정 생성 → 예약까지 한번에
           </p>
-          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-gray-400">
-            <span>{PROJECTS.length}개 프로젝트</span>
-            <span>-</span>
-            <span>{PROJECTS.filter((p) => p.status === "LIVE").length} Live</span>
-            <span>-</span>
-            <span>{PROJECTS.filter((p) => p.status === "NEW").length} New</span>
-          </div>
         </div>
       </header>
 
-      {/* Project Grid */}
-      <main className="max-w-5xl mx-auto px-6 py-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {PROJECTS.map((project) => (
+      {/* Travel Flow */}
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="space-y-5">
+          {TRAVEL_FLOW.map((item) => (
             <a
-              key={project.href}
-              href={project.href}
-              className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              key={item.step}
+              href={item.href}
+              className="group flex items-stretch bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Color Bar */}
-              <div className={`h-1.5 bg-gradient-to-r ${project.color}`} />
+              {/* Step Number + Color Bar */}
+              <div className={`w-2 bg-gradient-to-b ${item.color} flex-shrink-0`} />
 
-              <div className="p-5">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{project.emoji}</span>
-                    <h2 className="font-bold text-gray-900 group-hover:text-gray-700">
-                      {project.name}
-                    </h2>
-                  </div>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${STATUS_STYLE[project.status]}`}
-                  >
-                    {project.status}
-                  </span>
+              <div className="flex items-center gap-5 p-6 flex-1">
+                {/* Step Badge */}
+                <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                  <span className="text-3xl">{item.emoji}</span>
+                  <span className="text-[10px] font-bold text-gray-400">STEP {item.step}</span>
                 </div>
 
-                {/* Description */}
-                <p className="text-sm text-gray-500 leading-relaxed">{project.description}</p>
-
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="px-2 py-0.5 bg-gray-100 text-gray-500 text-[10px] rounded-full"
-                    >
-                      {t}
-                    </span>
-                  ))}
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-gray-400 font-medium">{item.label}</p>
+                  <h2 className="text-lg font-bold text-gray-900 group-hover:text-gray-700 mt-0.5">
+                    {item.title}
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">{item.description}</p>
                 </div>
+
+                {/* CTA */}
+                <span className={`px-5 py-2.5 rounded-xl bg-gradient-to-r ${item.color} text-white text-sm font-bold flex-shrink-0 group-hover:shadow-md transition-shadow`}>
+                  {item.cta} →
+                </span>
               </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="mt-16 mb-8 flex items-center gap-4">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400 font-medium">운영 도구 & 실험실</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        {/* Tools Grid */}
+        <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {TOOLS.map((tool) => (
+            <a
+              key={tool.href}
+              href={tool.href}
+              className="group bg-gray-50 hover:bg-white rounded-xl border border-gray-100 p-4 text-center hover:shadow-md hover:-translate-y-0.5 transition-all"
+            >
+              <span className="text-2xl block mb-2">{tool.emoji}</span>
+              <p className="text-sm font-bold text-gray-900">{tool.name}</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">{tool.description}</p>
+              <span className="inline-block mt-2 px-2 py-0.5 bg-gray-200 text-gray-500 text-[10px] rounded-full">
+                {tool.badge}
+              </span>
             </a>
           ))}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 mt-8">
-        <div className="max-w-5xl mx-auto px-6 py-6 text-center">
-          <p className="text-xs text-gray-400">Kaflix 아이디어 놀이터 - realang.store</p>
+      <footer className="border-t border-gray-100 mt-12">
+        <div className="max-w-4xl mx-auto px-6 py-6 text-center">
+          <p className="text-xs text-gray-400">제주패스 - realang.store</p>
         </div>
       </footer>
     </div>
