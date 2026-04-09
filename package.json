@@ -12,6 +12,8 @@
     "build:jejupass": "npm run build -w jejupass-promo",
     "build:mini-xd": "npm run build -w mini-xd",
     "build:sandbox": "npm run build -w creative-sandbox",
-    "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox"
+    "dev:weather": "npm run dev -w jeju-weather",
+    "build:weather": "npm run build -w jeju-weather",
+    "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather"
   }
 }
