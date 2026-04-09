@@ -39,6 +39,16 @@ const TRAVEL_FLOW = [
     cta: "지도 보기",
     color: "from-green-500 to-emerald-600",
   },
+  {
+    step: 5,
+    label: "같이 놀기",
+    emoji: "🎉",
+    title: "취미 파티 — 같이 할 사람!",
+    description: "자전거, 등산, 서핑, 카페탐방... 파티장이 코스 짜고, 렌터카도 준비. 참여만 하세요.",
+    href: "/party/",
+    cta: "파티 찾기",
+    color: "from-orange-500 to-red-500",
+  },
 ];
 
 const TOOLS = [

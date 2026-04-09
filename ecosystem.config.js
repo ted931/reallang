@@ -75,5 +75,12 @@ module.exports = {
       args: "start -p 3009",
       env: { NODE_ENV: "production" },
     },
+    {
+      name: "party",
+      cwd: "./projects/jeju-party",
+      script: "node_modules/.bin/next",
+      args: "start -p 3010",
+      env: { NODE_ENV: "production" },
+    },
   ],
 };
