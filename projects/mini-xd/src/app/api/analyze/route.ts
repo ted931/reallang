@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   const client = getClient();
 
   const stream = await client.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4o-mini",
     max_tokens: 8192,
     temperature: 0.1,
     stream: true,
