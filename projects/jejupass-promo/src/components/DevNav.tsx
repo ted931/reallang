@@ -19,7 +19,7 @@ export default function DevNav() {
     <div className="bg-gray-900 text-white sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto">
         {PAGES.map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
