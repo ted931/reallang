@@ -1,0 +1,949 @@
+[
+  {
+    "id": "shop-001",
+    "slug": "sunset-cafe-a1b2c3",
+    "name": "선셋카페",
+    "category": "cafe",
+    "region": "hamdeok",
+    "description": "함덕 바다가 한눈에 보이는 오션뷰 카페. 시그니처 망고빙수와 핸드드립 커피가 인기입니다.",
+    "address": "제주시 조천읍 함덕리 1234-5",
+    "phone": "064-123-4567",
+    "businessHours": {
+      "mon": "10:00-20:00",
+      "tue": "휴무",
+      "wed": "10:00-20:00",
+      "thu": "10:00-20:00",
+      "fri": "10:00-21:00",
+      "sat": "09:00-21:00",
+      "sun": "09:00-20:00"
+    },
+    "photos": [
+      {
+        "id": "p1",
+        "url": "/images/cafe-drink-oceanview-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p1b",
+        "url": "/images/cafe-terrace-ocean-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p1c",
+        "url": "/images/cafe-drink-oceanview-02.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m1",
+        "name": "아메리카노",
+        "price": 5000,
+        "isPopular": true
+      },
+      {
+        "id": "m2",
+        "name": "카페라떼",
+        "price": 5500,
+        "isPopular": false
+      },
+      {
+        "id": "m3",
+        "name": "망고빙수",
+        "price": 15000,
+        "isPopular": true
+      },
+      {
+        "id": "m4",
+        "name": "당근케이크",
+        "price": 6500,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-01T00:00:00Z",
+    "updatedAt": "2026-04-01T00:00:00Z"
+  },
+  {
+    "id": "shop-002",
+    "slug": "black-pork-house-d4e5f6",
+    "name": "고씨네 흑돼지",
+    "category": "restaurant",
+    "region": "jungmun",
+    "description": "15년 전통의 제주 흑돼지 전문점. 두툼한 오겹살과 직접 만든 된장찌개가 일품입니다.",
+    "address": "서귀포시 중문관광로 567-8",
+    "phone": "064-987-6543",
+    "businessHours": {
+      "mon": "11:00-22:00",
+      "tue": "11:00-22:00",
+      "wed": "11:00-22:00",
+      "thu": "11:00-22:00",
+      "fri": "11:00-22:00",
+      "sat": "11:00-22:00",
+      "sun": "11:00-21:00"
+    },
+    "photos": [
+      {
+        "id": "p4",
+        "url": "/images/food-meat-grill-01.jpg",
+        "isPrimary": true
+      }
+    ],
+    "menus": [
+      {
+        "id": "m5",
+        "name": "흑돼지 오겹살 (200g)",
+        "price": 18000,
+        "isPopular": true
+      },
+      {
+        "id": "m6",
+        "name": "흑돼지 목살 (200g)",
+        "price": 16000,
+        "isPopular": true
+      },
+      {
+        "id": "m7",
+        "name": "된장찌개",
+        "price": 8000,
+        "isPopular": false
+      },
+      {
+        "id": "m8",
+        "name": "물냉면",
+        "price": 9000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-03-15T00:00:00Z",
+    "updatedAt": "2026-03-15T00:00:00Z"
+  },
+  {
+    "id": "shop-003",
+    "slug": "hallim-mango-g7h8i9",
+    "name": "한림 망고카페",
+    "category": "dessert",
+    "region": "hallim",
+    "description": "제주산 망고를 듬뿍 사용한 디저트 카페. 협재 해변에서 도보 5분 거리에 있습니다.",
+    "address": "제주시 한림읍 협재리 789-10",
+    "phone": "064-555-1234",
+    "businessHours": {
+      "mon": "10:00-19:00",
+      "tue": "10:00-19:00",
+      "wed": "10:00-19:00",
+      "thu": "10:00-19:00",
+      "fri": "10:00-20:00",
+      "sat": "10:00-20:00",
+      "sun": "10:00-19:00"
+    },
+    "photos": [
+      {
+        "id": "p6",
+        "url": "/images/dessert-waffle-icecream-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p6b",
+        "url": "/images/cafe-brownie-latte-set-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m9",
+        "name": "생망고빙수",
+        "price": 18000,
+        "isPopular": true
+      },
+      {
+        "id": "m10",
+        "name": "망고주스",
+        "price": 8000,
+        "isPopular": true
+      },
+      {
+        "id": "m11",
+        "name": "망고타르트",
+        "price": 7500,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-05T00:00:00Z",
+    "updatedAt": "2026-04-05T00:00:00Z"
+  },
+  {
+    "id": "shop-004",
+    "slug": "aewol-brunch-j1k2l3",
+    "name": "애월 브런치하우스",
+    "category": "brunch",
+    "region": "aewol",
+    "description": "애월 해안도로에 위치한 감성 브런치 카페. 오션뷰 테라스에서 즐기는 에그베네딕트가 유명합니다.",
+    "address": "제주시 애월읍 애월해안로 123",
+    "phone": "064-711-2233",
+    "businessHours": {
+      "mon": "09:00-17:00",
+      "tue": "09:00-17:00",
+      "wed": "휴무",
+      "thu": "09:00-17:00",
+      "fri": "09:00-18:00",
+      "sat": "08:30-18:00",
+      "sun": "08:30-17:00"
+    },
+    "photos": [
+      {
+        "id": "p7",
+        "url": "/images/brunch-egg-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p7b",
+        "url": "/images/cafe-garden-outdoor-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p7c",
+        "url": "/images/cafe-drink-ade-outdoor-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m12",
+        "name": "에그베네딕트",
+        "price": 16000,
+        "isPopular": true
+      },
+      {
+        "id": "m13",
+        "name": "리코타 샐러드",
+        "price": 14000,
+        "isPopular": true
+      },
+      {
+        "id": "m14",
+        "name": "프렌치토스트",
+        "price": 13000,
+        "isPopular": false
+      },
+      {
+        "id": "m15",
+        "name": "아메리카노",
+        "price": 5000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-03-20T00:00:00Z",
+    "updatedAt": "2026-03-20T00:00:00Z"
+  },
+  {
+    "id": "shop-005",
+    "slug": "jeju-sushi-omakase-m4n5o6",
+    "name": "제주스시 오마카세",
+    "category": "restaurant",
+    "region": "jeju-si",
+    "description": "제주 근해에서 당일 잡은 신선한 활어로 만드는 오마카세. 예약 필수.",
+    "address": "제주시 연동 노형로 456-7",
+    "phone": "064-222-3344",
+    "businessHours": {
+      "mon": "12:00-21:00",
+      "tue": "12:00-21:00",
+      "wed": "12:00-21:00",
+      "thu": "12:00-21:00",
+      "fri": "12:00-22:00",
+      "sat": "12:00-22:00",
+      "sun": "휴무"
+    },
+    "photos": [
+      {
+        "id": "p8",
+        "url": "/images/food-sashimi-01.jpg",
+        "isPrimary": true
+      }
+    ],
+    "menus": [
+      {
+        "id": "m16",
+        "name": "런치 오마카세",
+        "price": 55000,
+        "isPopular": true
+      },
+      {
+        "id": "m17",
+        "name": "디너 오마카세",
+        "price": 85000,
+        "isPopular": true
+      },
+      {
+        "id": "m18",
+        "name": "사시미 모둠",
+        "price": 45000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-02-10T00:00:00Z",
+    "updatedAt": "2026-02-10T00:00:00Z"
+  },
+  {
+    "id": "shop-006",
+    "slug": "doldam-bakery-p7q8r9",
+    "name": "돌담 베이커리",
+    "category": "bakery",
+    "region": "seogwipo",
+    "description": "서귀포 올레시장 근처의 수제 빵집. 제주 우유와 한라봉을 사용한 빵이 대표 메뉴입니다.",
+    "address": "서귀포시 중앙로 89-3",
+    "phone": "064-733-5566",
+    "businessHours": {
+      "mon": "07:30-19:00",
+      "tue": "07:30-19:00",
+      "wed": "07:30-19:00",
+      "thu": "07:30-19:00",
+      "fri": "07:30-19:00",
+      "sat": "07:30-18:00",
+      "sun": "08:00-17:00"
+    },
+    "photos": [
+      {
+        "id": "p9",
+        "url": "/images/bakery-seogwi-croissant-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p9b",
+        "url": "/images/bakery-croissant-choco-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p9c",
+        "url": "/images/bakery-bread-display-02.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m19",
+        "name": "한라봉 크림빵",
+        "price": 4500,
+        "isPopular": true
+      },
+      {
+        "id": "m20",
+        "name": "제주우유 식빵",
+        "price": 6000,
+        "isPopular": true
+      },
+      {
+        "id": "m21",
+        "name": "흑임자 크루아상",
+        "price": 5000,
+        "isPopular": false
+      },
+      {
+        "id": "m22",
+        "name": "당근 머핀",
+        "price": 4000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-03-01T00:00:00Z",
+    "updatedAt": "2026-03-01T00:00:00Z"
+  },
+  {
+    "id": "shop-007",
+    "slug": "seongsan-seafood-s1t2u3",
+    "name": "성산 해녀의집",
+    "category": "restaurant",
+    "region": "seongsan",
+    "description": "성산일출봉 바로 앞 해녀가 직접 잡은 해산물 전문점. 전복죽과 해물뚝배기가 인기.",
+    "address": "서귀포시 성산읍 일출로 234",
+    "phone": "064-784-1122",
+    "businessHours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "photos": [
+      {
+        "id": "p10",
+        "url": "/images/food-haemul-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p10b",
+        "url": "/images/jeju-scenery-sunrise-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m23",
+        "name": "전복죽",
+        "price": 15000,
+        "isPopular": true
+      },
+      {
+        "id": "m24",
+        "name": "해물뚝배기",
+        "price": 12000,
+        "isPopular": true
+      },
+      {
+        "id": "m25",
+        "name": "성게국수",
+        "price": 13000,
+        "isPopular": false
+      },
+      {
+        "id": "m26",
+        "name": "회덮밥",
+        "price": 16000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-01-20T00:00:00Z",
+    "updatedAt": "2026-01-20T00:00:00Z"
+  },
+  {
+    "id": "shop-008",
+    "slug": "jeju-roasters-v4w5x6",
+    "name": "제주로스터스",
+    "category": "cafe",
+    "region": "jeju-si",
+    "description": "자체 로스팅하는 스페셜티 커피 전문점. 제주 감귤을 활용한 시그니처 라떼가 유명합니다.",
+    "address": "제주시 탑동로 78-2",
+    "phone": "064-755-9988",
+    "businessHours": {
+      "mon": "08:00-22:00",
+      "tue": "08:00-22:00",
+      "wed": "08:00-22:00",
+      "thu": "08:00-22:00",
+      "fri": "08:00-23:00",
+      "sat": "09:00-23:00",
+      "sun": "09:00-21:00"
+    },
+    "photos": [
+      {
+        "id": "p11",
+        "url": "/images/cafe-stone-interior-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p11b",
+        "url": "/images/cafe-latte-pair-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p11c",
+        "url": "/images/cafe-retro-coffee-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m27",
+        "name": "감귤라떼",
+        "price": 6500,
+        "isPopular": true
+      },
+      {
+        "id": "m28",
+        "name": "핸드드립",
+        "price": 7000,
+        "isPopular": true
+      },
+      {
+        "id": "m29",
+        "name": "아인슈패너",
+        "price": 6000,
+        "isPopular": false
+      },
+      {
+        "id": "m30",
+        "name": "제주말차라떼",
+        "price": 6500,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-03-10T00:00:00Z",
+    "updatedAt": "2026-03-10T00:00:00Z"
+  },
+  {
+    "id": "shop-009",
+    "slug": "hallim-noodle-y7z8a1",
+    "name": "한림 고기국수",
+    "category": "restaurant",
+    "region": "hallim",
+    "description": "30년 전통 고기국수 맛집. 진한 돼지뼈 육수에 두툼한 수육이 올라갑니다. 현지인 맛집.",
+    "address": "제주시 한림읍 한림로 567",
+    "phone": "064-796-3344",
+    "businessHours": {
+      "mon": "10:00-15:00",
+      "tue": "10:00-15:00",
+      "wed": "10:00-15:00",
+      "thu": "10:00-15:00",
+      "fri": "10:00-15:00",
+      "sat": "10:00-14:00",
+      "sun": "휴무"
+    },
+    "photos": [
+      {
+        "id": "p12",
+        "url": "/images/food-noodle-01.jpg",
+        "isPrimary": true
+      }
+    ],
+    "menus": [
+      {
+        "id": "m31",
+        "name": "고기국수",
+        "price": 9000,
+        "isPopular": true
+      },
+      {
+        "id": "m32",
+        "name": "비빔국수",
+        "price": 9000,
+        "isPopular": false
+      },
+      {
+        "id": "m33",
+        "name": "수육 (소)",
+        "price": 20000,
+        "isPopular": true
+      },
+      {
+        "id": "m34",
+        "name": "수육 (대)",
+        "price": 35000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-02-25T00:00:00Z",
+    "updatedAt": "2026-02-25T00:00:00Z"
+  },
+  {
+    "id": "shop-010",
+    "slug": "moonlight-bar-b2c3d4",
+    "name": "문라이트 바",
+    "category": "bar",
+    "region": "seogwipo",
+    "description": "서귀포 야경이 보이는 루프탑 바. 제주 감귤과 한라봉을 활용한 칵테일이 시그니처입니다.",
+    "address": "서귀포시 이중섭로 45-6",
+    "phone": "064-762-7788",
+    "businessHours": {
+      "mon": "휴무",
+      "tue": "18:00-01:00",
+      "wed": "18:00-01:00",
+      "thu": "18:00-01:00",
+      "fri": "18:00-02:00",
+      "sat": "17:00-02:00",
+      "sun": "17:00-24:00"
+    },
+    "photos": [
+      {
+        "id": "p13",
+        "url": "/images/bar-cocktail-01.webp",
+        "isPrimary": true
+      },
+      {
+        "id": "p13b",
+        "url": "/images/cafe-luxury-sunset-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p13c",
+        "url": "/images/cafe-drink-ade-ocean-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m35",
+        "name": "한라봉 모히또",
+        "price": 15000,
+        "isPopular": true
+      },
+      {
+        "id": "m36",
+        "name": "감귤 사워",
+        "price": 14000,
+        "isPopular": true
+      },
+      {
+        "id": "m37",
+        "name": "제주 하이볼",
+        "price": 13000,
+        "isPopular": false
+      },
+      {
+        "id": "m38",
+        "name": "크래프트 생맥주",
+        "price": 9000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-03-25T00:00:00Z",
+    "updatedAt": "2026-03-25T00:00:00Z"
+  },
+  {
+    "id": "shop-011",
+    "slug": "aewol-wave-cafe-e5f6g7",
+    "name": "애월 파도소리",
+    "category": "cafe",
+    "region": "aewol",
+    "description": "애월 해안도로 끝자락의 독채 카페. 탁 트인 바다 뷰와 조용한 분위기가 매력적입니다.",
+    "address": "제주시 애월읍 하귀2리 890",
+    "phone": "064-713-5500",
+    "businessHours": {
+      "mon": "10:00-19:00",
+      "tue": "10:00-19:00",
+      "wed": "10:00-19:00",
+      "thu": "10:00-19:00",
+      "fri": "10:00-20:00",
+      "sat": "09:00-20:00",
+      "sun": "09:00-19:00"
+    },
+    "photos": [
+      {
+        "id": "p15",
+        "url": "/images/cafe-seaside-terrace-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p15b",
+        "url": "/images/cafe-citrus-drink-field-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p15c",
+        "url": "/images/cafe-exterior-cup-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m43",
+        "name": "바닐라라떼",
+        "price": 6000,
+        "isPopular": true
+      },
+      {
+        "id": "m44",
+        "name": "제주녹차",
+        "price": 5500,
+        "isPopular": false
+      },
+      {
+        "id": "m45",
+        "name": "스콘 세트",
+        "price": 9000,
+        "isPopular": true
+      },
+      {
+        "id": "m46",
+        "name": "당근케이크",
+        "price": 6500,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-03T00:00:00Z",
+    "updatedAt": "2026-04-03T00:00:00Z"
+  },
+  {
+    "id": "shop-012",
+    "slug": "cafe-street-village-h8i9j0",
+    "name": "봄날 카페거리",
+    "category": "cafe",
+    "region": "seogwipo",
+    "description": "서귀포 올레길 카페거리에 위치한 아기자기한 카페. 돌담길과 바다가 어우러진 풍경이 인스타 명소.",
+    "address": "서귀포시 월평동 카페거리 12",
+    "phone": "064-738-1122",
+    "businessHours": {
+      "mon": "09:00-20:00",
+      "tue": "09:00-20:00",
+      "wed": "09:00-20:00",
+      "thu": "09:00-20:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-21:00",
+      "sun": "09:00-20:00"
+    },
+    "photos": [
+      {
+        "id": "p16",
+        "url": "/images/cafe-street-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p16b",
+        "url": "/images/cafe-modern-architecture-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p16c",
+        "url": "/images/cafe-jeju-drink-ocean-02.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m47",
+        "name": "제주 감귤 에이드",
+        "price": 7000,
+        "isPopular": true
+      },
+      {
+        "id": "m48",
+        "name": "흑임자 라떼",
+        "price": 6500,
+        "isPopular": true
+      },
+      {
+        "id": "m49",
+        "name": "한라봉 케이크",
+        "price": 7500,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-06T00:00:00Z",
+    "updatedAt": "2026-04-06T00:00:00Z"
+  },
+  {
+    "id": "shop-013",
+    "slug": "maison-bakery-k1l2m3",
+    "name": "메종 프티푸르 제주",
+    "category": "bakery",
+    "region": "jeju-si",
+    "description": "도쿄·서울에 이어 제주에 오픈한 프렌치 베이커리. 크루아상과 까눌레가 시그니처.",
+    "address": "제주시 노형동 1234-5",
+    "phone": "064-745-8800",
+    "businessHours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-21:00",
+      "sat": "08:00-21:00",
+      "sun": "08:00-20:00"
+    },
+    "photos": [
+      {
+        "id": "p17",
+        "url": "/images/bakery-maison-display-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p17b",
+        "url": "/images/bakery-pastry-display-02.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p17c",
+        "url": "/images/bakery-abebe-bread-01.webp",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m50",
+        "name": "크루아상",
+        "price": 5500,
+        "isPopular": true
+      },
+      {
+        "id": "m51",
+        "name": "까눌레",
+        "price": 4500,
+        "isPopular": true
+      },
+      {
+        "id": "m52",
+        "name": "에끌레어",
+        "price": 6000,
+        "isPopular": false
+      },
+      {
+        "id": "m53",
+        "name": "바게트",
+        "price": 7000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-07T00:00:00Z",
+    "updatedAt": "2026-04-07T00:00:00Z"
+  },
+  {
+    "id": "shop-014",
+    "slug": "ocean-bread-cafe-n4o5p6",
+    "name": "하이엔드 제주",
+    "category": "cafe",
+    "region": "seongsan",
+    "description": "성산 해안가 바로 앞 카페. 빵과 커피를 바다 보며 즐길 수 있는 테라스가 인기.",
+    "address": "서귀포시 성산읍 해맞이해안로 456",
+    "phone": "064-784-9900",
+    "businessHours": {
+      "mon": "09:00-19:00",
+      "tue": "09:00-19:00",
+      "wed": "09:00-19:00",
+      "thu": "09:00-19:00",
+      "fri": "09:00-20:00",
+      "sat": "09:00-20:00",
+      "sun": "09:00-19:00"
+    },
+    "photos": [
+      {
+        "id": "p18",
+        "url": "/images/cafe-coffee-bread-ocean-01.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p18b",
+        "url": "/images/cafe-oceanview-interior-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m54",
+        "name": "아메리카노",
+        "price": 5500,
+        "isPopular": true
+      },
+      {
+        "id": "m55",
+        "name": "크림치즈 베이글",
+        "price": 6000,
+        "isPopular": true
+      },
+      {
+        "id": "m56",
+        "name": "한라봉 에이드",
+        "price": 7000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-08T00:00:00Z",
+    "updatedAt": "2026-04-08T00:00:00Z"
+  },
+  {
+    "id": "shop-015",
+    "slug": "jeju-garden-cafe-q7r8s9",
+    "name": "제주 정원카페",
+    "category": "cafe",
+    "region": "hallim",
+    "description": "넓은 정원과 야외 피크닉 좌석이 있는 카페. 반려동물 동반 가능. 제주 감귤 에이드가 시그니처.",
+    "address": "제주시 한림읍 금능리 567-8",
+    "phone": "064-796-7700",
+    "businessHours": {
+      "mon": "10:00-18:00",
+      "tue": "10:00-18:00",
+      "wed": "10:00-18:00",
+      "thu": "10:00-18:00",
+      "fri": "10:00-19:00",
+      "sat": "09:00-19:00",
+      "sun": "09:00-18:00"
+    },
+    "photos": [
+      {
+        "id": "p19",
+        "url": "/images/cafe-garden-outdoor-02.jpg",
+        "isPrimary": true
+      },
+      {
+        "id": "p19b",
+        "url": "/images/cafe-jeju-drink-garden-01.jpg",
+        "isPrimary": false
+      },
+      {
+        "id": "p19c",
+        "url": "/images/cafe-popular-queue-01.jpg",
+        "isPrimary": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "m57",
+        "name": "제주 감귤 에이드",
+        "price": 7000,
+        "isPopular": true
+      },
+      {
+        "id": "m58",
+        "name": "녹차 라떼",
+        "price": 6000,
+        "isPopular": false
+      },
+      {
+        "id": "m59",
+        "name": "수제 스콘 세트",
+        "price": 9500,
+        "isPopular": true
+      },
+      {
+        "id": "m60",
+        "name": "아메리카노",
+        "price": 5000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-09T00:00:00Z",
+    "updatedAt": "2026-04-09T00:00:00Z"
+  },
+  {
+    "id": "3fc740cf-c083-4ee4-8d61-c11bef58061c",
+    "slug": "올레길-감성카페-d81aca",
+    "name": "올레길 감성카페",
+    "category": "cafe",
+    "region": "seogwipo",
+    "description": "올레길 7코스 시작점에 위치한 감성 카페. 제주 감귤을 활용한 수제 음료와 직접 구운 스콘이 인기입니다.",
+    "address": "서귀포시 올레길 7코스 입구 12-3",
+    "phone": "064-733-8899",
+    "businessHours": {},
+    "photos": [],
+    "menus": [
+      {
+        "id": "menu-1775700634768-0",
+        "name": "감귤 에이드",
+        "price": 7000,
+        "isPopular": true
+      },
+      {
+        "id": "menu-1775700634768-1",
+        "name": "아메리카노",
+        "price": 5000,
+        "isPopular": false
+      },
+      {
+        "id": "menu-1775700634768-2",
+        "name": "제주 말차 라떼",
+        "price": 6500,
+        "isPopular": true
+      },
+      {
+        "id": "menu-1775700634769-3",
+        "name": "수제 스콘 세트",
+        "price": 9000,
+        "isPopular": false
+      }
+    ],
+    "isPublished": true,
+    "createdAt": "2026-04-09T02:10:34.783Z",
+    "updatedAt": "2026-04-09T02:10:34.783Z"
+  }
+]

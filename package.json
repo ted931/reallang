@@ -1,0 +1,17 @@
+{
+  "name": "reallang",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "projects/*"
+  ],
+  "scripts": {
+    "dev:jejupass": "npm run dev -w jejupass-promo",
+    "dev:mini-xd": "npm run dev -w mini-xd",
+    "dev:sandbox": "npm run dev -w creative-sandbox",
+    "build:jejupass": "npm run build -w jejupass-promo",
+    "build:mini-xd": "npm run build -w mini-xd",
+    "build:sandbox": "npm run build -w creative-sandbox",
+    "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox"
+  }
+}

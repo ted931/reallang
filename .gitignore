@@ -1,27 +1,43 @@
-# Dependencies
-frontend/node_modules/
-backend/__pycache__/
-**/__pycache__/
-*.pyc
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Environment
-.env
-backend/.env
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Build
-frontend/dist/
+# testing
+/coverage
 
-# Data (large files)
-data/tatoeba_raw/
-data/sentences.csv
-data/links.csv
+# next.js
+/.next/
+/out/
+**/.next/
+**/node_modules/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# production
+/build
 
-# OS
+# misc
 .DS_Store
-Thumbs.db
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
