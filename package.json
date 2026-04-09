@@ -16,6 +16,14 @@
     "build:weather": "npm run build -w jeju-weather",
     "dev:map": "npm run dev -w jeju-map",
     "build:map": "npm run build -w jeju-map",
-    "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather"
+    "dev:travel": "npm run dev -w jeju-travel-planner",
+    "build:travel": "npm run build -w jeju-travel-planner",
+    "dev:course": "npm run dev -w jeju-course-maker",
+    "build:course": "npm run build -w jeju-course-maker",
+    "dev:dashboard": "npm run dev -w dashboard",
+    "build:dashboard": "npm run build -w dashboard",
+    "dev:chatbot": "npm run dev -w cs-chatbot",
+    "build:chatbot": "npm run build -w cs-chatbot",
+    "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather & npm run dev:travel & npm run dev:course & npm run dev:dashboard & npm run dev:chatbot"
   }
 }
