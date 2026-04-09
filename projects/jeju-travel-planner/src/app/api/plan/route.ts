@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { createClient } from "@supabase/supabase-js";
 import type { TravelPlan, TravelRequest } from "@/lib/types";
+
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
 const SYSTEM_PROMPT = `당신은 제주도 여행 전문 AI 플래너입니다. 사용자의 요구사항에 맞는 최적의 제주 여행 일정을 만들어주세요.
 
@@ -112,6 +120,21 @@ export async function POST(request: Request) {
     // 기본값 보정
     plan.nights = plan.nights || nights;
     plan.travelers = plan.travelers || travelers;
+
+    // Supabase에 저장 (테이블 없으면 무시)
+    const sb = getSupabase();
+    if (sb) {
+      sb.from("generated_plans").insert({
+        type: "travel_plan",
+        title: plan.title,
+        summary: plan.summary,
+        input_prompt: prompt,
+        input_params: { nights, travelers, budget, style },
+        result: plan,
+        total_cost: plan.totalBudget || 0,
+        days: (plan.nights || 0) + 1,
+      }).then(() => {}).catch(() => {});
+    }
 
     return NextResponse.json({ plan });
   } catch (err: any) {

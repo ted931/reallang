@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { createClient } from "@supabase/supabase-js";
 import type { CourseRequest, CourseResult } from "@/lib/types";
+
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
 const SYSTEM_PROMPT = `당신은 제주도 코스 설계 전문 AI입니다. 사용자의 취향에 맞는 최적의 제주 코스 3가지를 만들어주세요.
 
@@ -113,10 +121,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "AI 응답이 비어있습니다." }, { status: 500 });
     }
 
-    const result: CourseResult = {
-      ...JSON.parse(raw),
-      input: { days, companions, budget },
-    };
+    const parsed = JSON.parse(raw);
+    const result: CourseResult = { ...parsed, input: { days, companions, budget } };
+
+    // Supabase에 저장 (테이블 없으면 무시)
+    const sb = getSupabase();
+    const rec = parsed.courses?.find((c: any) => c.recommended) || parsed.courses?.[0];
+    if (sb && rec) {
+      sb.from("generated_plans").insert({
+        type: "course",
+        title: rec.name || prompt,
+        summary: rec.description,
+        input_prompt: prompt,
+        input_params: { days, companions, themes, budget, hasRentalCar },
+        result: parsed,
+        total_cost: rec.totalCost || 0,
+        days,
+      }).then(() => {}).catch(() => {});
+    }
 
     return NextResponse.json(result);
   } catch (err: any) {
