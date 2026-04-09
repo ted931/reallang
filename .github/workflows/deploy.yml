@@ -1,0 +1,30 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/reallang
+            git pull origin main
+            npm install
+            npx next build
+            for project in jejupass-promo mini-xd creative-sandbox jeju-weather jeju-map jeju-travel-planner jeju-course-maker dashboard cs-chatbot; do
+              if [ -d "projects/$project" ]; then
+                npm run build -w "$project" 2>&1 | tail -1
+              fi
+            done
+            sudo cp scripts/nginx.conf /etc/nginx/sites-available/reallang
+            sudo nginx -t && sudo systemctl reload nginx
+            pm2 restart all 2>/dev/null || pm2 start ecosystem.config.js
+            pm2 save
