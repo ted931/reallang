@@ -11,7 +11,7 @@ export const JEJU_LOCATIONS = [
   { name: "중문", nx: 51, ny: 33, lat: 33.2490, lng: 126.4122, emoji: "🌴" },
   { name: "표선", nx: 58, ny: 34, lat: 33.3225, lng: 126.8233, emoji: "🐚" },
   { name: "한라산", nx: 53, ny: 35, lat: 33.3616, lng: 126.5292, emoji: "⛰️" },
-  { name: "우도", nx: 62, ny: 36, lat: 33.5066, lng: 126.9514, emoji: "🐴" },
+  { name: "구좌", nx: 59, ny: 37, lat: 33.5200, lng: 126.8545, emoji: "🌾" },
 ] as const;
 
 interface WeatherItem {
