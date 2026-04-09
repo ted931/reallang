@@ -98,9 +98,9 @@ export async function POST(request: Request) {
     const openai = new OpenAI({ apiKey });
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       temperature: 0.9,
-      max_tokens: 6000,
+      max_tokens: 4000,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userMessage },
