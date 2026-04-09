@@ -14,6 +14,8 @@
     "build:sandbox": "npm run build -w creative-sandbox",
     "dev:weather": "npm run dev -w jeju-weather",
     "build:weather": "npm run build -w jeju-weather",
+    "dev:map": "npm run dev -w jeju-map",
+    "build:map": "npm run build -w jeju-map",
     "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather"
   }
 }
