@@ -110,6 +110,52 @@ export default function WeatherPage() {
               </div>
             </div>
 
+            {/* 맑은 곳 / 비 오는 곳 요약 + CTA */}
+            {(() => {
+              const sunny = locations.filter((l) => parseFloat(l.rainfall) === 0);
+              const rainy = locations.filter((l) => parseFloat(l.rainfall) > 0);
+              return (
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {sunny.length > 0 && (
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-100 p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">☀️</span>
+                        <h3 className="font-bold text-gray-900">지금 맑은 곳</h3>
+                        <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">{sunny.length}곳</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {sunny.map((l) => l.name).join(", ")}
+                      </p>
+                      <a
+                        href={`/course?theme=자연&region=${encodeURIComponent(sunny[0]?.name || "제주")}`}
+                        className="inline-flex items-center gap-1 px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors"
+                      >
+                        이 지역 코스 만들기 →
+                      </a>
+                    </div>
+                  )}
+                  {rainy.length > 0 && (
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">🌧️</span>
+                        <h3 className="font-bold text-gray-900">비 오는 곳</h3>
+                        <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{rainy.length}곳</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {rainy.map((l) => `${l.name}(${l.rainfall}mm)`).join(", ")}
+                      </p>
+                      <a
+                        href="/course?theme=카페&indoor=true"
+                        className="inline-flex items-center gap-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                      >
+                        실내 코스 보기 →
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {/* 지역별 카드 */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {locations.map((loc) => (

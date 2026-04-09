@@ -394,6 +394,40 @@ export default function CourseMakerPage() {
                     </p>
                   </div>
                 </div>
+
+                {/* 딥링크 CTA */}
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <a
+                    href={`/travel?nights=${(selectedCourse.days.length - 1) || 1}&budget=${selectedCourse.totalCost}&style=${encodeURIComponent(selectedCourse.name)}`}
+                    className="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-white rounded-xl font-medium text-sm hover:bg-emerald-600 transition-colors"
+                  >
+                    ✈️ 이 코스로 일정 만들기
+                  </a>
+                  <a
+                    href="/map"
+                    className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-50 transition-colors"
+                  >
+                    🗺️ 지도에서 장소 보기
+                  </a>
+                </div>
+
+                {/* 렌터카 예약 배너 */}
+                <div className="bg-gradient-to-r from-violet-500 to-indigo-500 rounded-xl p-5 text-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold">🚗 이 코스, 렌터카가 필요해요</p>
+                      <p className="text-sm text-white/80 mt-0.5">
+                        총 {selectedCourse.totalDriveKm}km 이동 · 제주패스 렌터카 최저가 보장
+                      </p>
+                    </div>
+                    <a
+                      href="/jejupass"
+                      className="px-5 py-2.5 bg-white text-violet-600 rounded-lg font-bold text-sm hover:bg-violet-50 transition-colors flex-shrink-0"
+                    >
+                      렌터카 예약
+                    </a>
+                  </div>
+                </div>
               </>
             )}
           </div>

@@ -381,6 +381,45 @@ export default function PlannerPage() {
                 </ul>
               </div>
             )}
+
+            {/* 예약 CTA */}
+            <div className="space-y-3">
+              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl p-5 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold">🚗 {plan.nights + 1}일간 렌터카 예약</p>
+                    <p className="text-sm text-white/80 mt-0.5">제주패스 렌터카 최저가 보장 · 공항 픽업</p>
+                  </div>
+                  <a
+                    href="/jejupass"
+                    className="px-5 py-2.5 bg-white text-emerald-600 rounded-lg font-bold text-sm hover:bg-emerald-50 transition-colors flex-shrink-0"
+                  >
+                    예약하기
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-3">
+                <a
+                  href="/weather"
+                  className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  🌤️ 여행일 날씨 확인
+                </a>
+                <a
+                  href="/course"
+                  className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  🧭 다른 코스 보기
+                </a>
+                <a
+                  href="/map"
+                  className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  🗺️ 지도에서 보기
+                </a>
+              </div>
+            </div>
           </div>
         )}
       </main>
