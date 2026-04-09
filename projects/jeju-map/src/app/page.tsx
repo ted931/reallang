@@ -1,101 +1,90 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CATEGORIES, DUMMY_PINS, type MapPin } from "@/lib/categories";
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
 
 export default function MapPage() {
   const [activeCategories, setActiveCategories] = useState<Set<string>>(
     new Set(["cafe", "restaurant", "attraction", "beach"])
   );
   const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 카카오 지도 SDK 로드
+  // Leaflet 동적 로드 (SSR 회피)
   useEffect(() => {
-    const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-    if (!kakaoKey) return;
+    if (typeof window === "undefined") return;
 
-    if (window.kakao?.maps) {
-      setMapLoaded(true);
-      return;
-    }
+    // CSS 로드
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(link);
 
-    const script = document.createElement("script");
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`;
-    script.onload = () => {
-      window.kakao.maps.load(() => setMapLoaded(true));
-    };
-    document.head.appendChild(script);
+    import("leaflet").then((L) => {
+      if (!containerRef.current || mapRef.current) return;
+
+      const map = L.map(containerRef.current, {
+        center: [33.38, 126.55],
+        zoom: 10,
+        zoomControl: false,
+      });
+
+      L.control.zoom({ position: "topright" }).addTo(map);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+        maxZoom: 18,
+      }).addTo(map);
+
+      mapRef.current = map;
+      (window as any).__leaflet = L;
+      setMapReady(true);
+    });
+
+    return () => { link.remove(); };
   }, []);
 
-  // 지도 초기화
-  useEffect(() => {
-    if (!mapLoaded || !containerRef.current || mapRef.current) return;
-
-    const options = {
-      center: new window.kakao.maps.LatLng(33.38, 126.55),
-      level: 10,
-    };
-    mapRef.current = new window.kakao.maps.Map(containerRef.current, options);
-
-    // 줌 컨트롤
-    const zoomControl = new window.kakao.maps.ZoomControl();
-    mapRef.current.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
-  }, [mapLoaded]);
-
   // 마커 업데이트
-  const updateMarkers = useCallback(() => {
-    if (!mapRef.current || !mapLoaded) return;
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+    const L = (window as any).__leaflet;
+    if (!L) return;
 
     // 기존 마커 제거
-    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
     const filtered = DUMMY_PINS.filter((p) => activeCategories.has(p.category));
 
     filtered.forEach((pin) => {
       const cat = CATEGORIES.find((c) => c.id === pin.category);
-      const position = new window.kakao.maps.LatLng(pin.lat, pin.lng);
 
-      // 커스텀 마커 (이모지)
-      const content = document.createElement("div");
-      content.innerHTML = `<div style="
-        width:36px;height:36px;border-radius:50%;
-        background:${cat?.color || "#6B7280"};
-        display:flex;align-items:center;justify-content:center;
-        font-size:16px;border:2px solid white;
-        box-shadow:0 2px 8px rgba(0,0,0,0.25);cursor:pointer;
-      ">${cat?.emoji || "📍"}</div>`;
-
-      const overlay = new window.kakao.maps.CustomOverlay({
-        position,
-        content: content,
-        yAnchor: 0.5,
-        xAnchor: 0.5,
+      const icon = L.divIcon({
+        className: "",
+        html: `<div style="
+          width:34px;height:34px;border-radius:50%;
+          background:${cat?.color || "#6B7280"};
+          display:flex;align-items:center;justify-content:center;
+          font-size:15px;border:2.5px solid white;
+          box-shadow:0 2px 8px rgba(0,0,0,0.3);cursor:pointer;
+          line-height:1;
+        ">${cat?.emoji || "📍"}</div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
       });
-      overlay.setMap(mapRef.current);
 
-      content.addEventListener("click", () => {
+      const marker = L.marker([pin.lat, pin.lng], { icon }).addTo(mapRef.current);
+      marker.on("click", () => {
         setSelectedPin((prev) => (prev?.id === pin.id ? null : pin));
-        mapRef.current.panTo(position);
+        mapRef.current.flyTo([pin.lat, pin.lng], 13, { duration: 0.5 });
       });
 
-      markersRef.current.push(overlay);
+      markersRef.current.push(marker);
     });
-  }, [activeCategories, mapLoaded]);
-
-  useEffect(() => {
-    updateMarkers();
-  }, [updateMarkers]);
+  }, [activeCategories, mapReady]);
 
   const toggleCategory = (id: string) => {
     setActiveCategories((prev) => {
@@ -107,14 +96,12 @@ export default function MapPage() {
     setSelectedPin(null);
   };
 
-  const getCategoryInfo = (categoryId: string) =>
-    CATEGORIES.find((c) => c.id === categoryId);
-
+  const getCategoryInfo = (id: string) => CATEGORIES.find((c) => c.id === id);
   const filteredCount = DUMMY_PINS.filter((p) => activeCategories.has(p.category)).length;
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Category Filter Bar */}
+      {/* Category Filter */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
           {CATEGORIES.map((cat) => {
@@ -125,9 +112,7 @@ export default function MapPage() {
                 key={cat.id}
                 onClick={() => toggleCategory(cat.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all ${
-                  isActive
-                    ? "text-white shadow-sm"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  isActive ? "text-white shadow-sm" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                 }`}
                 style={isActive ? { backgroundColor: cat.color } : {}}
               >
@@ -146,11 +131,10 @@ export default function MapPage() {
 
       {/* Map + Detail */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Map */}
         <div className="flex-1 relative">
           <div ref={containerRef} className="w-full h-full" />
 
-          {!mapLoaded && (
+          {!mapReady && (
             <div className="absolute inset-0 flex items-center justify-center bg-sky-50">
               <div className="text-center">
                 <div className="w-10 h-10 border-4 border-sky-400 border-t-transparent rounded-full animate-spin mx-auto" />
@@ -159,8 +143,7 @@ export default function MapPage() {
             </div>
           )}
 
-          {/* Info Badge */}
-          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur rounded-lg px-3 py-2 text-xs text-gray-500 shadow-sm">
+          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur rounded-lg px-3 py-2 text-xs text-gray-500 shadow-sm z-[1000]">
             {filteredCount}개 장소 · {activeCategories.size}개 카테고리
           </div>
         </div>
@@ -196,9 +179,7 @@ export default function MapPage() {
                 {selectedPin.phone && (
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400">📞</span>
-                    <a href={`tel:${selectedPin.phone}`} className="text-blue-600">
-                      {selectedPin.phone}
-                    </a>
+                    <a href={`tel:${selectedPin.phone}`} className="text-blue-600">{selectedPin.phone}</a>
                   </div>
                 )}
               </div>
