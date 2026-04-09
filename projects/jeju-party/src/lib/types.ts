@@ -19,8 +19,15 @@ export interface Party {
   hostPartyCount: number;
   hostBio?: string;
   tags: string[];
+  schedule?: ScheduleItem[];
   courseId?: string;
   createdAt: string;
+}
+
+export interface ScheduleItem {
+  time: string;
+  place: string;
+  memo?: string;
 }
 
 export interface PartyFilter {

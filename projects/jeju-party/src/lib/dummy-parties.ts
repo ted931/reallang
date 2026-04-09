@@ -23,6 +23,16 @@ export const DUMMY_PARTIES: Party[] = [
     hostPartyCount: 12,
     hostBio: "제주 한달살이 중, 자전거 매일 타요",
     tags: ["자전거", "해안도로", "애월", "렌터카있음"],
+    schedule: [
+      { time: "10:00", place: "애월항 주차장 집합", memo: "자전거 내리고 준비" },
+      { time: "10:30", place: "애월항 출발", memo: "해안도로 라이딩 시작" },
+      { time: "11:30", place: "곽지해변", memo: "잠깐 쉬면서 사진" },
+      { time: "12:00", place: "카페 델문도", memo: "아메리카노 한잔" },
+      { time: "12:40", place: "다시 출발 → 한림 방향" },
+      { time: "13:30", place: "한림항 도착", memo: "라이딩 끝!" },
+      { time: "14:00", place: "한림 우진해장국", memo: "몸국으로 마무리" },
+      { time: "15:00", place: "렌터카로 애월 복귀 → 해산" },
+    ],
     createdAt: "2026-04-09T10:00:00Z",
   },
   {
@@ -46,6 +56,13 @@ export const DUMMY_PARTIES: Party[] = [
     hostPartyCount: 23,
     hostBio: "오름 100개 도전 중 (현재 67개)",
     tags: ["등산", "한라산", "영실", "새벽출발", "흑돼지"],
+    schedule: [
+      { time: "05:30", place: "제주시 연동 픽업" },
+      { time: "06:30", place: "영실 탐방로 입구", memo: "등산 시작" },
+      { time: "09:00", place: "윗세오름 대피소", memo: "간식 타임" },
+      { time: "11:30", place: "하산 완료" },
+      { time: "12:30", place: "흑돈가 (애월)", memo: "흑돼지 점심!" },
+    ],
     createdAt: "2026-04-09T08:00:00Z",
   },
   {

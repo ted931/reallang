@@ -95,6 +95,38 @@ export default function PartyDetailPage() {
           <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{party.description}</p>
         </div>
 
+        {/* 일정 타임라인 */}
+        {party.schedule && party.schedule.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <h2 className="font-bold text-gray-900 mb-4">일정</h2>
+            <div className="space-y-0">
+              {party.schedule.map((item, idx) => (
+                <div key={idx} className="flex gap-3">
+                  {/* 타임라인 도트 + 선 */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-3 h-3 rounded-full bg-orange-400 border-2 border-orange-100 flex-shrink-0 mt-1" />
+                    {idx < party.schedule!.length - 1 && (
+                      <div className="w-px flex-1 bg-orange-200 min-h-[32px]" />
+                    )}
+                  </div>
+                  {/* 내용 */}
+                  <div className="pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">
+                        {item.time}
+                      </span>
+                      <span className="text-sm font-medium text-gray-900">{item.place}</span>
+                    </div>
+                    {item.memo && (
+                      <p className="text-xs text-gray-400 mt-0.5 ml-[52px]">{item.memo}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 렌터카 / 장비 */}
         {(party.hasRentalCar || party.equipmentNeeded) && (
           <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
