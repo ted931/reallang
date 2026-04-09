@@ -4,7 +4,10 @@ const basePath = process.env.NODE_ENV === "production" ? "/map" : "";
 
 const nextConfig: NextConfig = {
   basePath,
-  env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_KAKAO_JS_KEY: process.env.NEXT_PUBLIC_KAKAO_JS_KEY || "",
+  },
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 };
