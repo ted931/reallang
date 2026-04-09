@@ -52,7 +52,7 @@ export default function RegisterPage() {
     setVerifying(true);
     setVerifyError('');
     try {
-      const res = await fetch('/api/verify-business', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/verify-business`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ businessNumber }),
@@ -78,7 +78,7 @@ export default function RegisterPage() {
     try {
       const formData = new FormData();
       formData.append('image', file);
-      const res = await fetch('/api/verify-business/ocr', { method: 'POST', body: formData });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/verify-business/ocr`, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.success && data.valid) {
         setBusinessNumber(data.data.businessNumber);
@@ -108,7 +108,7 @@ export default function RegisterPage() {
     if (!name || !category || !region || !address) return;
     setSaving(true);
     try {
-      const res = await fetch('/api/shops', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/shops`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

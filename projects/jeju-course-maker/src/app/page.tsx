@@ -55,7 +55,7 @@ export default function CourseMakerPage() {
     setResult(null);
 
     try {
-      const res = await fetch("/api/course", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/course`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

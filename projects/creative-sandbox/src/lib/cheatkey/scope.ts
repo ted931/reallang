@@ -1,6 +1,6 @@
 export function createCheatkeyScope() {
   const saveData = async (table: string, data: Record<string, unknown>) => {
-    const res = await fetch(`/api/cheatkey/${table}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/cheatkey/${table}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -16,7 +16,7 @@ export function createCheatkeyScope() {
     const params = filter
       ? `?filter=${encodeURIComponent(JSON.stringify(filter))}`
       : "";
-    const res = await fetch(`/api/cheatkey/${table}${params}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/cheatkey/${table}${params}`);
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.error || "조회 실패");

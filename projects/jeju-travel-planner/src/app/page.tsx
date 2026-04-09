@@ -62,7 +62,7 @@ export default function PlannerPage() {
     setPlan(null);
 
     try {
-      const res = await fetch("/api/plan", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/plan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

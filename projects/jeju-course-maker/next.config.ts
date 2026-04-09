@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.NODE_ENV === "production" ? "/course" : "";
+
 const nextConfig: NextConfig = {
-  basePath: process.env.NODE_ENV === "production" ? "/course" : "",
+  basePath,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   serverExternalPackages: ["openai"],
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

@@ -18,7 +18,7 @@ export default function ExplorePage() {
     if (region) params.set('region', region);
 
     setLoading(true);
-    fetch(`/api/shops?${params}`)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/shops?${params}`)
       .then((r) => r.json())
       .then((data) => setShops(data.shops))
       .finally(() => setLoading(false));

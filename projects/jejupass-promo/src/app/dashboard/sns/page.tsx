@@ -27,7 +27,7 @@ export default function SNSGeneratorPage() {
 
   // Load shops
   useEffect(() => {
-    fetch('/api/shops')
+    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/shops`)
       .then((r) => r.json())
       .then((data) => {
         setShops(data.shops);
@@ -46,7 +46,7 @@ export default function SNSGeneratorPage() {
     if (!selectedShop) return;
     setGeneratingCaption(true);
     try {
-      const res = await fetch('/api/sns/generate-caption', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/sns/generate-caption`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shopId: selectedShop.id }),
@@ -68,7 +68,7 @@ export default function SNSGeneratorPage() {
       const formData = new FormData();
       formData.append('file', file);
       if (selectedShop) formData.append('shopId', selectedShop.id);
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/upload`, { method: 'POST', body: formData });
       const data = await res.json();
       setUploadedPhotoUrl(data.url);
       setPreviewUrl(null);
@@ -85,7 +85,7 @@ export default function SNSGeneratorPage() {
     setGeneratingCard(true);
     setPreviewUrl(null);
     try {
-      const res = await fetch('/api/sns/generate-card', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/sns/generate-card`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

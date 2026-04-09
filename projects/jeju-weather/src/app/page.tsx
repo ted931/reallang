@@ -22,7 +22,7 @@ export default function WeatherPage() {
   const [selected, setSelected] = useState<LocationWeather | null>(null);
 
   useEffect(() => {
-    fetch("/api/weather")
+    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/weather`)
       .then((r) => r.json())
       .then((data) => {
         setLocations(data.locations || []);
