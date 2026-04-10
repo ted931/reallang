@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy to Lightsail
 
 on:
   push:
@@ -11,20 +11,34 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          host: 13.125.33.79
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222
           script: |
             cd /home/ubuntu/reallang
             git pull origin main
-            npm install
-            npx next build
-            for project in jejupass-promo mini-xd creative-sandbox jeju-weather jeju-map jeju-travel-planner jeju-course-maker dashboard cs-chatbot; do
-              if [ -d "projects/$project" ]; then
-                npm run build -w "$project" 2>&1 | tail -1
-              fi
+            npm install --silent
+            
+            CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^projects/" | cut -d/ -f2 | sort -u)
+            
+            for proj in $CHANGED; do
+              case $proj in
+                jejupass-promo) npm run build:jejupass && pm2 restart jejupass ;;
+                mini-xd) npm run build:mini-xd && pm2 restart mini-xd ;;
+                creative-sandbox) npm run build:sandbox && pm2 restart sandbox ;;
+                jeju-weather) npm run build:weather && pm2 restart weather ;;
+                jeju-map) npm run build:map && pm2 restart map ;;
+                jeju-travel-planner) npm run build:travel && pm2 restart travel ;;
+                jeju-course-maker) npm run build:course && pm2 restart course ;;
+                dashboard) npm run build:dashboard && pm2 restart dashboard ;;
+                cs-chatbot) npm run build:chatbot && pm2 restart chatbot ;;
+                jeju-party) npm run build:party && pm2 restart party ;;
+              esac
             done
-            sudo cp scripts/nginx.conf /etc/nginx/sites-available/reallang
-            sudo nginx -t && sudo systemctl reload nginx
-            pm2 restart all 2>/dev/null || pm2 start ecosystem.config.js
+            
+            if [ -z "$CHANGED" ]; then
+              pm2 restart all
+            fi
+            
             pm2 save

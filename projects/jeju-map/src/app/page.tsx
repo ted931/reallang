@@ -9,9 +9,42 @@ export default function MapPage() {
   );
   const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [pins, setPins] = useState<MapPin[]>(DUMMY_PINS);
+  const [loading, setLoading] = useState(false);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 공공데이터 API에서 실제 POI 로드
+  useEffect(() => {
+    setLoading(true);
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    fetch(`${basePath}/api/places?type=12`) // 관광지부터
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.places?.length > 0) {
+          setPins((prev) => {
+            const newIds = new Set(data.places.map((p: MapPin) => p.id));
+            const filtered = prev.filter((p) => !newIds.has(p.id));
+            return [...filtered, ...data.places];
+          });
+        }
+        // 음식점도 로드
+        return fetch(`${basePath}/api/places?type=39`);
+      })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.places?.length > 0) {
+          setPins((prev) => {
+            const newIds = new Set(data.places.map((p: MapPin) => p.id));
+            const filtered = prev.filter((p) => !newIds.has(p.id));
+            return [...filtered, ...data.places];
+          });
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   // Leaflet 동적 로드 (SSR 회피)
   useEffect(() => {
@@ -57,7 +90,7 @@ export default function MapPage() {
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
-    const filtered = DUMMY_PINS.filter((p) => activeCategories.has(p.category));
+    const filtered = pins.filter((p) => activeCategories.has(p.category));
 
     filtered.forEach((pin) => {
       const cat = CATEGORIES.find((c) => c.id === pin.category);
@@ -84,7 +117,7 @@ export default function MapPage() {
 
       markersRef.current.push(marker);
     });
-  }, [activeCategories, mapReady]);
+  }, [activeCategories, mapReady, pins]);
 
   const toggleCategory = (id: string) => {
     setActiveCategories((prev) => {
@@ -97,7 +130,7 @@ export default function MapPage() {
   };
 
   const getCategoryInfo = (id: string) => CATEGORIES.find((c) => c.id === id);
-  const filteredCount = DUMMY_PINS.filter((p) => activeCategories.has(p.category)).length;
+  const filteredCount = pins.filter((p) => activeCategories.has(p.category)).length;
 
   return (
     <div className="h-screen flex flex-col">
@@ -106,7 +139,7 @@ export default function MapPage() {
         <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategories.has(cat.id);
-            const count = DUMMY_PINS.filter((p) => p.category === cat.id).length;
+            const count = pins.filter((p) => p.category === cat.id).length;
             return (
               <button
                 key={cat.id}
