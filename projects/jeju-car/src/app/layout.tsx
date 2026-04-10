@@ -1,3 +1,4 @@
+import { DevNav } from "@/components/dev-nav";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -12,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-[Noto_Sans_KR] antialiased bg-gray-50">{children}</body>
+      <body className="font-[Noto_Sans_KR] antialiased bg-gray-50"><DevNav />{children}</body>
     </html>
   );
 }

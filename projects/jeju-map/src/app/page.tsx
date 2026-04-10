@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { CATEGORIES, DUMMY_PINS, type MapPin } from "@/lib/categories";
+import { CATEGORIES, DUMMY_PINS, EXTRA_PINS, type MapPin } from "@/lib/categories";
+
+const ALL_PINS = [...DUMMY_PINS, ...EXTRA_PINS];
 
 export default function MapPage() {
   const [activeCategories, setActiveCategories] = useState<Set<string>>(
@@ -9,7 +11,7 @@ export default function MapPage() {
   );
   const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
   const [mapReady, setMapReady] = useState(false);
-  const [pins, setPins] = useState<MapPin[]>(DUMMY_PINS);
+  const [pins, setPins] = useState<MapPin[]>(ALL_PINS);
   const [loading, setLoading] = useState(false);
   const [showWeather, setShowWeather] = useState(false);
   const [weatherData, setWeatherData] = useState<any[]>([]);
