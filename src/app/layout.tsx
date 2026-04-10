@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "제주패스 — AI 여행 플래너 · 날씨 · 코스 · 지도",
-  description: "날씨 확인 → AI 코스 추천 → 맞춤 일정 생성 → 렌터카 예약까지. 제주 여행의 모든 것을 한곳에서.",
+  title: "Kaflix 아이디어 놀이터 — realang.store",
+  description: "제주 여행·렌터카·비즈니스 통합 서비스와 AI 프로토타입 실험실. 프로토타입에서 실제 서비스로.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
