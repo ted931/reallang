@@ -36,6 +36,32 @@ export interface PartyFilter {
   date?: string;
 }
 
+// ── 결제 관련 타입 ──
+export interface PartyParticipant {
+  id: string;
+  partyId: string;
+  userName: string;
+  phone?: string;
+  status: "pending" | "approved" | "cancelled";
+  paymentStatus: "none" | "pending" | "completed" | "refunded";
+  paymentAmount?: number;
+  joinedAt: string;
+}
+
+export interface PaymentRequest {
+  partyId: string;
+  partyTitle: string;
+  amount: number;
+  userName: string;
+  phone?: string;
+}
+
+export interface PaymentResult {
+  success: boolean;
+  transactionId?: string;
+  message: string;
+}
+
 export const HOBBY_CATEGORIES = [
   { id: "cycling", label: "자전거", emoji: "🚴" },
   { id: "hiking", label: "등산/트레킹", emoji: "⛰️" },

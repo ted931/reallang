@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-const basePath = process.env.NODE_ENV === "production" ? "/jeju-travel" : "";
+const basePath = process.env.NODE_ENV === "production" ? "/travel" : "";
 const nextConfig: NextConfig = {
   basePath,
   env: { NEXT_PUBLIC_BASE_PATH: basePath },

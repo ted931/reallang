@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { STATIONS, CAR_FUEL_EFFICIENCY, calculateFuel, type GasStation } from "@/lib/fuel-data";
+import { loadSelectedCar } from "@/lib/shared-state";
 
 const CAR_NAMES = Object.keys(CAR_FUEL_EFFICIENCY);
 
@@ -13,6 +14,15 @@ const RETURN_LOCATIONS = [
 
 export default function SmartFuelPage() {
   const [carName, setCarName] = useState("아반떼");
+
+  // 차종추천에서 선택된 차종 자동 적용
+  useEffect(() => {
+    const saved = loadSelectedCar();
+    if (saved) {
+      const shortName = saved.carName.split(" ").pop() || "";
+      if (CAR_FUEL_EFFICIENCY[shortName]) setCarName(shortName);
+    }
+  }, []);
   const [fuelPercent, setFuelPercent] = useState(30);
   const [returnLocation, setReturnLocation] = useState("제주공항");
   const [result, setResult] = useState<any>(null);

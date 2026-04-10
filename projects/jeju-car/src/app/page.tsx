@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { saveSelectedCar } from "@/lib/shared-state";
 
 interface CarInfo {
   id: string; name: string; category: string; seats: number;
@@ -56,6 +57,16 @@ export default function CarPickPage() {
       });
       const data = await res.json();
       setResult(data);
+      // 추천 차종을 공유 상태에 저장 → 주유가이드/비용계산에서 활용
+      if (data.recommendation?.car) {
+        saveSelectedCar({
+          carId: data.recommendation.car.id,
+          carName: data.recommendation.car.name,
+          pricePerDay: data.recommendation.car.pricePerDay,
+          fuelType: data.recommendation.car.fuelType,
+          days,
+        });
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -200,6 +211,16 @@ export default function CarPickPage() {
                 </div>
               </div>
             )}
+
+            {/* 다음 단계 CTA */}
+            <div className="grid sm:grid-cols-2 gap-3">
+              <a href="/fuel" className="flex items-center justify-center gap-2 py-3 bg-amber-500 text-white rounded-xl font-medium text-sm hover:bg-amber-600 transition-colors">
+                ⛽ 주유 가이드 보기
+              </a>
+              <a href="/cost" className="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-white rounded-xl font-medium text-sm hover:bg-emerald-600 transition-colors">
+                💰 총 비용 계산하기
+              </a>
+            </div>
           </div>
         )}
       </main>

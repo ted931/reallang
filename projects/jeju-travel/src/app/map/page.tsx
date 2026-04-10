@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { CATEGORIES, DUMMY_PINS, type MapPin } from "@/lib/categories";
+import { loadPlan, type SavedPlan } from "@/lib/shared-state";
 
 export default function MapPage() {
   const [activeCategories, setActiveCategories] = useState<Set<string>>(
@@ -13,10 +14,17 @@ export default function MapPage() {
   const [loading, setLoading] = useState(false);
   const [showWeather, setShowWeather] = useState(false);
   const [weatherData, setWeatherData] = useState<any[]>([]);
+  const [savedPlan, setSavedPlan] = useState<SavedPlan | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const weatherMarkersRef = useRef<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 일정 공유 데이터 로드
+  useEffect(() => {
+    const plan = loadPlan();
+    if (plan && plan.spots.length > 0) setSavedPlan(plan);
+  }, []);
 
   // 날씨 데이터 로드
   useEffect(() => {
@@ -183,6 +191,17 @@ export default function MapPage() {
 
   return (
     <div className="h-screen flex flex-col">
+      {/* 일정 연동 배너 */}
+      {savedPlan && (
+        <div className="bg-emerald-50 border-b border-emerald-200 px-4 py-2">
+          <div className="max-w-6xl mx-auto flex items-center gap-2 text-sm text-emerald-700">
+            <span>✈️</span>
+            <span className="font-medium">&quot;{savedPlan.title}&quot; 일정의 장소 {savedPlan.spots.length}곳이 지도에 표시됩니다</span>
+            <button onClick={() => setSavedPlan(null)} className="ml-auto text-emerald-500 hover:text-emerald-700 text-xs">닫기</button>
+          </div>
+        </div>
+      )}
+
       {/* Category Filter */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">

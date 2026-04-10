@@ -24,16 +24,28 @@ jobs:
             
             for proj in $CHANGED; do
               case $proj in
+                # 통합 서비스
+                jeju-travel) npm run build:jeju-travel && pm2 restart jeju-travel ;;
+                jeju-car) npm run build:jeju-car && pm2 restart jeju-car ;;
+                jeju-biz) npm run build:jeju-biz && pm2 restart jeju-biz ;;
+                # 제주 서비스
                 jejupass-promo) npm run build:jejupass && pm2 restart jejupass ;;
-                mini-xd) npm run build:mini-xd && pm2 restart mini-xd ;;
-                creative-sandbox) npm run build:sandbox && pm2 restart sandbox ;;
                 jeju-weather) npm run build:weather && pm2 restart weather ;;
                 jeju-map) npm run build:map && pm2 restart map ;;
-                jeju-travel-planner) npm run build:travel && pm2 restart travel ;;
-                jeju-course-maker) npm run build:course && pm2 restart course ;;
+                jeju-travel-planner) npm run build:travel && pm2 restart travel-planner ;;
+                jeju-course-maker) npm run build:course && pm2 restart course-maker ;;
+                jeju-party) npm run build:party && pm2 restart party ;;
+                # 렌터카 서비스
+                car-pick) npm run build:car-pick && pm2 restart car-pick ;;
+                weather-drive) npm run build:weather-drive && pm2 restart weather-drive ;;
+                smart-fuel) npm run build:smart-fuel && pm2 restart smart-fuel ;;
+                # 도구 & 내부
+                mini-xd) npm run build:mini-xd && pm2 restart mini-xd ;;
+                creative-sandbox) npm run build:sandbox && pm2 restart sandbox ;;
                 dashboard) npm run build:dashboard && pm2 restart dashboard ;;
                 cs-chatbot) npm run build:chatbot && pm2 restart chatbot ;;
-                jeju-party) npm run build:party && pm2 restart party ;;
+                # 공통 모듈 변경 시 전체 재빌드
+                common) pm2 restart all ;;
               esac
             done
             

@@ -10,6 +10,10 @@ export default function PartyDetailPage() {
   const party = DUMMY_PARTIES.find((p) => p.id === params.id);
   const [joined, setJoined] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<"info" | "paying" | "done">("info");
+  const [payerName, setPayerName] = useState("");
+  const [payerPhone, setPayerPhone] = useState("");
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
 
   if (!party) {
     return (
@@ -200,33 +204,176 @@ export default function PartyDetailPage() {
         </div>
       </main>
 
-      {/* 참여 모달 */}
+      {/* 참여 + 결제 모달 */}
       {showJoinModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-6" onClick={() => setShowJoinModal(false)}>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-6" onClick={() => { if (paymentStep === "info") { setShowJoinModal(false); setPaymentStep("info"); } }}>
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">참여 신청</h3>
-            <p className="text-sm text-gray-500 mb-4">
-              {party.hostName}님의 "{party.title}" 파티에 참여하시겠어요?
-            </p>
-            {party.costType !== "free" && (
-              <div className="p-3 bg-orange-50 rounded-xl text-sm text-orange-700 mb-4">
-                💰 예상 비용: ₩{(party.costAmount || 0).toLocaleString()}/인 ({party.costType === "split" ? "엔빵" : "고정"})
+
+            {/* STEP 1: 정보 입력 */}
+            {paymentStep === "info" && (
+              <>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">참여 신청</h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  {party.hostName}님의 &quot;{party.title}&quot; 파티에 참여하시겠어요?
+                </p>
+
+                <div className="space-y-3 mb-4">
+                  <input
+                    value={payerName}
+                    onChange={(e) => setPayerName(e.target.value)}
+                    placeholder="이름"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-400 outline-none"
+                  />
+                  <input
+                    value={payerPhone}
+                    onChange={(e) => setPayerPhone(e.target.value)}
+                    placeholder="연락처 (선택)"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-orange-400 outline-none"
+                  />
+                </div>
+
+                {party.costType !== "free" && (
+                  <div className="p-3 bg-orange-50 rounded-xl mb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-orange-700">참여 비용</span>
+                      <span className="text-lg font-bold text-orange-700">
+                        {(party.costAmount || 0).toLocaleString()}원
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-orange-500 mt-1">
+                      {party.costType === "split" ? "인당 예상 금액 (엔빵)" : "고정 참여비"}
+                    </p>
+                  </div>
+                )}
+
+                {party.costType === "free" && (
+                  <div className="p-3 bg-emerald-50 rounded-xl text-sm text-emerald-700 mb-4">
+                    무료 파티입니다
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setShowJoinModal(false); setPaymentStep("info"); }}
+                    className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium"
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!payerName.trim()) return;
+                      if (party.costType === "free") {
+                        setJoined(true);
+                        setPaymentStep("done");
+                      } else {
+                        setPaymentStep("paying");
+                      }
+                    }}
+                    disabled={!payerName.trim()}
+                    className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm disabled:opacity-50"
+                  >
+                    {party.costType === "free" ? "참여합니다!" : "결제하고 참여"}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* STEP 2: 결제 진행 */}
+            {paymentStep === "paying" && (
+              <>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">결제</h3>
+                <div className="p-4 bg-gray-50 rounded-xl mb-4">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500">파티</span>
+                    <span className="font-medium text-gray-900">{party.title}</span>
+                  </div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500">참여자</span>
+                    <span className="font-medium text-gray-900">{payerName}</span>
+                  </div>
+                  <div className="flex justify-between text-sm pt-2 border-t border-gray-200">
+                    <span className="text-gray-900 font-bold">결제 금액</span>
+                    <span className="text-lg font-bold text-orange-600">
+                      {(party.costAmount || 0).toLocaleString()}원
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-400 mb-4 text-center">
+                  결제 게이트웨이 연동 준비 중입니다.
+                  현재는 모의 결제로 참여가 처리됩니다.
+                </p>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setPaymentStep("info")}
+                    className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium"
+                  >
+                    뒤로
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setPaymentProcessing(true);
+                      try {
+                        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+                        // 결제 초기화
+                        await fetch(`${basePath}/api/payments`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            action: "initialize",
+                            partyId: party.id,
+                            partyTitle: party.title,
+                            amount: party.costAmount || 0,
+                            userName: payerName,
+                            phone: payerPhone,
+                          }),
+                        });
+                        // 모의 결제 완료
+                        await fetch(`${basePath}/api/payments`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ action: "confirm", orderId: `PARTY-${party.id.slice(0, 8)}-${Date.now()}` }),
+                        });
+                        setJoined(true);
+                        setPaymentStep("done");
+                      } catch {
+                        alert("결제 처리 중 오류가 발생했습니다.");
+                      } finally {
+                        setPaymentProcessing(false);
+                      }
+                    }}
+                    disabled={paymentProcessing}
+                    className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm disabled:opacity-50"
+                  >
+                    {paymentProcessing ? "처리 중..." : "결제 완료"}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* STEP 3: 완료 */}
+            {paymentStep === "done" && (
+              <div className="text-center py-4">
+                <p className="text-4xl mb-3">🎉</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">참여 완료!</h3>
+                <p className="text-sm text-gray-500 mb-1">
+                  {party.hostName}님이 승인하면 카카오톡으로 알려드릴게요
+                </p>
+                {party.costType !== "free" && (
+                  <p className="text-xs text-emerald-600 mb-4">
+                    결제 {(party.costAmount || 0).toLocaleString()}원 완료
+                  </p>
+                )}
+                <button
+                  onClick={() => { setShowJoinModal(false); setPaymentStep("info"); }}
+                  className="px-8 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm"
+                >
+                  확인
+                </button>
               </div>
             )}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowJoinModal(false)}
-                className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 text-sm font-medium"
-              >
-                취소
-              </button>
-              <button
-                onClick={() => { setJoined(true); setShowJoinModal(false); }}
-                className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm"
-              >
-                참여합니다!
-              </button>
-            </div>
+
           </div>
         </div>
       )}

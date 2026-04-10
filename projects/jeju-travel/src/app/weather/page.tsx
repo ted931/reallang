@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { saveWeather } from "@/lib/shared-state";
 
 interface LocationWeather {
   name: string;
@@ -25,8 +26,19 @@ export default function WeatherPage() {
     fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/weather`)
       .then((r) => r.json())
       .then((data) => {
-        setLocations(data.locations || []);
+        const locs = data.locations || [];
+        setLocations(locs);
         setUpdatedAt(data.updatedAt || "");
+        // 날씨 요약을 공유 상태에 저장 → 코스/플래너에서 활용
+        const sunny = locs.filter((l: LocationWeather) => parseFloat(l.rainfall) === 0);
+        const rainy = locs.filter((l: LocationWeather) => parseFloat(l.rainfall) > 0);
+        const temps = locs.map((l: LocationWeather) => parseFloat(l.temperature) || 0);
+        saveWeather({
+          sunnyAreas: sunny.map((l: LocationWeather) => l.name),
+          rainyAreas: rainy.map((l: LocationWeather) => l.name),
+          avgTemp: temps.length > 0 ? temps.reduce((a: number, b: number) => a + b, 0) / temps.length : 0,
+          updatedAt: data.updatedAt || new Date().toISOString(),
+        });
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -127,7 +139,7 @@ export default function WeatherPage() {
                         {sunny.map((l) => l.name).join(", ")}
                       </p>
                       <a
-                        href={`/course?theme=자연&region=${encodeURIComponent(sunny[0]?.name || "제주")}`}
+                        href={`/course?theme=자연&region=${encodeURIComponent(sunny[0]?.name || "제주")}&weather=sunny`}
                         className="inline-flex items-center gap-1 px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors"
                       >
                         이 지역 코스 만들기 →

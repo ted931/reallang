@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 const PAGES = [
   { href: "/", label: "차종추천", emoji: "🚗" },
   { href: "/fuel", label: "주유가이드", emoji: "⛽" },
+  { href: "/cost", label: "비용계산", emoji: "💰" },
 ];
 
 export function DevNav() {

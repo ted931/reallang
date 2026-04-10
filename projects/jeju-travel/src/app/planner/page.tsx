@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import type { TravelPlan } from "@/lib/types";
+import { loadCourse, savePlan } from "@/lib/shared-state";
 
 const STYLE_OPTIONS = [
   { id: "healing", label: "힐링", emoji: "🧘" },
@@ -30,7 +32,16 @@ const CATEGORY_COLORS: Record<string, string> = {
   이동: "bg-gray-100 text-gray-500",
 };
 
-export default function PlannerPage() {
+export default function PlannerPageWrapper() {
+  return (
+    <Suspense>
+      <PlannerPage />
+    </Suspense>
+  );
+}
+
+function PlannerPage() {
+  const searchParams = useSearchParams();
   const [prompt, setPrompt] = useState("");
   const [nights, setNights] = useState(2);
   const [travelers, setTravelers] = useState(2);
@@ -40,6 +51,30 @@ export default function PlannerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeDay, setActiveDay] = useState(0);
+  const [courseHint, setCourseHint] = useState("");
+
+  // URL 파라미터 + 코스 공유 데이터 로드
+  useEffect(() => {
+    // URL params: ?nights=2&budget=500000&style=힐링코스
+    const pNights = searchParams.get("nights");
+    const pBudget = searchParams.get("budget");
+    const pStyle = searchParams.get("style");
+
+    if (pNights) setNights(Math.max(1, Math.min(7, parseInt(pNights) || 2)));
+    if (pBudget) {
+      const b = parseInt(pBudget) || 0;
+      setBudget(b >= 10000 ? Math.round(b / 10000) : b);
+    }
+    if (pStyle) setPrompt((prev) => prev || `"${pStyle}" 코스 기반 상세 일정`);
+
+    // 코스 공유 데이터에서 힌트 생성
+    const course = loadCourse();
+    if (course) {
+      if (!pNights) setNights(Math.max(1, course.days - 1));
+      if (!pBudget && course.totalCost > 0) setBudget(Math.round(course.totalCost / 10000));
+      setCourseHint(`"${course.name}" 코스 (${course.days}일, ${course.spots.length}곳) 기반으로 일정을 생성합니다`);
+    }
+  }, []);
 
   const toggleStyle = (id: string) => {
     setSelectedStyles((prev) =>
@@ -80,8 +115,25 @@ export default function PlannerPage() {
       }
 
       const data = await res.json();
-      setPlan(data.plan);
+      const newPlan = data.plan;
+      setPlan(newPlan);
       setActiveDay(0);
+
+      // 일정을 공유 상태에 저장 → 지도에서 활용
+      if (newPlan) {
+        const allSpots = newPlan.schedule.flatMap((d: any) =>
+          d.spots.map((s: any) => ({
+            name: s.name,
+            category: s.category,
+            day: d.day,
+          }))
+        );
+        savePlan({
+          title: newPlan.title,
+          nights: newPlan.nights,
+          spots: allSpots,
+        });
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -108,6 +160,14 @@ export default function PlannerPage() {
         {!plan ? (
           /* ── 입력 폼 ── */
           <div className="space-y-6">
+            {/* 코스 연동 힌트 */}
+            {courseHint && (
+              <div className="p-3 bg-violet-50 border border-violet-200 rounded-xl text-sm text-violet-700 flex items-center gap-2">
+                <span>🗺️</span>
+                <span>{courseHint}</span>
+              </div>
+            )}
+
             {/* 빠른 입력 */}
             <div>
               <p className="text-xs font-medium text-gray-500 mb-2">빠른 선택</p>
@@ -391,10 +451,10 @@ export default function PlannerPage() {
                     <p className="text-sm text-white/80 mt-0.5">제주패스 렌터카 최저가 보장 · 공항 픽업</p>
                   </div>
                   <a
-                    href="/jejupass"
+                    href="/car/?utm_source=realang&utm_medium=planner&utm_campaign=ai_result"
                     className="px-5 py-2.5 bg-white text-emerald-600 rounded-lg font-bold text-sm hover:bg-emerald-50 transition-colors flex-shrink-0"
                   >
-                    예약하기
+                    렌터카 비교하기
                   </a>
                 </div>
               </div>

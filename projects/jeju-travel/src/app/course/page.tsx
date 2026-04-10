@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import type { Course, CourseResult, CourseStop } from "@/lib/types";
+import { loadWeather, saveCourse } from "@/lib/shared-state";
 
 const COMPANION_OPTIONS = [
   { id: "커플", emoji: "💑" },
@@ -32,7 +34,16 @@ const CATEGORY_STYLE: Record<string, { color: string; icon: string }> = {
   공항: { color: "bg-gray-100 text-gray-600", icon: "🛬" },
 };
 
-export default function CourseMakerPage() {
+export default function CoursePage() {
+  return (
+    <Suspense>
+      <CourseMakerPage />
+    </Suspense>
+  );
+}
+
+function CourseMakerPage() {
+  const searchParams = useSearchParams();
   const [prompt, setPrompt] = useState("");
   const [days, setDays] = useState(2);
   const [companions, setCompanions] = useState("커플");
@@ -44,6 +55,42 @@ export default function CourseMakerPage() {
   const [activeDayIdx, setActiveDayIdx] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [weatherHint, setWeatherHint] = useState("");
+
+  // URL 파라미터 + 공유 날씨 데이터 로드
+  useEffect(() => {
+    // URL params: ?theme=자연&region=제주시&weather=sunny
+    const theme = searchParams.get("theme");
+    const region = searchParams.get("region");
+    const weatherParam = searchParams.get("weather");
+
+    if (theme && !themes.includes(theme)) {
+      const match = THEME_OPTIONS.find((t) => t.id === theme);
+      if (match) setThemes([match.id]);
+    }
+
+    // 날씨 공유 상태에서 힌트 생성
+    const w = loadWeather();
+    if (w) {
+      const parts: string[] = [];
+      if (w.rainyAreas.length > 0) {
+        parts.push(`비 오는 곳(${w.rainyAreas.join(",")})은 실내 코스 위주`);
+      }
+      if (region && w.sunnyAreas.includes(region)) {
+        parts.push(`${region}은 맑음 — 야외 코스 추천`);
+      }
+      if (parts.length > 0) setWeatherHint(parts.join(". "));
+
+      // 날씨 기반 프롬프트 자동 생성
+      if (weatherParam === "sunny" && region && !prompt) {
+        setPrompt(`${region} 중심으로 맑은 날씨를 즐기는 야외 코스`);
+      }
+      if (weatherParam === "rainy" && !prompt) {
+        setPrompt("비 오는 날 실내 위주 코스 (카페, 박물관, 실내 체험)");
+        if (!themes.includes("카페")) setThemes((prev) => [...prev, "카페"]);
+      }
+    }
+  }, []);
 
   const toggleTheme = (id: string) => {
     setThemes((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
@@ -92,6 +139,22 @@ export default function CourseMakerPage() {
 
   const selectedCourse: Course | undefined = result?.courses.find((c) => c.id === selectedCourseId);
 
+  // 코스 선택 변경 시 공유 상태에 저장
+  useEffect(() => {
+    if (!selectedCourse) return;
+    const allSpots = selectedCourse.days.flatMap((d) =>
+      d.stops.map((s) => ({ name: s.name, category: s.category }))
+    );
+    saveCourse({
+      name: selectedCourse.name,
+      days: selectedCourse.days.length,
+      totalCost: selectedCourse.totalCost,
+      companions,
+      themes,
+      spots: allSpots,
+    });
+  }, [selectedCourseId, result]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-violet-50 to-white">
       {/* Header */}
@@ -106,6 +169,14 @@ export default function CourseMakerPage() {
         {!result ? (
           /* ── 입력 폼 ── */
           <div className="space-y-6">
+            {/* 날씨 연동 힌트 */}
+            {weatherHint && (
+              <div className="p-3 bg-sky-50 border border-sky-200 rounded-xl text-sm text-sky-700 flex items-center gap-2">
+                <span>🌤️</span>
+                <span>날씨 연동: {weatherHint}</span>
+              </div>
+            )}
+
             {/* 자연어 입력 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -395,22 +466,37 @@ export default function CourseMakerPage() {
                 </div>
 
                 {/* 딥링크 CTA */}
-                <div className="grid sm:grid-cols-2 gap-3">
+                <div className="grid sm:grid-cols-3 gap-3">
                   <a
                     href={`/travel?nights=${(selectedCourse.days.length - 1) || 1}&budget=${selectedCourse.totalCost}&style=${encodeURIComponent(selectedCourse.name)}`}
                     className="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-white rounded-xl font-medium text-sm hover:bg-emerald-600 transition-colors"
                   >
-                    ✈️ 이 코스로 일정 만들기
+                    ✈️ 일정 만들기
                   </a>
                   <a
                     href="/map"
                     className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-50 transition-colors"
                   >
-                    🗺️ 지도에서 장소 보기
+                    🗺️ 지도 보기
                   </a>
+                  <button
+                    onClick={() => {
+                      const ogUrl = `${window.location.origin}/api/og?title=${encodeURIComponent(selectedCourse.name)}&days=${selectedCourse.days.length}&spots=${selectedCourse.days.reduce((a, d) => a + d.stops.length, 0)}&cost=${formatCost(selectedCourse.totalCost)}&type=course`;
+                      const shareUrl = window.location.href;
+                      if (navigator.share) {
+                        navigator.share({ title: selectedCourse.name, text: `${selectedCourse.description} - ${formatCost(selectedCourse.totalCost)}`, url: shareUrl });
+                      } else {
+                        navigator.clipboard.writeText(shareUrl);
+                        alert("링크가 복사되었습니다!");
+                      }
+                    }}
+                    className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium text-sm hover:bg-gray-50 transition-colors"
+                  >
+                    공유하기
+                  </button>
                 </div>
 
-                {/* 렌터카 예약 배너 */}
+                {/* 렌터카 비교하기 배너 */}
                 <div className="bg-gradient-to-r from-violet-500 to-indigo-500 rounded-xl p-5 text-white">
                   <div className="flex items-center justify-between">
                     <div>
@@ -420,10 +506,10 @@ export default function CourseMakerPage() {
                       </p>
                     </div>
                     <a
-                      href="/jejupass"
+                      href="/car/?utm_source=realang&utm_medium=course&utm_campaign=ai_result"
                       className="px-5 py-2.5 bg-white text-violet-600 rounded-lg font-bold text-sm hover:bg-violet-50 transition-colors flex-shrink-0"
                     >
-                      렌터카 예약
+                      렌터카 비교하기
                     </a>
                   </div>
                 </div>
