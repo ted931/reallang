@@ -129,9 +129,14 @@ export default function MapPage() {
     import("leaflet").then((L) => {
       if (!containerRef.current || mapRef.current) return;
 
+      const jejuBounds = L.latLngBounds([33.1, 126.1], [33.6, 127.0]);
       const map = L.map(containerRef.current, {
         center: [33.38, 126.55],
         zoom: 10,
+        minZoom: 9,
+        maxZoom: 18,
+        maxBounds: jejuBounds.pad(0.1),
+        maxBoundsViscosity: 1.0,
         zoomControl: false,
       });
 
