@@ -20,22 +20,19 @@ export default function MapPage() {
   const weatherMarkersRef = useRef<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 네이버 API로 실제 POI 로드 (카테고리별)
+  // 네이버 벌크 API — 13지역 x 10카테고리 한 번에 수집 (서버 캐시)
   useEffect(() => {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
-    const queries = ["제주 카페", "제주 맛집", "제주 관광지", "제주 숙소", "제주 해수욕장", "제주 서핑", "제주 올레길", "제주 주유소"];
-
-    queries.forEach((q) => {
-      fetch(`${basePath}/api/naver-search?q=${encodeURIComponent(q)}&size=20`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.places?.length > 0) {
-            setPins((prev) => {
-              const existingIds = new Set(prev.map((p) => p.id));
-              const newPins = data.places.filter((p: MapPin) => !existingIds.has(p.id));
-              return [...prev, ...newPins];
-            });
-          }
+    setLoading(true);
+    fetch(`${basePath}/api/naver-bulk`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.places?.length > 0) {
+          setPins((prev) => {
+            const existingIds = new Set(prev.map((p) => p.id));
+            const newPins = data.places.filter((p: MapPin) => !existingIds.has(p.id));
+            return [...prev, ...newPins];
+          });
         })
         .catch(() => {});
     });
