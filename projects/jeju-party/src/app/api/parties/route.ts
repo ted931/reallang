@@ -80,5 +80,7 @@ async function suggestCourse(category: string, region: string) {
 }
 
 export async function GET() {
-  return NextResponse.json({ parties: [] });
+  // TODO: Supabase 전환 시 여기만 수정
+  const { DUMMY_PARTIES } = await import("@/lib/dummy-parties");
+  return NextResponse.json({ parties: DUMMY_PARTIES });
 }
