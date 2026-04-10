@@ -11,9 +11,58 @@ export default function MapPage() {
   const [mapReady, setMapReady] = useState(false);
   const [pins, setPins] = useState<MapPin[]>(DUMMY_PINS);
   const [loading, setLoading] = useState(false);
+  const [showWeather, setShowWeather] = useState(false);
+  const [weatherData, setWeatherData] = useState<any[]>([]);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const weatherMarkersRef = useRef<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 날씨 데이터 로드
+  useEffect(() => {
+    if (!showWeather) return;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    fetch(`${basePath}/api/weather`)
+      .then((r) => r.json())
+      .then((data) => setWeatherData(data.locations || []))
+      .catch(console.error);
+  }, [showWeather]);
+
+  // 날씨 마커 표시/숨기기
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+    const L = (window as any).__leaflet;
+    if (!L) return;
+
+    weatherMarkersRef.current.forEach((m) => m.remove());
+    weatherMarkersRef.current = [];
+
+    if (!showWeather || weatherData.length === 0) return;
+
+    weatherData.forEach((loc: any) => {
+      if (!loc.lat || !loc.lng || loc.temperature === "-") return;
+      const temp = parseFloat(loc.temperature);
+      const bgColor = temp >= 25 ? "#EF4444" : temp >= 20 ? "#F59E0B" : temp >= 15 ? "#10B981" : temp >= 10 ? "#06B6D4" : "#3B82F6";
+
+      const icon = L.divIcon({
+        className: "",
+        html: `<div style="
+          background:${bgColor};color:white;
+          padding:4px 8px;border-radius:12px;
+          font-size:11px;font-weight:700;
+          white-space:nowrap;border:2px solid white;
+          box-shadow:0 2px 8px rgba(0,0,0,0.3);
+          display:flex;align-items:center;gap:3px;
+        ">${loc.sky.split(" ")[0]} ${loc.temperature}°</div>`,
+        iconSize: [80, 28],
+        iconAnchor: [40, 14],
+      });
+
+      const marker = L.marker([loc.lat, loc.lng], { icon, zIndexOffset: 1000 }).addTo(mapRef.current);
+      marker.bindTooltip(`${loc.name}: ${loc.temperature}° ${loc.sky} (습도 ${loc.humidity}%, 풍속 ${loc.windSpeed}m/s)`, { direction: "top" });
+      weatherMarkersRef.current.push(marker);
+    });
+  }, [showWeather, weatherData, mapReady]);
 
   // 공공데이터 API에서 실제 POI 로드
   useEffect(() => {
@@ -137,6 +186,16 @@ export default function MapPage() {
       {/* Category Filter */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
+          {/* 날씨 토글 */}
+          <button
+            onClick={() => setShowWeather(!showWeather)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all border-2 ${
+              showWeather ? "bg-sky-500 text-white border-sky-500" : "bg-white text-sky-600 border-sky-300 hover:bg-sky-50"
+            }`}
+          >
+            🌤️ 날씨
+          </button>
+          <span className="w-px h-6 bg-gray-200 self-center flex-shrink-0" />
           {CATEGORIES.map((cat) => {
             const isActive = activeCategories.has(cat.id);
             const count = pins.filter((p) => p.category === cat.id).length;

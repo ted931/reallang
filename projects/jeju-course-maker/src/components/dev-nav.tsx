@@ -7,6 +7,12 @@ const PAGES = [
   { href: "/", label: "코스 메이커", emoji: "🗺️" },
 ];
 
+const RELATED = [
+  { href: "/travel", label: "여행플래너", emoji: "✈️" },
+  { href: "/weather", label: "날씨", emoji: "🌤️" },
+  { href: "/map", label: "지도", emoji: "📍" },
+];
+
 export function DevNav() {
   const pathname = usePathname();
 
@@ -28,6 +34,13 @@ export function DevNav() {
             </Link>
           );
         })}
+        <span className="w-px h-6 bg-gray-700 self-center flex-shrink-0" />
+        {RELATED.map((item) => (
+          <a key={item.href} href={item.href}
+            className="px-2 py-1 rounded text-[10px] text-gray-400 hover:text-gray-200 whitespace-nowrap flex-shrink-0">
+            {item.emoji} {item.label}
+          </a>
+        ))}
         <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap">테스트 네비</span>
       </div>
     </div>
