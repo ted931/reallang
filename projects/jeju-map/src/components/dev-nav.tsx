@@ -22,7 +22,7 @@ export function DevNav() {
             {item.emoji} {item.label}
           </Link>
         ))}
-        <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap">테스트 네비</span>
+        <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap"><a href="/" class="text-[10px] text-gray-400 hover:text-white">🏠 홈</a> · 테스트 네비</span>
       </div>
     </div>
   );
