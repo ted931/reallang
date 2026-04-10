@@ -33,9 +33,10 @@ export default function MapPage() {
             const newPins = data.places.filter((p: MapPin) => !existingIds.has(p.id));
             return [...prev, ...newPins];
           });
-        })
-        .catch(() => {});
-    });
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   // 날씨 데이터 로드
