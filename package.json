@@ -24,6 +24,8 @@
     "build:dashboard": "npm run build -w dashboard",
     "dev:chatbot": "npm run dev -w cs-chatbot",
     "build:chatbot": "npm run build -w cs-chatbot",
+    "dev:car-pick": "npm run dev -w car-pick",
+    "build:car-pick": "npm run build -w car-pick",
     "dev:party": "npm run dev -w jeju-party",
     "build:party": "npm run build -w jeju-party",
     "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather & npm run dev:travel & npm run dev:course & npm run dev:dashboard & npm run dev:chatbot"
