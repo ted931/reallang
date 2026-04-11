@@ -138,12 +138,20 @@ export default function MapPage() {
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
-      // CartoDB Voyager — 깔끔한 모던 타일
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 18,
-        subdomains: "abcd",
-      }).addTo(map);
+      // VWorld 기본 지도 (한국어 지명, 국토교통부)
+      const vworldKey = process.env.NEXT_PUBLIC_VWORLD_KEY || "";
+      if (vworldKey) {
+        L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${vworldKey}/Base/{z}/{y}/{x}.png`, {
+          attribution: '&copy; <a href="https://www.vworld.kr">VWorld</a>',
+          maxZoom: 18,
+        }).addTo(map);
+      } else {
+        // fallback: OSM 표준 타일 (한국어 지명 지원)
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+          maxZoom: 18,
+        }).addTo(map);
+      }
 
       mapRef.current = map;
       (window as any).__leaflet = L;
