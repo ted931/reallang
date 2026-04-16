@@ -5,12 +5,13 @@ import { ImageUploader } from "@/components/image-uploader";
 import { ContextSelector } from "@/components/context-selector";
 import { useProjectStore } from "@/store/use-project-store";
 import { consumeSSE } from "@/lib/stream-utils";
+import { cleanupCode } from "@/lib/code-cleanup";
 
 export default function Home() {
   const router = useRouter();
   const {
     imageBase64, imageMediaType, siteType,
-    phase, setPhase, setCode, setIR, setError, error,
+    phase, setPhase, setCode, setIR, setError, error, pushHistory,
   } = useProjectStore();
 
   const handleGenerate = async () => {
@@ -31,8 +32,10 @@ export default function Home() {
       },
       (fullText) => {
         // 마크다운 펜스 제거
-        const cleaned = fullText.replace(/```html\s*/g, '').replace(/```\s*/g, '').trim();
+        const stripped = fullText.replace(/```html\s*/g, '').replace(/```\s*/g, '').trim();
+        const cleaned = cleanupCode(stripped);
         setCode(cleaned);
+        pushHistory(cleaned);
         setIR({ meta: { pageType: siteType || "landing" }, theme: { colors: {} }, layout: { sections: [] }, components: [] });
         setPhase("editing");
         router.push("/editor");

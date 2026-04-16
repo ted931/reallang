@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useProjectStore } from "@/store/use-project-store";
 import { consumeSSE, extractCode } from "@/lib/stream-utils";
+import { cleanupCode } from "@/lib/code-cleanup";
 
 export function ChatPanel() {
   const {
     chatMessages, addChatMessage,
     code, setCode, ir,
     phase, setPhase, setError,
-    imageBase64, imageMediaType,
+    imageBase64, imageMediaType, pushHistory,
   } = useProjectStore();
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -34,8 +35,10 @@ export function ChatPanel() {
       { message, currentCode: code, ir, chatHistory: chatMessages, originalImage: imageBase64, imageMediaType },
       () => {},
       (fullText) => {
-        fullResponse = fullText.replace(/```html\s*/g, '').replace(/```\s*/g, '').trim();
+        const stripped = fullText.replace(/```html\s*/g, '').replace(/```\s*/g, '').trim();
+        fullResponse = cleanupCode(stripped);
         setCode(fullResponse);
+        pushHistory(fullResponse);
         addChatMessage({ role: "assistant", content: "코드를 수정했습니다." });
         setPhase("editing");
       },

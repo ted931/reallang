@@ -12,7 +12,7 @@ const VIEWPORTS = [
 ];
 
 export function CodeToolbar() {
-  const { code, viewportWidth, setViewportWidth, reset } = useProjectStore();
+  const { code, viewportWidth, setViewportWidth, reset, undo, redo, canUndo, canRedo, compareMode, setCompareMode } = useProjectStore();
   const [copied, setCopied] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const router = useRouter();
@@ -41,6 +41,48 @@ export function CodeToolbar() {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Undo/Redo */}
+        <div className="hidden sm:flex items-center gap-1">
+          <button
+            onClick={undo}
+            disabled={!canUndo()}
+            title="실행취소 (Undo)"
+            className="px-2 py-1 text-sm text-gray-400 hover:text-white disabled:opacity-30 transition-colors"
+          >
+            ↩
+          </button>
+          <button
+            onClick={redo}
+            disabled={!canRedo()}
+            title="다시실행 (Redo)"
+            className="px-2 py-1 text-sm text-gray-400 hover:text-white disabled:opacity-30 transition-colors"
+          >
+            ↪
+          </button>
+        </div>
+
+        {/* Compare mode */}
+        <div className="hidden sm:flex items-center gap-1 bg-gray-800 rounded-lg p-0.5">
+          {([
+            { mode: "off" as const, label: "프리뷰", icon: "👁" },
+            { mode: "side" as const, label: "나란히 비교", icon: "⬜⬜" },
+            { mode: "overlay" as const, label: "겹쳐 비교", icon: "🔲" },
+          ]).map(({ mode, label, icon }) => (
+            <button
+              key={mode}
+              onClick={() => setCompareMode(mode)}
+              title={label}
+              className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                compareMode === mode
+                  ? "bg-gray-600 text-white"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {icon}
+            </button>
+          ))}
+        </div>
+
         {/* Viewport toggle */}
         <div className="hidden sm:flex items-center gap-1 bg-gray-800 rounded-lg p-0.5">
           {VIEWPORTS.map(({ width, label, icon }) => (

@@ -34,6 +34,21 @@ interface ProjectState {
   setCode: (code: string) => void;
   appendCode: (chunk: string) => void;
 
+  // Undo/Redo
+  codeHistory: string[];
+  historyIndex: number;
+  pushHistory: (code: string) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+
+  // 원본 비교
+  compareMode: "off" | "side" | "overlay";
+  setCompareMode: (mode: "off" | "side" | "overlay") => void;
+  overlayOpacity: number;
+  setOverlayOpacity: (v: number) => void;
+
   chatMessages: ChatMessage[];
   addChatMessage: (msg: Omit<ChatMessage, "id" | "timestamp">) => void;
 
@@ -46,6 +61,8 @@ interface ProjectState {
   reset: () => void;
 }
 
+const MAX_HISTORY = 50;
+
 const initialState = {
   phase: "upload" as AppPhase,
   imageBase64: null,
@@ -54,6 +71,10 @@ const initialState = {
   siteType: "landing",
   ir: null,
   code: "",
+  codeHistory: [] as string[],
+  historyIndex: -1,
+  compareMode: "off" as "off" | "side" | "overlay",
+  overlayOpacity: 50,
   chatMessages: [] as ChatMessage[],
   viewportWidth: 1280,
   error: null,
@@ -68,6 +89,39 @@ export const useProjectStore = create<ProjectState>((set) => ({
   setIR: (ir) => set({ ir }),
   setCode: (code) => set({ code }),
   appendCode: (chunk) => set((s) => ({ code: s.code + chunk })),
+
+  // Undo/Redo
+  pushHistory: (code) =>
+    set((s) => {
+      const trimmed = s.codeHistory.slice(0, s.historyIndex + 1);
+      const next = [...trimmed, code].slice(-MAX_HISTORY);
+      return { codeHistory: next, historyIndex: next.length - 1 };
+    }),
+  undo: () =>
+    set((s) => {
+      if (s.historyIndex <= 0) return s;
+      const newIndex = s.historyIndex - 1;
+      return { historyIndex: newIndex, code: s.codeHistory[newIndex] };
+    }),
+  redo: () =>
+    set((s) => {
+      if (s.historyIndex >= s.codeHistory.length - 1) return s;
+      const newIndex = s.historyIndex + 1;
+      return { historyIndex: newIndex, code: s.codeHistory[newIndex] };
+    }),
+  canUndo: () => {
+    const s = useProjectStore.getState();
+    return s.historyIndex > 0;
+  },
+  canRedo: () => {
+    const s = useProjectStore.getState();
+    return s.historyIndex < s.codeHistory.length - 1;
+  },
+
+  // 원본 비교
+  setCompareMode: (mode) => set({ compareMode: mode }),
+  setOverlayOpacity: (v) => set({ overlayOpacity: v }),
+
   addChatMessage: (msg) =>
     set((s) => ({
       chatMessages: [
