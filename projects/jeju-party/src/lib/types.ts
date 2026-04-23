@@ -13,6 +13,14 @@ export interface Party {
   costAmount?: number;
   hasRentalCar: boolean;
   carInfo?: string;
+  rentalCarMode?: "none" | "own-car" | "rent-together";
+  rentalCarId?: string;
+  rentalCarDailyPrice?: number;
+  rentalCarDays?: number;
+  rentalCarPerPerson?: number;
+  rentalCarPickup?: string;
+  rentalCarReturn?: string;
+  rentalCarConfirmed?: number;
   equipmentNeeded?: string;
   hostName: string;
   hostRating: number;
@@ -21,6 +29,9 @@ export interface Party {
   tags: string[];
   schedule?: ScheduleItem[];
   courseId?: string;
+  cafePassEnabled?: boolean;
+  cafePassNote?: string;
+  cafeTourId?: string;
   createdAt: string;
 }
 

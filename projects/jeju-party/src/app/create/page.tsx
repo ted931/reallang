@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 import { HOBBY_CATEGORIES, REGIONS, type ScheduleItem } from "@/lib/types";
+import { CAFE_TOURS } from "@/lib/dummy-cafe-tours";
+import { CARS, RENTAL_STATIONS, CATEGORY_CAR_MAP } from "@/lib/car-data";
+import PhoneVerify, { usePhoneVerified } from "@/components/phone-verify";
+
+function getInitParam(key: string) {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).get(key);
+}
 
 export default function CreatePartyPage() {
   const [title, setTitle] = useState("");
@@ -15,14 +23,24 @@ export default function CreatePartyPage() {
   const [maxMembers, setMaxMembers] = useState(4);
   const [costType, setCostType] = useState<"split" | "free" | "fixed">("split");
   const [costAmount, setCostAmount] = useState("");
-  const [hasRentalCar, setHasRentalCar] = useState(false);
+  const [rentalCarMode, setRentalCarMode] = useState<"none" | "own-car" | "rent-together">("none");
   const [carInfo, setCarInfo] = useState("");
+  const [selectedCarId, setSelectedCarId] = useState("");
+  const [rentalPickup, setRentalPickup] = useState("제주공항점");
+  const [rentalReturn, setRentalReturn] = useState("제주공항점");
   const [equipment, setEquipment] = useState("");
   const [hostName, setHostName] = useState("");
   const [hostBio, setHostBio] = useState("");
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(getInitParam("step") === "done");
   const [aiLoading, setAiLoading] = useState(false);
+  const [cafePassEnabled, setCafePassEnabled] = useState(false);
+  const [cafePassNote, setCafePassNote] = useState("");
+  const [selectedTourId, setSelectedTourId] = useState("");
+  const [consentChecked, setConsentChecked] = useState(false);
+  const [showPhoneVerify, setShowPhoneVerify] = useState(false);
+  const [showSafetyGuide, setShowSafetyGuide] = useState(false);
+  const phoneVerified = usePhoneVerified();
 
   const addScheduleItem = () => {
     const lastTime = schedule.length > 0 ? schedule[schedule.length - 1].time : time || "10:00";
@@ -66,7 +84,11 @@ export default function CreatePartyPage() {
   };
 
   const handleSubmit = () => {
-    if (!title || !category || !date || !region || !hostName) return;
+    if (!title || !category || !date || !region || !hostName || !consentChecked) return;
+    if (!phoneVerified) {
+      setShowPhoneVerify(true);
+      return;
+    }
     setSubmitted(true);
   };
 
@@ -167,6 +189,14 @@ export default function CreatePartyPage() {
             <label className="block text-xs font-bold text-gray-500 mb-1">집합 장소</label>
             <input type="text" value={location} onChange={(e) => setLocation(e.target.value)}
               placeholder="예: 애월항 주차장" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none" />
+            {/집|숙소|에어비앤비|게스트하우스|모텔|호텔 방/.test(location) && (
+              <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2">
+                <span className="text-sm mt-0.5">⚠️</span>
+                <p className="text-xs text-amber-700">
+                  공개된 장소(카페, 공원, 주차장 등)에서 만나는 것을 권장합니다
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -241,36 +271,166 @@ export default function CreatePartyPage() {
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">비용</label>
-            <div className="flex gap-2 mb-2">
-              {([["split", "엔빵"], ["free", "무료"], ["fixed", "정해진 금액"]] as const).map(([val, label]) => (
-                <button key={val} onClick={() => setCostType(val)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium ${costType === val ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600"}`}>
-                  {label}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-2 mb-2">
+              {([
+                ["split", "엔빵"],
+                ["free", "무료"],
+                ["fixed", "정해진 금액"],
+                ["split-cafe", "엔빵 + 카페패스"],
+                ["free-cafe", "무료 + 카페패스"],
+              ] as const).map(([val, label]) => {
+                const isActive = val.includes("cafe")
+                  ? costType === val.replace("-cafe", "") && cafePassEnabled
+                  : costType === val && !cafePassEnabled;
+                const isCafe = val.includes("cafe");
+                return (
+                  <button key={val} onClick={() => {
+                    const base = val.replace("-cafe", "") as "split" | "free" | "fixed";
+                    setCostType(base);
+                    setCafePassEnabled(isCafe);
+                  }}
+                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                      isActive
+                        ? isCafe ? "bg-sky-500 text-white" : "bg-orange-500 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}>
+                    {label}
+                  </button>
+                );
+              })}
             </div>
             {costType !== "free" && (
               <input type="number" value={costAmount} onChange={(e) => setCostAmount(e.target.value)}
                 placeholder={costType === "split" ? "인당 예상 금액 (원)" : "참가비 (원)"}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none" />
             )}
+            {cafePassEnabled && costType !== "free" && costAmount && (
+              <p className="text-[11px] text-sky-600 mt-1.5">
+                파티비 {Number(costAmount).toLocaleString()}원 + 카페패스 14,900원~ (각자 선택 구매)
+              </p>
+            )}
+            {cafePassEnabled && costType === "free" && (
+              <p className="text-[11px] text-sky-600 mt-1.5">
+                파티는 무료, 카페패스만 각자 구매 (14,900원~)
+              </p>
+            )}
+            {rentalCarMode === "rent-together" && selectedCarId && (() => {
+              const sc = CARS.find((c) => c.id === selectedCarId);
+              if (!sc) return null;
+              const rentalPP = Math.ceil(sc.pricePerDay / maxMembers);
+              const partyAmount = costType !== "free" && costAmount ? Number(costAmount) : 0;
+              return (
+                <p className="text-[11px] text-blue-600 mt-1.5">
+                  {partyAmount > 0
+                    ? `파티비 ${partyAmount.toLocaleString()}원 + 렌터카 엔빵 ${rentalPP.toLocaleString()}원 = 총 ${(partyAmount + rentalPP).toLocaleString()}원/인`
+                    : `파티 무료 + 렌터카 엔빵 ${rentalPP.toLocaleString()}원/인`}
+                </p>
+              );
+            })()}
           </div>
         </div>
 
-        {/* 렌터카 + 장비 */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-bold text-gray-700">🚗 렌터카 있음 (동승 가능)</span>
-            <button onClick={() => setHasRentalCar(!hasRentalCar)}
-              className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ${hasRentalCar ? "bg-orange-500" : "bg-gray-300"}`}>
-              <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
-                style={{ transform: hasRentalCar ? "translateX(20px)" : "translateX(0)" }} />
-            </button>
+        {/* 이동 수단 + 장비 */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
+          <label className="block text-sm font-bold text-gray-700">🚗 이동 수단</label>
+          <div className="grid grid-cols-3 gap-2">
+            {([
+              ["none", "각자 이동", "🚶"],
+              ["own-car", "내 차로", "🚘"],
+              ["rent-together", "같이 빌려요", "🤝"],
+            ] as const).map(([val, label, emoji]) => (
+              <button key={val} onClick={() => { setRentalCarMode(val); if (val !== "rent-together") setSelectedCarId(""); }}
+                className={`py-3 rounded-xl text-sm font-medium transition-all text-center ${
+                  rentalCarMode === val ? "bg-orange-500 text-white shadow-md" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}>
+                <span className="block text-lg mb-0.5">{emoji}</span>
+                {label}
+              </button>
+            ))}
           </div>
-          {hasRentalCar && (
+
+          {/* 내 차로 */}
+          {rentalCarMode === "own-car" && (
             <input type="text" value={carInfo} onChange={(e) => setCarInfo(e.target.value)}
               placeholder="차종 (예: 카니발 9인승)" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none" />
           )}
+
+          {/* 같이 빌려요 */}
+          {rentalCarMode === "rent-together" && (() => {
+            const recommended = CATEGORY_CAR_MAP[category] || [];
+            const selectedCar = CARS.find((c) => c.id === selectedCarId);
+            const perPerson = selectedCar ? Math.ceil(selectedCar.pricePerDay / maxMembers) : 0;
+            return (
+              <div className="space-y-3">
+                <p className="text-xs text-gray-500">차량을 선택하세요 {recommended.length > 0 && "(추천 표시)"}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {CARS.map((car) => {
+                    const isRecommended = recommended.includes(car.id);
+                    const isDisabled = car.seats < maxMembers;
+                    const isSelected = selectedCarId === car.id;
+                    return (
+                      <button key={car.id}
+                        disabled={isDisabled}
+                        onClick={() => setSelectedCarId(isSelected ? "" : car.id)}
+                        className={`relative p-3 rounded-xl border-2 text-left transition-all ${
+                          isSelected ? "border-orange-500 bg-orange-50" :
+                          isDisabled ? "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed" :
+                          "border-gray-200 hover:border-gray-300"
+                        }`}>
+                        {isRecommended && !isDisabled && (
+                          <span className="absolute -top-2 -right-2 px-1.5 py-0.5 bg-orange-500 text-white text-[9px] font-bold rounded-full">추천</span>
+                        )}
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-base">{car.image}</span>
+                          <span className="text-xs font-bold text-gray-900 truncate">{car.name}</span>
+                        </div>
+                        <div className="text-[10px] text-gray-400 space-y-0.5">
+                          <p>{car.seats}인승 · {car.trunkCapacity}</p>
+                          <p className="font-medium text-gray-700">{car.pricePerDay.toLocaleString()}원/일</p>
+                          <p className="text-orange-600 font-bold">엔빵 {Math.ceil(car.pricePerDay / maxMembers).toLocaleString()}원/인</p>
+                        </div>
+                        {isDisabled && (
+                          <p className="text-[9px] text-red-400 mt-1">좌석 부족 ({car.seats}석 &lt; {maxMembers}명)</p>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {selectedCar && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">픽업 장소</label>
+                        <select value={rentalPickup} onChange={(e) => setRentalPickup(e.target.value)}
+                          className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none bg-white">
+                          {RENTAL_STATIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">반납 장소</label>
+                        <select value={rentalReturn} onChange={(e) => setRentalReturn(e.target.value)}
+                          className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none bg-white">
+                          {RENTAL_STATIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-orange-50 rounded-xl">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-orange-700">{selectedCar.name} · 1일</span>
+                        <span className="text-sm font-bold text-orange-700">{selectedCar.pricePerDay.toLocaleString()}원</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-xs text-orange-600">엔빵 ({maxMembers}명)</span>
+                        <span className="text-sm font-bold text-orange-600">{perPerson.toLocaleString()}원/인</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           <div>
             <label className="block text-xs font-bold text-gray-500 mb-1">필요한 장비/준비물 (선택)</label>
             <input type="text" value={equipment} onChange={(e) => setEquipment(e.target.value)}
@@ -278,13 +438,238 @@ export default function CreatePartyPage() {
           </div>
         </div>
 
-        {/* 제출 */}
-        <button onClick={handleSubmit}
-          disabled={!title || !category || !date || !region || !hostName}
-          className="w-full py-4 bg-orange-500 text-white font-bold text-lg rounded-2xl hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-orange-200">
-          🎉 파티 만들기
-        </button>
+        {/* 카페패스 추천 — 모든 카테고리에서 노출 */}
+        <div className={`rounded-2xl border p-5 transition-all ${cafePassEnabled ? "bg-sky-50/50 border-sky-200" : "bg-white border-gray-100"}`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="text-lg">☕</span>
+              <div>
+                <span className="text-sm font-bold text-gray-700">카페패스 추천</span>
+                {!cafePassEnabled && (
+                  <p className="text-[11px] text-gray-400 mt-0.5">제휴 카페 50곳+ · 3일 14,900원~</p>
+                )}
+              </div>
+            </div>
+            <button onClick={() => setCafePassEnabled(!cafePassEnabled)}
+              className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ${cafePassEnabled ? "bg-sky-500" : "bg-gray-300"}`}>
+              <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                style={{ transform: cafePassEnabled ? "translateX(20px)" : "translateX(0)" }} />
+            </button>
+          </div>
+
+          {cafePassEnabled && (
+            <div className="mt-4 space-y-3">
+              {/* 패스 요약 — 깔끔한 2행 */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-white rounded-xl p-3 border border-sky-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-sky-500">무제한</span>
+                    <span className="px-1.5 py-0.5 bg-red-50 text-red-500 text-[8px] font-bold rounded">인기</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-2">3시간마다 1잔 무료</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-base font-bold text-gray-900">14,900</span>
+                    <span className="text-[10px] text-gray-400">원/3일</span>
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-0.5">5일 19,900원</p>
+                </div>
+                <div className="bg-white rounded-xl p-3 border border-amber-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-amber-500">잔 이용권</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-2">30일 내 자유 사용</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-base font-bold text-gray-900">9,900</span>
+                    <span className="text-[10px] text-gray-400">원/3잔</span>
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-0.5">5잔 15,500원 (잔당 3,100원)</p>
+                </div>
+              </div>
+
+              {/* 추천 멘트 — 프리셋 + 직접 입력 */}
+              <div className="space-y-2">
+                <p className="text-[11px] font-medium text-gray-500">추천 멘트</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    "카페패스 있으면 음료 거의 공짜!",
+                    "중간에 카페 들를 때 패스 쓰면 좋아요",
+                    "저도 패스 쓸 예정이에요 같이 써요!",
+                    "카페 투어할 건데 패스 필수!",
+                    "쉬는 시간에 커피 한잔 어때요?",
+                  ].map((preset) => (
+                    <button key={preset} type="button"
+                      onClick={() => setCafePassNote(cafePassNote === preset ? "" : preset)}
+                      className={`px-2.5 py-1.5 rounded-lg text-[11px] transition-all ${
+                        cafePassNote === preset
+                          ? "bg-sky-500 text-white font-medium"
+                          : "bg-white border border-gray-200 text-gray-600 hover:border-sky-300"
+                      }`}>
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+                <input type="text" value={cafePassNote} onChange={(e) => setCafePassNote(e.target.value)}
+                  placeholder="직접 입력도 가능해요"
+                  className="w-full px-3 py-2 rounded-xl border border-sky-200 bg-white text-sm focus:border-sky-400 outline-none placeholder:text-gray-400" />
+              </div>
+
+              {/* 카페투어 코스 선택 — 카페 카테고리일 때만 */}
+              {category === "cafe" && (
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-2">카페투어 코스 (선택)</label>
+                  <div className="space-y-2">
+                    {CAFE_TOURS.filter((t) => !region || t.region === region).length > 0 ? (
+                      CAFE_TOURS.filter((t) => !region || t.region === region).map((tour) => (
+                        <button key={tour.id} onClick={() => {
+                          if (selectedTourId === tour.id) {
+                            setSelectedTourId("");
+                          } else {
+                            setSelectedTourId(tour.id);
+                            const startH = parseInt(time?.split(":")[0] || "10");
+                            const newSchedule: ScheduleItem[] = tour.cafes.map((cafe, idx) => {
+                              const h = startH + Math.floor(idx * 0.7);
+                              const m = Math.round((idx * 0.7 % 1) * 60);
+                              return {
+                                time: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
+                                place: cafe.name,
+                                memo: `${cafe.specialty} · 약 ${cafe.stayMin}분${cafe.note ? ` · ${cafe.note}` : ""}`,
+                              };
+                            });
+                            setSchedule(newSchedule);
+                          }
+                        }}
+                          className={`w-full p-3 rounded-xl border-2 text-left transition-all ${
+                            selectedTourId === tour.id ? "border-sky-500 bg-sky-50" : "border-gray-200 hover:border-gray-300"
+                          }`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span>{tour.image}</span>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{tour.title}</p>
+                                <p className="text-[10px] text-gray-400">
+                                  ⭐ {tour.rating} · {tour.cafes.length}곳 · {tour.totalTime}
+                                </p>
+                              </div>
+                            </div>
+                            {selectedTourId === tour.id && (
+                              <span className="text-sky-500 text-sm font-bold">✓</span>
+                            )}
+                          </div>
+                        </button>
+                      ))
+                    ) : (
+                      <p className="text-xs text-gray-400 text-center py-3">
+                        {region ? `${region} 지역에 등록된 코스가 아직 없어요` : "지역을 먼저 선택해주세요"}
+                      </p>
+                    )}
+                    {CAFE_TOURS.filter((t) => region && t.region !== region).length > 0 && (
+                      <details className="text-xs text-gray-400">
+                        <summary className="cursor-pointer hover:text-gray-500">다른 지역 코스 보기</summary>
+                        <div className="space-y-2 mt-2">
+                          {CAFE_TOURS.filter((t) => region && t.region !== region).map((tour) => (
+                            <button key={tour.id} onClick={() => {
+                              setSelectedTourId(tour.id);
+                              const startH = parseInt(time?.split(":")[0] || "10");
+                              const newSchedule: ScheduleItem[] = tour.cafes.map((cafe, idx) => {
+                                const h = startH + Math.floor(idx * 0.7);
+                                const m = Math.round((idx * 0.7 % 1) * 60);
+                                return {
+                                  time: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
+                                  place: cafe.name,
+                                  memo: `${cafe.specialty} · 약 ${cafe.stayMin}분${cafe.note ? ` · ${cafe.note}` : ""}`,
+                                };
+                              });
+                              setSchedule(newSchedule);
+                            }}
+                              className={`w-full p-3 rounded-xl border-2 text-left transition-all ${
+                                selectedTourId === tour.id ? "border-sky-500 bg-sky-50" : "border-gray-200 hover:border-gray-300"
+                              }`}>
+                              <div className="flex items-center gap-2">
+                                <span>{tour.image}</span>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">{tour.title}</p>
+                                  <p className="text-[10px] text-gray-400">
+                                    {tour.region} · ⭐ {tour.rating} · {tour.cafes.length}곳
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </details>
+                    )}
+                  </div>
+                </div>
+              )}
+
+            </div>
+          )}
+        </div>
+
+        {/* 동의 + 안전 가이드 + 제출 */}
+        <div className="space-y-4">
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={consentChecked}
+              onChange={(e) => setConsentChecked(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400"
+            />
+            <span className="text-xs text-gray-500 leading-relaxed">
+              <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/terms`} target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">이용약관</a> 및{" "}
+              <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/privacy`} target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">개인정보처리방침</a>에 동의합니다 (만 14세 이상)
+            </span>
+          </label>
+
+          <div className="bg-white rounded-2xl border border-gray-100">
+            <button
+              type="button"
+              onClick={() => setShowSafetyGuide(!showSafetyGuide)}
+              className="w-full px-5 py-3 flex items-center justify-between text-left"
+            >
+              <span className="text-sm font-medium text-gray-700">🛡️ 파티장 안전 가이드</span>
+              <span className="text-gray-400 text-xs">{showSafetyGuide ? "접기" : "펼치기"}</span>
+            </button>
+            {showSafetyGuide && (
+              <div className="px-5 pb-4 space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <p className="text-xs text-gray-600">집합 장소는 <strong>공개된 장소</strong>(카페, 공원, 주차장)로 설정하세요</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <p className="text-xs text-gray-600">참여자 <strong>연락처를 사전에 확인</strong>하고 비상 연락망을 공유하세요</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <p className="text-xs text-gray-600">렌터카 동승 시 <strong>보험 가입 여부</strong>를 미리 확인하세요</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5">✓</span>
+                  <p className="text-xs text-gray-600">파티 정보를 주변에 공유하고, <strong>긴급 상황 대비 계획</strong>을 세워두세요</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button onClick={handleSubmit}
+            disabled={!title || !category || !date || !region || !hostName || !consentChecked}
+            className="w-full py-4 bg-orange-500 text-white font-bold text-lg rounded-2xl hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-orange-200">
+            🎉 파티 만들기
+          </button>
+        </div>
       </main>
+
+      {/* 본인인증 모달 */}
+      {showPhoneVerify && (
+        <PhoneVerify
+          onVerified={() => {
+            setShowPhoneVerify(false);
+            setSubmitted(true);
+          }}
+          onClose={() => setShowPhoneVerify(false)}
+        />
+      )}
     </div>
   );
 }

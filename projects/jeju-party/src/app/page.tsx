@@ -144,17 +144,31 @@ export default function PartyFeedPage() {
                     </div>
                     <div>
                       <span className="text-xs font-medium text-gray-700">{party.hostName}</span>
+                      <span className="inline-flex items-center px-1.5 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] font-bold rounded-full ml-1">📱 인증</span>
                       <span className="text-[10px] text-gray-400 ml-1">
                         ⭐{party.hostRating} · 파티 {party.hostPartyCount}회
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {party.hasRentalCar && (
+                    {party.cafePassEnabled && (
+                      <span className="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-600 rounded-full font-medium">
+                        ☕ 카페패스
+                      </span>
+                    )}
+                    {party.rentalCarMode === "rent-together" && party.rentalCarPerPerson ? (
+                      <span className="text-[10px] px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full font-medium">
+                        🚗 엔빵 {party.rentalCarPerPerson.toLocaleString()}원
+                      </span>
+                    ) : party.rentalCarMode === "own-car" ? (
+                      <span className="text-[10px] px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full font-medium">
+                        🚗 동승가능
+                      </span>
+                    ) : party.hasRentalCar ? (
                       <span className="text-[10px] px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full font-medium">
                         🚗 렌터카
                       </span>
-                    )}
+                    ) : null}
                     <span className="text-sm font-bold text-orange-600">
                       {party.costType === "free"
                         ? "무료"

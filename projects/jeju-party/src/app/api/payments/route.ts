@@ -60,6 +60,25 @@ export async function POST(req: Request) {
         });
       }
 
+      case "cafe-pass-purchase": {
+        const { passId, passName, amount, userName } = body;
+
+        if (!passId || !amount || !userName) {
+          return NextResponse.json({ error: "필수 정보가 누락되었습니다." }, { status: 400 });
+        }
+
+        const passOrderId = `PASS-${passId}-${Date.now()}`;
+
+        return NextResponse.json({
+          success: true,
+          orderId: passOrderId,
+          transactionId: `TXN-PASS-${Date.now()}`,
+          message: `${passName} 구매가 완료되었습니다.`,
+          passId,
+          amount,
+        });
+      }
+
       case "refund": {
         const { orderId, reason } = body;
 
