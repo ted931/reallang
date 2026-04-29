@@ -7,6 +7,8 @@ import { DUMMY_PARTIES } from "@/lib/dummy-parties";
 import { CAFE_PASSES, CAFE_TOURS } from "@/lib/dummy-cafe-tours";
 import { CARS } from "@/lib/car-data";
 import PhoneVerify, { usePhoneVerified } from "@/components/phone-verify";
+import { PARTNER_OFFERS } from "@/lib/dummy-partners";
+import { FeaturedPartnerCard, BasicPartnerCard } from "@/components/partner-offer-card";
 
 function getInitParam(key: string) {
   if (typeof window === "undefined") return null;
@@ -461,6 +463,101 @@ export default function PartyDetailPage() {
           </div>
         )}
 
+        {/* 파트너 업체 오퍼 */}
+        {(() => {
+          const categoryOffers = PARTNER_OFFERS.filter((o) =>
+            o.targetCategories.includes(party.category)
+          );
+          const allOffers = PARTNER_OFFERS.filter((o) =>
+            o.targetCategories.includes("all")
+          );
+          const combined =
+            categoryOffers.length >= 2
+              ? categoryOffers
+              : [...categoryOffers, ...allOffers.filter(
+                  (o) => !categoryOffers.some((c) => c.id === o.id)
+                )].slice(0, 4);
+          const relevantOffers = combined
+            .sort(
+              (a, b) =>
+                (b.sponsorLevel === "featured" ? 1 : 0) -
+                (a.sponsorLevel === "featured" ? 1 : 0)
+            )
+            .slice(0, 4);
+
+          if (relevantOffers.length === 0) return null;
+
+          const featuredOffers = relevantOffers.filter((o) => o.sponsorLevel === "featured");
+          const basicOffers = relevantOffers.filter((o) => o.sponsorLevel === "basic");
+
+          return (
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              {/* 섹션 헤더 */}
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🤝</span>
+                  <h2 className="font-bold text-gray-900">파티 참가자 혜택</h2>
+                  <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">
+                    {relevantOffers.length}개 혜택
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 mb-5 ml-7">
+                이 파티 참가자에게만 제공되는 특별 오퍼
+              </p>
+
+              {/* Featured 오퍼 */}
+              {featuredOffers.map((offer) => (
+                <div key={offer.id} className="mb-4">
+                  <FeaturedPartnerCard offer={offer} />
+                </div>
+              ))}
+
+              {/* Basic 오퍼 — 가로 스크롤 */}
+              {basicOffers.length > 0 && (
+                <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+                  {basicOffers.map((offer) => (
+                    <BasicPartnerCard key={offer.id} offer={offer} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* AI 차종 추천 연동 CTA */}
+        {(() => {
+          const purposeMap: Record<string, string> = {
+            cycling: "drive", hiking: "hiking", surfing: "activity",
+            running: "activity", fishing: "activity", photo: "drive",
+            cafe: "healing", cooking: "healing",
+          };
+          const mappedPurpose = purposeMap[party.category] || "healing";
+          const carUrl = `http://localhost:3021?travelers=${party.maxMembers}&days=1&purpose=${mappedPurpose}&from=party&partyName=${encodeURIComponent(party.title)}`;
+          return (
+            <div className="bg-gradient-to-r from-slate-800 to-blue-900 rounded-2xl p-5 text-white">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold text-blue-300 uppercase tracking-widest mb-1">AI 렌터카 추천</p>
+                  <p className="text-sm font-bold mb-1">직접 이동하시나요?</p>
+                  <p className="text-xs text-blue-200 leading-relaxed">
+                    파티 인원 <span className="text-white font-bold">{party.maxMembers}명</span> 기준으로
+                    AI가 최적 차종을 바로 추천해드려요
+                  </p>
+                </div>
+                <a
+                  href={carUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 flex items-center gap-1.5 bg-white text-slate-900 text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-colors whitespace-nowrap"
+                >
+                  🚗 차종 추천
+                </a>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* 파티장 프로필 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 relative">
           <div className="flex items-center justify-between mb-3">
@@ -854,6 +951,30 @@ export default function PartyDetailPage() {
                     결제 {(party.costAmount || 0).toLocaleString()}원 완료
                   </p>
                 )}
+
+                {/* 파티 참가자 혜택 — Featured 오퍼 1개 */}
+                {(() => {
+                  const featuredOffer =
+                    PARTNER_OFFERS.find(
+                      (o) =>
+                        o.sponsorLevel === "featured" &&
+                        o.targetCategories.includes(party.category)
+                    ) ||
+                    PARTNER_OFFERS.find(
+                      (o) =>
+                        o.sponsorLevel === "featured" &&
+                        o.targetCategories.includes("all")
+                    );
+                  if (!featuredOffer) return null;
+                  return (
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-4 mb-4 text-left">
+                      <p className="text-xs font-bold text-orange-700 mb-3">
+                        🎁 참가 확정! 이 혜택도 챙겨가세요
+                      </p>
+                      <FeaturedPartnerCard offer={featuredOffer} />
+                    </div>
+                  );
+                })()}
 
                 {/* 안전 공유 */}
                 <div className="bg-gray-50 rounded-xl p-4 mb-4 text-left">

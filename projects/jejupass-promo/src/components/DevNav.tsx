@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const PAGES = [
-  { href: '/', label: '랜딩', emoji: '🏠' },
-  { href: '/register', label: '가게등록', emoji: '📝' },
-  { href: '/explore', label: '가게탐색', emoji: '🔍' },
-  { href: '/shop/sunset-cafe-a1b2c3', label: '가게상세', emoji: '🏪' },
-  { href: '/dashboard', label: '대시보드', emoji: '📊' },
-  { href: '/dashboard/sns', label: 'SNS생성', emoji: '📸' },
+  { href: '/', label: '랜딩', emoji: '🏠', step: '1' },
+  { href: '/explore', label: '가게 탐색', emoji: '🔍', step: '2' },
+  { href: '/register', label: '가게 등록', emoji: '📝', step: '3' },
+  { href: '/shop/sunset-cafe-a1b2c3', label: '가게 상세', emoji: '🏪', step: '3-1' },
+  { href: '/dashboard', label: '대시보드', emoji: '📊', step: '4' },
+  { href: '/dashboard/sns', label: 'SNS 관리', emoji: '📸', step: '4-1' },
+  { href: '/dashboard/cafepass', label: '카페패스 신청', emoji: '☕', step: '4-2' },
 ];
 
 export default function DevNav() {
@@ -28,7 +29,7 @@ export default function DevNav() {
                 isActive ? 'bg-orange-500 text-white' : 'bg-gray-700 hover:bg-gray-600'
               }`}
             >
-              {item.emoji} {item.label}
+              <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
             </Link>
           );
         })}

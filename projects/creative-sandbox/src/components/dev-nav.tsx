@@ -4,10 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { href: "/", label: "홈", emoji: "🏠" },
-  { href: "/login", label: "로그인", emoji: "🔐" },
-  { href: "/dashboard", label: "대시보드", emoji: "📋" },
-  { href: "/test/canvas-demo", label: "캔버스(채팅+위젯)", emoji: "🖼️" },
+  { href: "/", label: "홈", emoji: "🏠", step: "1" },
+  { href: "/login", label: "로그인", emoji: "🔐", step: "2" },
+  { href: "/dashboard", label: "대시보드", emoji: "📋", step: "3" },
+  { href: "/test/canvas-demo", label: "캔버스 데모", emoji: "🖼️", step: "4" },
+  { href: "/test/visibility-demo", label: "가시성 데모", emoji: "👁️", step: "4-1" },
+  { href: "/test/widget-add-demo", label: "위젯 추가", emoji: "➕", step: "4-2" },
+  { href: "/test/widget-interaction-demo", label: "위젯 인터랙션", emoji: "🖱️", step: "4-3" },
 ];
 
 export function DevNav() {
@@ -27,7 +30,7 @@ export function DevNav() {
                 isActive ? "bg-purple-500 text-white" : "bg-gray-700 hover:bg-gray-600"
               }`}
             >
-              {item.emoji} {item.label}
+              <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
             </Link>
           );
         })}

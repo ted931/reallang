@@ -3,9 +3,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { href: "/", label: "차종추천", emoji: "🚗" },
-  { href: "/fuel", label: "주유가이드", emoji: "⛽" },
-  { href: "/cost", label: "비용계산", emoji: "💰" },
+  { href: "/", label: "차종 추천", emoji: "🚗", step: "1" },
+  { href: "/fuel", label: "주유 가이드", emoji: "⛽", step: "2" },
+  { href: "/cost", label: "비용 계산", emoji: "💰", step: "3" },
 ];
 
 export function DevNav() {
@@ -19,7 +19,7 @@ export function DevNav() {
             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
               pathname === item.href ? "bg-emerald-500 text-white" : "bg-gray-700 hover:bg-gray-600"
             }`}>
-            {item.emoji} {item.label}
+            <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
           </Link>
         ))}
         <a href="/" className="text-[10px] text-gray-400 hover:text-white ml-auto whitespace-nowrap">🏠 홈</a>

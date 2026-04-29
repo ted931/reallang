@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { href: "/", label: "대시보드", emoji: "📊" },
+  { href: "/", label: "대시보드", emoji: "📊", step: "1" },
+  { href: "/setup", label: "셋업", emoji: "⚙️", step: "2" },
 ];
 
 export function DevNav() {
@@ -24,7 +25,7 @@ export function DevNav() {
                 isActive ? "bg-indigo-500 text-white" : "bg-gray-700 hover:bg-gray-600"
               }`}
             >
-              {item.emoji} {item.label}
+              <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
             </Link>
           );
         })}

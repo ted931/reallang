@@ -3,12 +3,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { href: "/", label: "시작", emoji: "🏠" },
-  { href: "/weather", label: "날씨", emoji: "🌤️" },
-  { href: "/course", label: "코스", emoji: "🧭" },
-  { href: "/planner", label: "일정", emoji: "✈️" },
-  { href: "/map", label: "지도", emoji: "🗺️" },
-  { href: "/drive", label: "드라이브", emoji: "🛣️" },
+  { href: "/", label: "홈", emoji: "🏠", step: "1" },
+  { href: "/weather", label: "날씨", emoji: "🌤️", step: "2" },
+  { href: "/course", label: "코스 메이커", emoji: "🧭", step: "3" },
+  { href: "/planner", label: "여행 일정", emoji: "✈️", step: "4" },
+  { href: "/map", label: "여행 지도", emoji: "🗺️", step: "5" },
+  { href: "/drive", label: "드라이브 코스", emoji: "🛣️", step: "6" },
 ];
 
 export function DevNav() {
@@ -22,7 +22,7 @@ export function DevNav() {
             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
               pathname === item.href ? "bg-sky-500 text-white" : "bg-gray-700 hover:bg-gray-600"
             }`}>
-            {item.emoji} {item.label}
+            <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
           </Link>
         ))}
         <a href="/" className="text-[10px] text-gray-400 hover:text-white ml-auto whitespace-nowrap">🏠 홈</a>

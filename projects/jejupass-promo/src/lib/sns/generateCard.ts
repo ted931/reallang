@@ -192,6 +192,95 @@ function InstagramStoryTemplate(data: CardData, photoDataUri: string | null) {
   };
 }
 
+// ─── CafePass Standard Card (1080x720) ───
+function CafePassCardTemplate(data: CardData, photoDataUri: string | null) {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        width: '1080px', height: '720px', display: 'flex', flexDirection: 'column' as const,
+        backgroundColor: '#ffffff', fontFamily: 'Pretendard',
+      },
+      children: [
+        // 사진 영역 (상단 3/5)
+        {
+          type: 'div',
+          props: {
+            style: { position: 'relative' as const, width: '1080px', height: '432px', overflow: 'hidden' },
+            children: [
+              photoDataUri
+                ? { type: 'img', props: { src: photoDataUri, width: 1080, height: 432, style: { objectFit: 'cover' as const, width: '1080px', height: '432px' } } }
+                : {
+                    type: 'div',
+                    props: {
+                      style: { width: '1080px', height: '432px', background: 'linear-gradient(135deg, #FF6B35 0%, #FF9A76 50%, #FFDAC1 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+                      children: [{ type: 'div', props: { style: { fontSize: '120px' }, children: getCategoryEmoji(data.category) } }],
+                    },
+                  },
+              // JEJU PASS CAFE 워터마크 (우상단)
+              {
+                type: 'div',
+                props: {
+                  style: { position: 'absolute' as const, top: '20px', right: '24px', backgroundColor: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.9)', padding: '6px 14px', borderRadius: '20px', fontSize: '18px', fontWeight: 600, letterSpacing: '0.5px' },
+                  children: 'JEJU PASS CAFE',
+                },
+              },
+            ],
+          },
+        },
+        // 하단 정보 영역
+        {
+          type: 'div',
+          props: {
+            style: { flex: 1, padding: '28px 48px', display: 'flex', flexDirection: 'column' as const, justifyContent: 'space-between' },
+            children: [
+              {
+                type: 'div',
+                props: {
+                  style: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' },
+                  children: [
+                    {
+                      type: 'div',
+                      props: {
+                        style: { display: 'flex', flexDirection: 'column' as const, gap: '8px' },
+                        children: [
+                          { type: 'div', props: { style: { fontSize: '14px', color: '#9ca3af', fontWeight: 500, letterSpacing: '1px' }, children: `${data.category.toUpperCase()} · ${data.region}` } },
+                          { type: 'div', props: { style: { fontSize: '42px', fontWeight: 700, color: '#111827', lineHeight: 1.2 }, children: data.shopName } },
+                        ],
+                      },
+                    },
+                    // 제주패스 카페패스 제휴 매장 뱃지
+                    {
+                      type: 'div',
+                      props: {
+                        style: { backgroundColor: '#FFF3ED', border: `2px solid ${BRAND.color}`, borderRadius: '12px', padding: '10px 18px', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '2px', flexShrink: 0 },
+                        children: [
+                          { type: 'div', props: { style: { fontSize: '13px', fontWeight: 700, color: BRAND.color }, children: '제주패스' } },
+                          { type: 'div', props: { style: { fontSize: '11px', color: BRAND.colorDark }, children: '카페패스 제휴 매장' } },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #f3f4f6', paddingTop: '16px' },
+                  children: [
+                    { type: 'div', props: { style: { fontSize: '22px', color: '#6b7280', lineHeight: 1.4 }, children: data.caption.slice(0, 50) } },
+                    { type: 'div', props: { style: { fontSize: '16px', color: '#9ca3af' }, children: BRAND.url } },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+}
+
 // ─── KakaoTalk Card (800x400) ───
 function KakaoCardTemplate(data: CardData, photoDataUri: string | null) {
   return {
@@ -238,6 +327,7 @@ const TEMPLATES = {
   'instagram-square': { fn: InstagramSquareTemplate, width: 1080, height: 1080 },
   'instagram-story': { fn: InstagramStoryTemplate, width: 1080, height: 1920 },
   'kakao': { fn: KakaoCardTemplate, width: 800, height: 400 },
+  'cafepass-card': { fn: CafePassCardTemplate, width: 1080, height: 720 },
 } as const;
 
 export type TemplateType = keyof typeof TEMPLATES;

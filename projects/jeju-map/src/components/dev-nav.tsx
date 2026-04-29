@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { href: "/", label: "지도", emoji: "🗺️" },
-  { href: "/list", label: "목록", emoji: "📋" },
+  { href: "/", label: "지도", emoji: "🗺️", step: "1" },
+  { href: "/list", label: "장소 목록", emoji: "📋", step: "2" },
 ];
 
 export function DevNav() {
@@ -19,7 +19,7 @@ export function DevNav() {
             className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
               pathname === item.href ? "bg-emerald-500 text-white" : "bg-gray-700 hover:bg-gray-600"
             }`}>
-            {item.emoji} {item.label}
+            <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
           </Link>
         ))}
         <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap"><a href="/" class="text-[10px] text-gray-400 hover:text-white">🏠 홈</a> · 테스트 네비</span>

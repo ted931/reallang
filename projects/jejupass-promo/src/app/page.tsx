@@ -3,16 +3,33 @@
 import Link from 'next/link';
 import { BRAND } from '@/lib/constants';
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "제주패스",
+  url: "https://jejupass.com/web",
+  description: "제주 소상공인을 위한 무료 마케팅 플랫폼",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://jejupass.com/web/explore?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function Home() {
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       {/* Header */}
       <header className="border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <span className="font-bold text-lg" style={{ color: BRAND.color }}>제주패스</span>
           <nav className="flex items-center gap-4 text-sm">
             <Link href="/explore" className="text-gray-600 hover:text-gray-900">가게 탐색</Link>
-            <Link href="/register" className="px-3 py-1.5 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: BRAND.color }}>
+            <Link href="/signup" className="px-3 py-1.5 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: BRAND.color }}>
               무료 등록
             </Link>
           </nav>
@@ -20,12 +37,14 @@ export default function Home() {
       </header>
 
 
+      {/* Main content */}
+      <main>
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-            제주 사장님,<br />
-            <span style={{ color: BRAND.color }}>무료</span>로 가게를 홍보하세요
+            제주 카페·맛집 사장님,<br />
+            제주패스에서 <span style={{ color: BRAND.color }}>무료</span>로 홍보하세요
           </h1>
           <p className="mt-4 text-gray-500 text-lg">
             사진만 올리면 인스타그램 콘텐츠를 자동으로 만들어드립니다.
@@ -34,7 +53,7 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/register"
+              href="/signup"
               className="px-8 py-3 rounded-xl text-white font-semibold text-base shadow-lg hover:shadow-xl transition-shadow"
               style={{ backgroundColor: BRAND.color }}
             >
@@ -114,13 +133,15 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-gray-900">지금 바로 시작하세요</h2>
         <p className="text-gray-500 mt-2">완전 무료, 가입비도 수수료도 없습니다.</p>
         <Link
-          href="/register"
+          href="/signup"
           className="inline-block mt-6 px-8 py-3 rounded-xl text-white font-semibold shadow-lg"
           style={{ backgroundColor: BRAND.color }}
         >
           무료로 가게 등록하기
         </Link>
       </section>
+
+      </main>
 
       {/* Footer */}
       <footer className="py-8 px-4 text-center text-xs text-gray-400 border-t border-gray-100">

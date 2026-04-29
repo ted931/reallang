@@ -37,7 +37,7 @@ export type ShopCreateInput = Omit<Shop, 'id' | 'slug' | 'createdAt' | 'updatedA
 export interface SNSCardRequest {
   shopId: string;
   photoUrl: string;
-  template: 'instagram-square' | 'instagram-story' | 'kakao';
+  template: 'instagram-square' | 'instagram-story' | 'kakao' | 'cafepass-card';
   caption?: string;
   shopName?: string;
   category?: string;
