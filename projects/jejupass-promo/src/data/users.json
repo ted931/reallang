@@ -1,0 +1,12 @@
+[
+  {
+    "id": "user-001",
+    "name": "김제주",
+    "email": "test@jejupass.com",
+    "password": "password123",
+    "phone": "010-1234-5678",
+    "businessNumber": "123-45-67890",
+    "shopIds": ["shop-001"],
+    "createdAt": "2026-04-01T00:00:00Z"
+  }
+]

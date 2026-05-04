@@ -7,6 +7,7 @@ const PAGES = [
   { href: "/promo", label: "홍보 관리", emoji: "🏪", step: "2" },
   { href: "/cs", label: "CS챗봇", emoji: "💬", step: "3" },
   { href: "/partner", label: "파트너센터", emoji: "📣", step: "4" },
+  { href: "/commercial", label: "사업자파티", emoji: "🏢", step: "5" },
 ];
 
 export function DevNav() {

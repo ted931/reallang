@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CATEGORIES, REGIONS, BRAND } from '@/lib/constants';
 import type { ShopCategory, ShopRegion } from '@/lib/types';
 
-type Step = 'info' | 'menu' | 'verify' | 'complete';
+type Step = 'info' | 'menu' | 'complete';
 
 interface MenuItem {
   name: string;
@@ -13,7 +14,18 @@ interface MenuItem {
   isPopular: boolean;
 }
 
+interface LocalUser {
+  id: string;
+  name: string;
+  email: string;
+  shopIds: string[];
+}
+
 export default function RegisterPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<LocalUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
   const [step, setStep] = useState<Step>('info');
   const [saving, setSaving] = useState(false);
   const [createdSlug, setCreatedSlug] = useState('');
@@ -33,13 +45,13 @@ export default function RegisterPage() {
     { name: '수제 스콘 세트', price: '9000', isPopular: false },
   ]);
 
-  // 사업자 인증
-  const [businessNumber, setBusinessNumber] = useState('');
-  const [verifying, setVerifying] = useState(false);
-  const [verified, setVerified] = useState(false);
-  const [verifyError, setVerifyError] = useState('');
-  const [ocrLoading, setOcrLoading] = useState(false);
-  const [ocrData, setOcrData] = useState<{ businessName?: string; representative?: string; address?: string } | null>(null);
+  useEffect(() => {
+    const raw = localStorage.getItem('jejupass_user');
+    if (raw) {
+      try { setUser(JSON.parse(raw)); } catch { /* ignore */ }
+    }
+    setAuthChecked(true);
+  }, []);
 
   const addMenu = () => setMenus([...menus, { name: '', price: '', isPopular: false }]);
   const updateMenu = (idx: number, field: keyof MenuItem, value: string | boolean) => {
@@ -47,68 +59,11 @@ export default function RegisterPage() {
   };
   const removeMenu = (idx: number) => setMenus(menus.filter((_, i) => i !== idx));
 
-  const handleVerify = async () => {
-    if (!businessNumber.replace(/[-\s]/g, '')) return;
-    setVerifying(true);
-    setVerifyError('');
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/verify-business`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ businessNumber }),
-      });
-      const data = await res.json();
-      if (data.valid) {
-        setVerified(true);
-        setBusinessNumber(data.businessNumber);
-      } else {
-        setVerifyError(data.message);
-      }
-    } catch {
-      setVerifyError('인증 중 오류가 발생했습니다.');
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-  const handleOCR = async (file: File) => {
-    setOcrLoading(true);
-    setVerifyError('');
-    setOcrData(null);
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/verify-business/ocr`, { method: 'POST', body: formData });
-      const data = await res.json();
-      if (data.success && data.valid) {
-        setBusinessNumber(data.data.businessNumber);
-        setVerified(true);
-        setOcrData({
-          businessName: data.data.businessName,
-          representative: data.data.representative,
-          address: data.data.address,
-        });
-        // 추출된 정보로 폼 자동 채우기
-        if (data.data.businessName && !name) setName(data.data.businessName);
-        if (data.data.address && !address) setAddress(data.data.address);
-      } else if (data.success && !data.valid) {
-        setBusinessNumber(data.data?.businessNumber || '');
-        setVerifyError(data.message);
-      } else {
-        setVerifyError(data.error || '인식에 실패했습니다.');
-      }
-    } catch {
-      setVerifyError('OCR 처리 중 오류가 발생했습니다.');
-    } finally {
-      setOcrLoading(false);
-    }
-  };
-
   const handleSubmit = async () => {
     if (!name || !category || !region || !address) return;
     setSaving(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/shops`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/shops`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -121,7 +76,7 @@ export default function RegisterPage() {
           })),
           photos: [],
           businessHours: {},
-          isPublished: verified, // 인증된 경우만 공개
+          isPublished: true, // 회원가입 시 인증 완료 → 바로 공개
         }),
       });
       const data = await res.json();
@@ -135,13 +90,48 @@ export default function RegisterPage() {
     }
   };
 
-  // Step indicator
   const steps = [
     { key: 'info', label: '기본 정보' },
     { key: 'menu', label: '메뉴' },
-    { key: 'verify', label: '사업자 인증' },
   ];
   const currentIdx = steps.findIndex((s) => s.key === step);
+
+  // ─── 인증 없이 접근 차단 ───
+  if (!authChecked) return null;
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <header className="bg-white border-b border-gray-100">
+          <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
+            <Link href="/" className="font-bold text-lg" style={{ color: BRAND.color }}>제주패스</Link>
+          </div>
+        </header>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="bg-white rounded-2xl border border-gray-200 p-8 max-w-sm w-full text-center space-y-4">
+            <div className="text-4xl">🔒</div>
+            <h2 className="text-lg font-bold text-gray-900">가게 등록은 사업자 인증 후 가능합니다</h2>
+            <p className="text-sm text-gray-500">회원가입 시 사업자 인증을 완료하면<br />바로 가게를 등록할 수 있어요.</p>
+            <div className="space-y-2 pt-2">
+              <Link
+                href="/signup"
+                className="block w-full py-3 rounded-xl text-white font-semibold text-sm"
+                style={{ backgroundColor: BRAND.color }}
+              >
+                회원가입 (사업자 인증 포함)
+              </Link>
+              <Link
+                href="/login"
+                className="block w-full py-3 rounded-xl text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50"
+              >
+                이미 계정이 있어요 → 로그인
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -152,7 +142,7 @@ export default function RegisterPage() {
         </div>
       </header>
 
-      {/* Step buttons (테스트용) */}
+      {/* Step 탭 */}
       <div className="max-w-lg mx-auto px-4 pt-4">
         <div className="flex gap-2">
           {steps.map((s, i) => (
@@ -173,7 +163,7 @@ export default function RegisterPage() {
               step === 'complete' ? 'text-white bg-green-600' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'
             }`}
           >
-            4. 완료
+            3. 완료
           </button>
         </div>
       </div>
@@ -279,151 +269,25 @@ export default function RegisterPage() {
 
             <div className="flex gap-3">
               <button onClick={() => setStep('info')} className="flex-1 py-3 rounded-xl font-semibold border border-gray-200 text-gray-600">← 이전</button>
-              <button onClick={() => setStep('verify')} className="flex-1 py-3 rounded-xl text-white font-semibold" style={{ backgroundColor: BRAND.color }}>다음 →</button>
-            </div>
-          </div>
-        )}
-
-        {/* ─── Step 3: 사업자 인증 ─── */}
-        {step === 'verify' && (
-          <div className="space-y-5">
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">사업자 인증</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                인증하면 가게 페이지가 바로 공개됩니다.<br />
-                건너뛰어도 SNS 콘텐츠는 만들 수 있어요.
-              </p>
-            </div>
-
-            {/* OCR 업로드 — 가장 쉬운 방법 */}
-            {!verified && (
-              <label className={`block bg-white rounded-xl border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${ocrLoading ? 'border-orange-300 bg-orange-50' : 'border-gray-200 hover:border-orange-200 hover:bg-orange-50/30'}`}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleOCR(file);
-                  }}
-                  disabled={ocrLoading}
-                />
-                {ocrLoading ? (
-                  <div>
-                    <div className="w-8 h-8 border-3 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-sm font-medium text-orange-600 mt-3">사업자등록증 인식 중...</p>
-                    <p className="text-xs text-gray-400 mt-1">AI가 사업자번호를 자동으로 읽고 있어요</p>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="text-3xl mb-2">📄</div>
-                    <p className="text-sm font-medium text-gray-700">사업자등록증 사진 촬영 / 업로드</p>
-                    <p className="text-xs text-gray-400 mt-1">사진을 찍으면 AI가 자동으로 사업자번호를 인식합니다</p>
-                  </div>
-                )}
-              </label>
-            )}
-
-            {/* OCR 결과 — 인식된 정보 표시 */}
-            {ocrData && verified && (
-              <div className="bg-green-50 rounded-xl border border-green-200 p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-green-600 text-lg">✓</span>
-                  <span className="text-sm font-bold text-green-700">사업자 인증 완료</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-gray-500">사업자번호</span>
-                    <p className="font-medium text-gray-800">{businessNumber}</p>
-                  </div>
-                  {ocrData.businessName && (
-                    <div>
-                      <span className="text-gray-500">상호</span>
-                      <p className="font-medium text-gray-800">{ocrData.businessName}</p>
-                    </div>
-                  )}
-                  {ocrData.representative && (
-                    <div>
-                      <span className="text-gray-500">대표자</span>
-                      <p className="font-medium text-gray-800">{ocrData.representative}</p>
-                    </div>
-                  )}
-                  {ocrData.address && (
-                    <div className="col-span-2">
-                      <span className="text-gray-500">소재지</span>
-                      <p className="font-medium text-gray-800">{ocrData.address}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* 직접 입력 (OCR 실패 시 대안) */}
-            {!verified && (
-              <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
-                <p className="text-xs text-gray-400">또는 직접 입력</p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={businessNumber}
-                    onChange={(e) => { setBusinessNumber(e.target.value); setVerified(false); setVerifyError(''); }}
-                    placeholder="000-00-00000"
-                    maxLength={12}
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-300"
-                  />
-                  <button
-                    onClick={handleVerify}
-                    disabled={verifying || !businessNumber.replace(/[-\s]/g, '')}
-                    className="px-4 py-3 rounded-xl text-sm font-medium text-white disabled:opacity-50"
-                    style={{ backgroundColor: BRAND.color }}
-                  >
-                    {verifying ? '확인중...' : '인증'}
-                  </button>
-                </div>
-                {verifyError && <p className="text-xs text-red-500 mt-1">{verifyError}</p>}
-              </div>
-            )}
-
-            {/* 인증 없이 진행 안내 */}
-            {!verified && (
-              <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-500">
-                <p className="font-medium text-gray-600 mb-1">인증 없이도 시작할 수 있어요</p>
-                <ul className="space-y-1 text-xs">
-                  <li>• SNS 콘텐츠 생성은 바로 가능</li>
-                  <li>• 가게 페이지 공개는 인증 후 활성화</li>
-                  <li>• 나중에 언제든 인증할 수 있어요</li>
-                </ul>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <button onClick={() => setStep('menu')} className="flex-1 py-3 rounded-xl font-semibold border border-gray-200 text-gray-600">← 이전</button>
               <button onClick={handleSubmit} disabled={saving}
                 className="flex-1 py-3 rounded-xl text-white font-semibold disabled:opacity-50"
                 style={{ backgroundColor: BRAND.color }}>
-                {saving ? '등록 중...' : verified ? '등록 완료' : '인증 없이 등록'}
+                {saving ? '등록 중...' : '등록 완료 🎉'}
               </button>
             </div>
           </div>
         )}
 
-        {/* ─── Step 4: 완료 ─── */}
+        {/* ─── Step 3: 완료 ─── */}
         {step === 'complete' && (
           <div className="flex items-center justify-center py-12">
             <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
               <div className="text-5xl mb-4">🎉</div>
               <h1 className="text-2xl font-bold text-gray-900">등록 완료!</h1>
-              <p className="text-gray-500 mt-2">
-                {verified
-                  ? '가게 페이지가 공개되었어요.'
-                  : '사업자 인증 후 가게 페이지가 공개됩니다.'}
-              </p>
-              {verified && (
-                <span className="inline-block mt-2 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
-                  ✓ 인증된 사업자
-                </span>
-              )}
+              <p className="text-gray-500 mt-2">가게 페이지가 공개되었어요.</p>
+              <span className="inline-block mt-2 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
+                ✓ 인증된 사업자
+              </span>
               <div className="mt-6 space-y-3">
                 <Link
                   href={`/shop/${createdSlug || 'sunset-cafe-a1b2c3'}`}
@@ -433,15 +297,66 @@ export default function RegisterPage() {
                   내 가게 페이지 보기
                 </Link>
                 <Link
-                  href={`/dashboard/sns${createdId ? `?shopId=${createdId}` : ''}`}
+                  href={`/dashboard/shop/${createdId || 'shop-001'}/edit`}
                   className="block w-full py-3 rounded-xl font-semibold border-2 text-center"
                   style={{ borderColor: BRAND.color, color: BRAND.color }}
                 >
-                  SNS 콘텐츠 만들기
+                  가게 관리 (영업시간·사진 등록)
                 </Link>
-                <Link href="/explore" className="block text-sm text-gray-400 hover:text-gray-600 mt-2">
-                  다른 가게 둘러보기
+                <Link
+                  href={`/dashboard/sns${createdId ? `?shopId=${createdId}` : ''}`}
+                  className="block text-sm text-gray-400 hover:text-gray-600 mt-2"
+                >
+                  SNS 콘텐츠 만들기 →
                 </Link>
+              </div>
+
+              {/* 다음 단계 — 수익 퍼널 */}
+              <div className="mt-6 pt-6 border-t border-gray-100 text-left space-y-3">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center mb-4">다음 단계로 더 많은 고객을</p>
+
+                {/* 카페패스 등록 */}
+                <a
+                  href="http://localhost:3001/cafepass"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-emerald-100 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                >
+                  <span className="text-2xl">☕</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">카페패스에 가게 추가</p>
+                    <p className="text-xs text-gray-500 mt-0.5">패스 구매자에게 자동 노출 · 결제 수수료 0%</p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 shrink-0">등록 →</span>
+                </a>
+
+                {/* 렌터카 연계 */}
+                <a
+                  href="http://localhost:3001/rentcar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 transition-colors"
+                >
+                  <span className="text-2xl">🚗</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">렌터카 고객 유입 연계</p>
+                    <p className="text-xs text-gray-500 mt-0.5">제주패스 렌터카 예약자에게 가게 추천 노출</p>
+                  </div>
+                  <span className="text-xs font-bold text-blue-600 shrink-0">신청 →</span>
+                </a>
+
+                {/* 제주 파티 연계 */}
+                <a
+                  href="http://localhost:3010"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-purple-100 bg-purple-50 hover:bg-purple-100 transition-colors"
+                >
+                  <span className="text-2xl">🎉</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">제주 파티 경유지로 등록</p>
+                    <p className="text-xs text-gray-500 mt-0.5">여행 파티가 내 가게를 코스에 포함</p>
+                  </div>
+                  <span className="text-xs font-bold text-purple-600 shrink-0">보기 →</span>
+                </a>
               </div>
             </div>
           </div>

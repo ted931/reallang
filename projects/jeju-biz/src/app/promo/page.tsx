@@ -27,7 +27,7 @@ const SAMPLE_MENUS = [
 ];
 
 export default function PromoPage() {
-  const [step, setStep] = useState<"list" | "create" | "preview">("list");
+  const [step, setStep] = useState<"list" | "create" | "preview" | "done">("list");
   const [shop, setShop] = useState<ShopInfo>({
     name: "", category: "restaurant", description: "",
     phone: "", address: "", hours: "09:00 - 21:00",
@@ -82,12 +82,7 @@ export default function PromoPage() {
   const handleSave = () => {
     if (!shop.name.trim()) return;
     setSavedShops([shop, ...savedShops]);
-    setShop({
-      name: "", category: "restaurant", description: "",
-      phone: "", address: "", hours: "09:00 - 21:00",
-      menus: [...SAMPLE_MENUS], photos: [],
-    });
-    setStep("list");
+    setStep("done");
   };
 
   const catInfo = (id: string) => CATEGORY_OPTIONS.find((c) => c.id === id);
@@ -109,7 +104,7 @@ export default function PromoPage() {
                 + 새 홍보 페이지
               </button>
             )}
-            {step !== "list" && (
+            {step !== "list" && step !== "done" && (
               <button
                 onClick={() => setStep("list")}
                 className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
@@ -158,9 +153,20 @@ export default function PromoPage() {
                       </div>
                     </div>
                     <p className="text-sm text-gray-600">{s.description}</p>
-                    <div className="flex gap-2 mt-3">
-                      <span className="text-[10px] text-gray-400">메뉴 {s.menus.length}개</span>
-                      <span className="text-[10px] text-gray-400">· {s.hours}</span>
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex gap-2">
+                        <span className="text-[10px] text-gray-400">메뉴 {s.menus.length}개</span>
+                        <span className="text-[10px] text-gray-400">· {s.hours}</span>
+                      </div>
+                      <a
+                        href="http://localhost:3001/register"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors"
+                      >
+                        ⭐ 제주패스 정식등록 →
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -361,6 +367,141 @@ export default function PromoPage() {
               <button
                 onClick={() => setStep("list")}
                 className="px-6 py-3 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+              >
+                목록으로 돌아가기
+              </button>
+            </div>
+
+            {/* 업그레이드 CTA */}
+            <div className="bg-white rounded-2xl border border-amber-100 p-5">
+              <p className="text-sm font-bold text-gray-800 mb-1">더 많은 고객을 만나고 싶으신가요?</p>
+              <p className="text-xs text-gray-500 mb-4">무료 홍보 페이지에서 제주패스 정식 등록으로 업그레이드하면 리뷰 관리, 카페패스 연동, 파티 경유지 노출이 가능합니다.</p>
+              <div className="space-y-2">
+                <a
+                  href="http://localhost:3001/register"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-amber-500 hover:bg-amber-600 transition-colors text-white"
+                >
+                  <span className="text-xl">⭐</span>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold">제주패스 정식 가게 등록</p>
+                    <p className="text-xs text-amber-100">리뷰·예약·SNS 관리 + 지도 노출</p>
+                  </div>
+                  <span className="text-xs font-bold shrink-0">무료 →</span>
+                </a>
+                <div className="grid grid-cols-2 gap-2">
+                  <a
+                    href="http://localhost:3001/cafepass"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 transition-colors"
+                  >
+                    <span className="text-lg">☕</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-gray-900">카페패스</p>
+                      <p className="text-[10px] text-gray-500 truncate">패스 고객 자동 유입</p>
+                    </div>
+                  </a>
+                  <a
+                    href="http://localhost:3010"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-3 rounded-xl bg-purple-50 border border-purple-100 hover:bg-purple-100 transition-colors"
+                  >
+                    <span className="text-lg">🎉</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-gray-900">여행 파티</p>
+                      <p className="text-[10px] text-gray-500 truncate">경유지로 가게 노출</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── 완료 스텝 ─── */}
+        {step === "done" && (
+          <div className="flex items-center justify-center py-8">
+            <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
+              <div className="text-5xl mb-4">🎉</div>
+              <h2 className="text-2xl font-bold text-gray-900">홍보 페이지 생성 완료!</h2>
+              <p className="text-gray-500 mt-2 text-sm">
+                <span className="font-semibold text-gray-800">{shop.name || savedShops[0]?.name}</span>의 홍보 페이지가
+                여행자 지도에 자동으로 노출됩니다.
+              </p>
+
+              <div className="mt-6 space-y-3 text-left">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center mb-2">더 많은 고객을 만나려면</p>
+
+                {/* 정식 등록 */}
+                <a
+                  href="http://localhost:3001/register"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3.5 rounded-xl border-2 border-amber-400 bg-amber-50 hover:bg-amber-100 transition-colors"
+                >
+                  <span className="text-2xl">⭐</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">제주패스 정식 등록 (무료)</p>
+                    <p className="text-xs text-gray-500 mt-0.5">리뷰 관리 · 사진 등록 · 예약 연동</p>
+                  </div>
+                  <span className="text-xs font-bold text-amber-600 shrink-0">등록 →</span>
+                </a>
+
+                {/* 카페패스 */}
+                <a
+                  href="http://localhost:3001/cafepass"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-emerald-100 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                >
+                  <span className="text-2xl">☕</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">카페패스에 가게 추가</p>
+                    <p className="text-xs text-gray-500 mt-0.5">패스 구매자에게 자동 노출 · 결제 수수료 0%</p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 shrink-0">신청 →</span>
+                </a>
+
+                {/* 렌터카 */}
+                <a
+                  href="http://localhost:3001/rentcar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 transition-colors"
+                >
+                  <span className="text-2xl">🚗</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">렌터카 고객 유입 연계</p>
+                    <p className="text-xs text-gray-500 mt-0.5">제주패스 렌터카 예약자에게 가게 추천 노출</p>
+                  </div>
+                  <span className="text-xs font-bold text-blue-600 shrink-0">신청 →</span>
+                </a>
+
+                {/* 파티 */}
+                <a
+                  href="http://localhost:3010"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-purple-100 bg-purple-50 hover:bg-purple-100 transition-colors"
+                >
+                  <span className="text-2xl">🎉</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-900">제주 파티 경유지로 등록</p>
+                    <p className="text-xs text-gray-500 mt-0.5">여행 파티가 내 가게를 코스에 포함</p>
+                  </div>
+                  <span className="text-xs font-bold text-purple-600 shrink-0">보기 →</span>
+                </a>
+              </div>
+
+              <button
+                onClick={() => {
+                  setShop({ name: "", category: "restaurant", description: "", phone: "", address: "", hours: "09:00 - 21:00", menus: [...SAMPLE_MENUS], photos: [] });
+                  setStep("list");
+                }}
+                className="mt-6 w-full py-3 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200 transition-colors text-sm"
               >
                 목록으로 돌아가기
               </button>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getShops, createShop, filterShops } from '@/lib/store';
+import { updateUser } from '@/lib/userStore';
 import { generateId, generateSlug } from '@/lib/utils';
 import type { Shop } from '@/lib/types';
 
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, category, region, description, address, phone, businessHours, menus, photos } = body;
+  const { name, category, region, description, address, phone, businessHours, menus, photos, userId } = body;
 
   if (!name || !category || !region || !address) {
     return NextResponse.json({ error: '필수 항목을 입력해주세요.' }, { status: 400 });
@@ -40,5 +41,15 @@ export async function POST(req: NextRequest) {
   };
 
   await createShop(shop);
+
+  // userId가 있으면 해당 user의 shopIds에 추가
+  if (userId) {
+    const { getUserById } = await import('@/lib/userStore');
+    const user = await getUserById(userId);
+    if (user) {
+      await updateUser(userId, { shopIds: [...user.shopIds, shop.id] });
+    }
+  }
+
   return NextResponse.json({ shop }, { status: 201 });
 }

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BRAND } from '@/lib/constants';
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -99,7 +101,7 @@ export default function SignupPage() {
     return errs;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -107,7 +109,35 @@ export default function SignupPage() {
       return;
     }
     setLoading(true);
-    setTimeout(() => router.push('/register'), 800);
+    try {
+      const res = await fetch(`${BASE}/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone,
+          businessNumber,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrors({ general: data.error || '회원가입에 실패했습니다.' });
+        return;
+      }
+      localStorage.setItem('jejupass_user', JSON.stringify({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        shopIds: data.user.shopIds,
+      }));
+      router.push('/register');
+    } catch {
+      setErrors({ general: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -127,6 +157,12 @@ export default function SignupPage() {
           </div>
 
           <form onSubmit={handleSubmit} noValidate className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+
+            {(errors as Record<string, string>).general && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
+                {(errors as Record<string, string>).general}
+              </div>
+            )}
 
             {/* 이름 */}
             <div>

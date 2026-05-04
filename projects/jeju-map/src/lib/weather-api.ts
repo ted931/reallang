@@ -115,3 +115,17 @@ export function getSkyDescription(precipType: string, temperature: number): stri
       return "⛅ 쌀쌀";
   }
 }
+
+// 개발/API 미설정 시 사용할 더미 데이터
+export const DUMMY_WEATHER: LocationWeather[] = [
+  { name: "제주시", emoji: "🏙️", lat: 33.5104, lng: 126.5319, temperature: "22", humidity: "65", rainfall: "0", windSpeed: "3.2", windDirection: "180", sky: "☀️ 맑음" },
+  { name: "서귀포", emoji: "🌊", lat: 33.2541, lng: 126.5600, temperature: "24", humidity: "70", rainfall: "0", windSpeed: "2.8", windDirection: "200", sky: "☀️ 맑음" },
+  { name: "애월", emoji: "🌅", lat: 33.4631, lng: 126.3313, temperature: "21", humidity: "68", rainfall: "0", windSpeed: "4.1", windDirection: "160", sky: "🌤️ 맑음" },
+  { name: "한림", emoji: "🏖️", lat: 33.4120, lng: 126.2654, temperature: "20", humidity: "72", rainfall: "0.5", windSpeed: "5.0", windDirection: "170", sky: "🌦️ 빗방울" },
+  { name: "함덕", emoji: "🏄", lat: 33.5432, lng: 126.6698, temperature: "23", humidity: "63", rainfall: "0", windSpeed: "3.5", windDirection: "190", sky: "☀️ 맑음" },
+  { name: "성산", emoji: "🌋", lat: 33.4584, lng: 126.9272, temperature: "21", humidity: "75", rainfall: "1.2", windSpeed: "4.8", windDirection: "220", sky: "🌧️ 비" },
+  { name: "중문", emoji: "🌴", lat: 33.2490, lng: 126.4122, temperature: "25", humidity: "60", rainfall: "0", windSpeed: "2.5", windDirection: "180", sky: "☀️ 맑음" },
+  { name: "표선", emoji: "🐚", lat: 33.3225, lng: 126.8233, temperature: "22", humidity: "67", rainfall: "0", windSpeed: "3.0", windDirection: "200", sky: "🌤️ 맑음" },
+  { name: "한라산", emoji: "⛰️", lat: 33.3616, lng: 126.5292, temperature: "14", humidity: "80", rainfall: "2.0", windSpeed: "8.5", windDirection: "240", sky: "🌧️ 비" },
+  { name: "구좌", emoji: "🌾", lat: 33.5200, lng: 126.8545, temperature: "21", humidity: "69", rainfall: "0", windSpeed: "3.8", windDirection: "185", sky: "☀️ 맑음" },
+];

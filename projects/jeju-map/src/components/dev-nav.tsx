@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 const PAGES = [
   { href: "/", label: "지도", emoji: "🗺️", step: "1" },
   { href: "/list", label: "장소 목록", emoji: "📋", step: "2" },
+  { href: "/weather", label: "날씨", emoji: "🌤️", step: "3" },
+  { href: "/drive", label: "드라이브", emoji: "🚗", step: "4" },
 ];
 
 export function DevNav() {
@@ -22,7 +24,7 @@ export function DevNav() {
             <span className="text-[9px] text-gray-400 mr-1">{item.step}</span>{item.emoji} {item.label}
           </Link>
         ))}
-        <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap"><a href="/" class="text-[10px] text-gray-400 hover:text-white">🏠 홈</a> · 테스트 네비</span>
+        <span className="text-[10px] text-gray-600 ml-auto whitespace-nowrap"><a href="/" className="text-[10px] text-gray-400 hover:text-white">🏠 홈</a> · 테스트 네비</span>
       </div>
     </div>
   );

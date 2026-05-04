@@ -32,6 +32,13 @@ export interface MapPin {
   phone?: string;
   description?: string;
   image?: string;
+  // 확장 필드
+  source?: 'jejupass' | 'api' | 'dummy';
+  rating?: number;
+  reviewCount?: number;
+  photoUrl?: string;
+  shopSlug?: string;
+  shopId?: string;
 }
 
 // 더미 데이터 (실제 데이터는 API에서)

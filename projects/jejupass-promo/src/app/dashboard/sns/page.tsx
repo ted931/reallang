@@ -207,6 +207,8 @@ function buildBaseHashtags(shop: Shop, selectedMenuNames: string[]): string[] {
 }
 
 // ─── 메인 페이지 ───
+type IGPostStatus = 'idle' | 'connecting' | 'publishing' | 'published' | 'dev_skip' | 'error';
+
 export default function SNSGeneratorPage() {
   const [shops, setShops] = useState<Shop[]>([]);
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
@@ -222,6 +224,15 @@ export default function SNSGeneratorPage() {
   const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [cafepassToast, setCafepassToast] = useState(false);
+
+  // Instagram 연동 상태
+  const [igStatus, setIgStatus] = useState<IGPostStatus>('idle');
+  const [igMessage, setIgMessage] = useState('');
+  const [showIgConnect, setShowIgConnect] = useState(false);
+  const [igToken, setIgToken] = useState('');
+  const [igUserId, setIgUserId] = useState('');
+  const [igUsername, setIgUsername] = useState('');
+  const [igConnecting, setIgConnecting] = useState(false);
 
   // Load shops
   useEffect(() => {
@@ -394,6 +405,68 @@ export default function SNSGeneratorPage() {
     a.href = previewUrl;
     a.download = `${selectedShop.slug}-${template}.png`;
     a.click();
+  };
+
+  // Instagram 연동
+  const handleIgConnect = async () => {
+    if (!selectedShop || !igToken || !igUserId) return;
+    setIgConnecting(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/instagram/connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shopId: selectedShop.id, token: igToken, userId: igUserId, username: igUsername }),
+      });
+      if (res.ok) {
+        // 가게 데이터 새로고침
+        const updated = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/shops/${selectedShop.id}`).then(r => r.json());
+        setSelectedShop(updated.shop);
+        setShowIgConnect(false);
+        setIgToken(''); setIgUserId(''); setIgUsername('');
+      }
+    } finally {
+      setIgConnecting(false);
+    }
+  };
+
+  const handleIgDisconnect = async () => {
+    if (!selectedShop) return;
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/instagram/connect`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shopId: selectedShop.id }),
+    });
+    const updated = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/shops/${selectedShop.id}`).then(r => r.json());
+    setSelectedShop(updated.shop);
+  };
+
+  // Instagram 게시
+  const handleIgPublish = async () => {
+    if (!selectedShop || !previewUrl) return;
+    setIgStatus('publishing');
+    setIgMessage('');
+    try {
+      const fullCaption = `${caption}\n\n${hashtags.join(' ')}\n\n📍 ${selectedShop.name} | 제주패스에서 더 보기 jejupass.com`;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/instagram/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shopId: selectedShop.id, imageUrl: previewUrl, caption: fullCaption }),
+      });
+      const data = await res.json();
+      if (data.status === 'published') {
+        setIgStatus('published');
+        setIgMessage('인스타그램에 게시 완료!');
+      } else if (data.status === 'dev_skip') {
+        setIgStatus('dev_skip');
+        setIgMessage(data.message);
+      } else {
+        setIgStatus('error');
+        setIgMessage(data.error || '게시 중 오류가 발생했습니다.');
+      }
+    } catch {
+      setIgStatus('error');
+      setIgMessage('네트워크 오류가 발생했습니다.');
+    }
   };
 
   // 카페패스 제출용 다운로드
@@ -684,28 +757,137 @@ export default function SNSGeneratorPage() {
                     descriptionLength={descriptionLength}
                   />
 
-                  {/* 작업 4: 다운로드 버튼 개선 */}
+                  {/* 액션 버튼 */}
                   <div className="mt-4 space-y-2">
+
+                    {/* Instagram 바로 올리기 — 메인 CTA */}
+                    {selectedShop?.instagram ? (
+                      <div className="space-y-2">
+                        {/* 연동된 계정 표시 */}
+                        <div className="flex items-center justify-between px-3 py-2 bg-pink-50 rounded-lg border border-pink-100">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base">📸</span>
+                            <div>
+                              <p className="text-xs font-semibold text-pink-800">@{selectedShop.instagram.username}</p>
+                              <p className="text-[10px] text-pink-500">연동됨</p>
+                            </div>
+                          </div>
+                          <button onClick={handleIgDisconnect} className="text-[10px] text-pink-400 hover:text-pink-600 underline">연동 해제</button>
+                        </div>
+
+                        {/* 게시 버튼 */}
+                        {igStatus === 'idle' && (
+                          <button
+                            onClick={handleIgPublish}
+                            className="w-full py-3 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2"
+                            style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }}
+                          >
+                            <span>📱</span>
+                            <span>인스타그램에 바로 올리기</span>
+                          </button>
+                        )}
+                        {igStatus === 'publishing' && (
+                          <div className="w-full py-3 rounded-xl bg-pink-100 text-pink-700 text-sm font-medium text-center flex items-center justify-center gap-2">
+                            <div className="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin" />
+                            게시 중...
+                          </div>
+                        )}
+                        {igStatus === 'published' && (
+                          <div className="w-full py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-semibold text-center">
+                            ✅ 인스타그램 게시 완료!
+                          </div>
+                        )}
+                        {igStatus === 'dev_skip' && (
+                          <div className="p-3 rounded-xl bg-blue-50 border border-blue-100 text-xs text-blue-700 space-y-1">
+                            <p className="font-semibold">🛠 개발 환경 — 실제 게시 생략</p>
+                            <p className="text-blue-600 leading-relaxed">{igMessage}</p>
+                            <button onClick={() => setIgStatus('idle')} className="text-blue-500 underline">다시 시도</button>
+                          </div>
+                        )}
+                        {igStatus === 'error' && (
+                          <div className="p-3 rounded-xl bg-red-50 border border-red-100 text-xs text-red-700 space-y-1">
+                            <p className="font-semibold">❌ 게시 실패</p>
+                            <p>{igMessage}</p>
+                            <button onClick={() => setIgStatus('idle')} className="text-red-500 underline">다시 시도</button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* Instagram 연동 안 된 경우 */
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => setShowIgConnect(!showIgConnect)}
+                          className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 border-2 transition-colors"
+                          style={{ borderColor: '#E1306C', color: '#E1306C' }}
+                        >
+                          <span>📱</span>
+                          <span>Instagram 연동하고 바로 올리기</span>
+                        </button>
+
+                        {showIgConnect && (
+                          <div className="p-4 bg-white rounded-xl border border-gray-200 space-y-3">
+                            <div>
+                              <p className="text-sm font-semibold text-gray-800 mb-1">Instagram 계정 연동</p>
+                              <p className="text-xs text-gray-500 leading-relaxed">
+                                Meta 개발자 콘솔에서 Instagram Graph API 토큰을 발급받아 입력하세요.
+                                토큰은 가게 정보에 안전하게 저장됩니다.
+                              </p>
+                            </div>
+                            <input
+                              type="text"
+                              value={igUserId}
+                              onChange={(e) => setIgUserId(e.target.value)}
+                              placeholder="Instagram User ID (숫자)"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-pink-300"
+                            />
+                            <input
+                              type="text"
+                              value={igUsername}
+                              onChange={(e) => setIgUsername(e.target.value)}
+                              placeholder="Instagram 아이디 (@ 없이)"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-pink-300"
+                            />
+                            <input
+                              type="password"
+                              value={igToken}
+                              onChange={(e) => setIgToken(e.target.value)}
+                              placeholder="Access Token"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-pink-300 font-mono"
+                            />
+                            <button
+                              onClick={handleIgConnect}
+                              disabled={igConnecting || !igToken || !igUserId}
+                              className="w-full py-2.5 rounded-lg text-white text-sm font-semibold disabled:opacity-50"
+                              style={{ backgroundColor: '#E1306C' }}
+                            >
+                              {igConnecting ? '연동 중...' : '연동하기'}
+                            </button>
+                            <p className="text-[10px] text-gray-400 text-center">
+                              토큰 발급 방법은 준비 중입니다. 연동 준비가 되면 알려드릴게요.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* 보조 버튼 */}
                     <div className="flex gap-2">
-                      <button
-                        onClick={handleDownload}
-                        className="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-700 font-medium text-sm hover:bg-gray-50"
-                      >
-                        일반 저장
+                      <button onClick={handleDownload} className="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-700 font-medium text-sm hover:bg-gray-50">
+                        💾 저장
                       </button>
                       <button
                         onClick={() => {
                           if (previewUrl && caption) {
-                            const fullCaption = `${caption}\n\n${hashtags.join(' ')}\n\n📍 제주패스에서 더 보기`;
-                            navigator.clipboard.writeText(fullCaption);
-                            alert('캡션이 복사되었습니다! 인스타그램에 붙여넣기 하세요.');
+                            navigator.clipboard.writeText(`${caption}\n\n${hashtags.join(' ')}\n\n📍 제주패스 jejupass.com`);
+                            alert('캡션이 복사되었습니다!');
                           }
                         }}
                         className="flex-1 py-2.5 rounded-lg font-medium text-sm border border-gray-200 text-gray-700 hover:bg-gray-50"
                       >
-                        캡션 복사
+                        📋 캡션 복사
                       </button>
                     </div>
+
                     <button
                       onClick={handleCafepassSubmit}
                       className="w-full py-2.5 rounded-lg text-white font-semibold text-sm flex items-center justify-center gap-1.5"
@@ -715,11 +897,6 @@ export default function SNSGeneratorPage() {
                       <span>카페패스 제출용 저장</span>
                     </button>
                   </div>
-
-                  <p className="text-xs text-gray-400 mt-3 text-center">
-                    이미지를 다운로드한 후 인스타그램/카카오톡에 올려보세요.
-                    <br />제주패스 로고가 자연스럽게 포함되어 있습니다.
-                  </p>
                 </div>
               ) : (
                 <div className="text-center text-gray-400">

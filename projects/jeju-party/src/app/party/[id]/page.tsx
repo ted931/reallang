@@ -47,7 +47,22 @@ export default function PartyDetailPage() {
   const [reportSubmitted, setReportSubmitted] = useState(false);
   const [showHostMenu, setShowHostMenu] = useState(false);
   const [joinWithCar, setJoinWithCar] = useState(true);
+  const [commercialSeats, setCommercialSeats] = useState(1);
+  const [stopShops, setStopShops] = useState<{ id: string; name: string; slug: string; category: string; address: string; description?: string; photos?: { url: string; isPrimary?: boolean }[] }[]>([]);
   const phoneVerified = usePhoneVerified();
+
+  useEffect(() => {
+    if (!party?.stopSlugs?.length) return;
+    fetch("http://localhost:3001/api/shops")
+      .then((r) => r.json())
+      .then((data) => {
+        const slugSet = new Set(party.stopSlugs);
+        const shops = (data.shops || [])
+          .filter((s: any) => s.isPublished && slugSet.has(s.slug));
+        setStopShops(shops);
+      })
+      .catch(() => {});
+  }, [party?.id]);
 
   if (!party) {
     return (
@@ -167,11 +182,278 @@ export default function PartyDetailPage() {
           </div>
         </div>
 
+        {/* 사업자 파티 예약 섹션 */}
+        {party.partyType === "commercial" && (
+          <div className="bg-white rounded-2xl border border-blue-100 p-6">
+            {/* 헤더 */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg">🏢 사업자 파티</span>
+                {party.operatorVerified && (
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs font-bold rounded-md border border-blue-200">✓ 인증업체</span>
+                )}
+              </div>
+            </div>
+            {party.operatorName && (
+              <p className="text-sm font-bold text-blue-700 mb-4">업체명: {party.operatorName}</p>
+            )}
+
+            {/* 가격 + 잔여 자리 */}
+            <div className="flex items-center justify-between py-3 border-t border-b border-gray-100 mb-4">
+              <div>
+                <p className="text-xs text-gray-400 mb-0.5">1인 요금</p>
+                <p className="text-2xl font-bold text-blue-600">₩{(party.pricePerSeat || 0).toLocaleString()}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-gray-400 mb-0.5">잔여 자리</p>
+                <p className="text-lg font-bold text-gray-900">
+                  {party.maxMembers - (party.reservedSeats || 0)} / {party.maxMembers}
+                </p>
+              </div>
+            </div>
+
+            {/* 포함/불포함/환불/최소인원 */}
+            <div className="space-y-2 mb-4">
+              {party.includedItems && party.includedItems.length > 0 && (
+                <div className="flex gap-2 text-sm">
+                  <span className="text-gray-400 shrink-0">포함 사항</span>
+                  <span className="text-gray-700">{party.includedItems.join(", ")}</span>
+                </div>
+              )}
+              {party.excludedItems && party.excludedItems.length > 0 && (
+                <div className="flex gap-2 text-sm">
+                  <span className="text-gray-400 shrink-0">불포함</span>
+                  <span className="text-gray-500">{party.excludedItems.join(", ")}</span>
+                </div>
+              )}
+              {party.refundPolicy && (
+                <div className="flex gap-2 text-sm">
+                  <span className="text-gray-400 shrink-0">환불 정책</span>
+                  <span className="text-gray-600">{party.refundPolicy}</span>
+                </div>
+              )}
+              {party.minMembers && (
+                <div className="flex gap-2 text-sm">
+                  <span className="text-gray-400 shrink-0">최소 인원</span>
+                  <span className="text-orange-600 font-medium">{party.minMembers}명 (미달 시 자동 취소)</span>
+                </div>
+              )}
+            </div>
+
+            {/* 인원 선택 */}
+            <div className="mb-4">
+              <p className="text-xs text-gray-500 mb-2 font-medium">인원 선택</p>
+              <div className="flex gap-2 flex-wrap">
+                {Array.from({ length: Math.min(4, party.maxMembers - (party.reservedSeats || 0)) }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setCommercialSeats(n)}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                      commercialSeats === n
+                        ? "bg-blue-600 text-white"
+                        : "bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100"
+                    }`}
+                  >
+                    {n}명
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 금액 계산 */}
+            <div className="bg-blue-50 rounded-xl p-4 mb-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">선입금</span>
+                <span className="font-medium text-gray-900">
+                  ₩{Math.round((party.pricePerSeat || 0) * commercialSeats * (party.depositRate ?? 100) / 100).toLocaleString()}
+                  {(party.depositRate ?? 100) < 100 ? ` (${party.depositRate}%)` : " (전액)"}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">플랫폼 수수료</span>
+                <span className="font-medium text-gray-500">
+                  ₩{Math.round((party.pricePerSeat || 0) * commercialSeats * (party.platformFeeRate ?? 10) / 100).toLocaleString()}
+                  {` (${party.platformFeeRate ?? 10}%)`}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-blue-200">
+                <span className="text-sm font-bold text-gray-900">총 결제액</span>
+                <span className="text-lg font-bold text-blue-600">
+                  ₩{Math.round((party.pricePerSeat || 0) * commercialSeats * (1 + (party.platformFeeRate ?? 10) / 100) * (party.depositRate ?? 100) / 100).toLocaleString()}
+                </span>
+              </div>
+              <p className="text-[10px] text-blue-400 text-right">플랫폼 수수료 포함</p>
+            </div>
+
+            {/* 예약 버튼 */}
+            <button
+              onClick={() => {
+                if (!phoneVerified) {
+                  setShowPhoneVerify(true);
+                } else {
+                  setShowJoinModal(true);
+                }
+              }}
+              className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold text-base hover:bg-blue-700 transition-colors"
+            >
+              지금 예약하기 — ₩{Math.round((party.pricePerSeat || 0) * commercialSeats * (1 + (party.platformFeeRate ?? 10) / 100) * (party.depositRate ?? 100) / 100).toLocaleString()}
+            </button>
+          </div>
+        )}
+
         {/* 상세 설명 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <h2 className="font-bold text-gray-900 mb-3">파티 소개</h2>
           <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{party.description}</p>
         </div>
+
+        {/* 번들 코스 — 여러 활동 묶음 */}
+        {party.bundleItems && party.bundleItems.length > 0 && (
+          <div className="bg-white rounded-2xl border border-purple-100 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-lg">🎯</span>
+              <h2 className="font-bold text-gray-900">번들 코스</h2>
+              <span className="px-2 py-0.5 bg-purple-100 text-purple-600 text-[10px] font-bold rounded-full">
+                {party.bundleItems.length}개 활동
+              </span>
+              <span className="ml-auto text-[10px] text-gray-400">
+                총 ~{(party.bundleItems.reduce((s, i) => s + (i.cost || 0), 0)).toLocaleString()}원/인
+              </span>
+            </div>
+            <div className="space-y-3">
+              {party.bundleItems.map((item, idx) => {
+                const bCat = HOBBY_CATEGORIES.find((c) => c.id === item.category);
+                const linked = item.commercialPartyId ? DUMMY_PARTIES.find((p) => p.id === item.commercialPartyId) : null;
+                return (
+                  <div key={item.id} className="flex items-start gap-3">
+                    <div className="flex flex-col items-center">
+                      <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-sm font-bold text-purple-600">
+                        {idx + 1}
+                      </div>
+                      {idx < party.bundleItems!.length - 1 && (
+                        <div className="w-0.5 h-4 bg-purple-100 mt-1" />
+                      )}
+                    </div>
+                    <div className="flex-1 pb-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs font-medium text-gray-500">{item.time}</span>
+                        <span className="text-sm font-bold text-gray-900">{bCat?.emoji} {item.title}</span>
+                        {item.cost !== undefined && (
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${item.cost === 0 ? "bg-emerald-100 text-emerald-600" : "bg-purple-50 text-purple-600"}`}>
+                            {item.cost === 0 ? "무료" : `₩${item.cost.toLocaleString()}/인`}
+                          </span>
+                        )}
+                      </div>
+                      {item.location && (
+                        <p className="text-[10px] text-gray-400 mt-0.5">📍 {item.location}</p>
+                      )}
+                      {item.note && (
+                        <p className="text-[10px] text-gray-500 mt-0.5">{item.note}</p>
+                      )}
+                      {/* 사업자 파티 연동 뱃지 */}
+                      {linked && (
+                        <a
+                          href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/party/${linked.id}`}
+                          className="inline-flex items-center gap-1 mt-1 text-[10px] px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded-full font-medium hover:bg-blue-100 transition-colors"
+                        >
+                          🏢 {linked.operatorName} 예약 바로가기 →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* 렌터카 코디 (번들 파티에서 활성화된 경우) */}
+            {party.rentalCoordEnabled && (
+              <div className="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                <div className="flex items-center gap-2 mb-1">
+                  <span>🚗</span>
+                  <span className="text-sm font-bold text-blue-700">렌터카 같이 할 사람 구해요</span>
+                  {party.rentalCoordSeats && (
+                    <span className="ml-auto text-[10px] bg-blue-200 text-blue-700 px-2 py-0.5 rounded-full font-bold">
+                      동승 {party.rentalCoordSeats}자리
+                    </span>
+                  )}
+                </div>
+                {party.rentalCoordNote && (
+                  <p className="text-xs text-blue-600">{party.rentalCoordNote}</p>
+                )}
+                <button className="mt-2 w-full py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors">
+                  렌터카 같이 타기 신청
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 경유 가게 — jejupass 등록 가게 */}
+        {(party.stopSlugs && party.stopSlugs.length > 0) && (
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-lg">📍</span>
+              <h2 className="font-bold text-gray-900">경유 가게</h2>
+              <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">
+                {party.stopSlugs.length}곳
+              </span>
+              <a
+                href="http://localhost:3005"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto text-[10px] text-indigo-500 hover:underline"
+              >
+                지도에서 보기 →
+              </a>
+            </div>
+            {stopShops.length > 0 ? (
+              <div className="space-y-3">
+                {stopShops.map((shop, idx) => {
+                  const primaryPhoto = shop.photos?.find((p) => p.isPrimary) || shop.photos?.[0];
+                  return (
+                    <div key={shop.id} className="flex items-center gap-3 p-3 bg-orange-50/50 rounded-xl border border-orange-100">
+                      <span className="text-sm font-bold text-orange-400 w-5 shrink-0">{idx + 1}</span>
+                      {primaryPhoto ? (
+                        <div
+                          className="w-12 h-12 rounded-xl bg-cover bg-center bg-gray-100 shrink-0"
+                          style={{ backgroundImage: `url(${primaryPhoto.url})` }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-xl shrink-0">☕</div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-sm font-bold text-gray-900 truncate">{shop.name}</span>
+                          <span className="shrink-0 text-[9px] px-1.5 py-0.5 bg-orange-100 text-orange-600 rounded-full font-bold">⭐ 제주패스</span>
+                        </div>
+                        {shop.description && (
+                          <p className="text-xs text-gray-500 truncate">{shop.description}</p>
+                        )}
+                        <p className="text-[10px] text-gray-400 mt-0.5 truncate">📍 {shop.address}</p>
+                      </div>
+                      <a
+                        href={`http://localhost:3001/shop/${shop.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-orange-300 text-orange-500 hover:bg-orange-50 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        보기
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {party.stopSlugs.map((slug) => (
+                  <span key={slug} className="text-xs px-3 py-1.5 bg-orange-50 text-orange-400 border border-orange-100 rounded-full">
+                    {slug}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* 카페투어 코스 정보 */}
         {cafeTour && (
@@ -447,6 +729,19 @@ export default function PartyDetailPage() {
                     {party.rentalCarReturn && party.rentalCarReturn !== party.rentalCarPickup && <span>반납: {party.rentalCarReturn}</span>}
                   </div>
                 </div>
+                {/* 렌터카 예약 CTA */}
+                <a
+                  href="http://localhost:3001/rentcar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 flex items-center justify-between w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                >
+                  <div>
+                    <p className="text-sm font-bold">🚗 제주패스에서 렌터카 예약</p>
+                    <p className="text-[11px] text-blue-200 mt-0.5">최저가 보장 · 전 차종 풀커버 보험 포함</p>
+                  </div>
+                  <span className="text-blue-200 text-lg">→</span>
+                </a>
               </div>
             ) : party.hasRentalCar && (
               <div>
@@ -600,6 +895,22 @@ export default function PartyDetailPage() {
           </div>
         </div>
 
+        {/* 법적 고지 */}
+        <div className="text-[10px] text-gray-400 bg-gray-50 rounded-xl p-4 leading-relaxed">
+          <p className="font-medium text-gray-500 mb-2">📋 이용 안내</p>
+          {party.stayMode === "stay" && (
+            <p className="text-amber-600 font-medium mb-1">
+              ⚠️ 이 파티는 개인 장기 체류자가 단기 동행을 구하는 소셜 모임입니다. 숙박 공간의 전대차·상업적 재임대는 법적으로 금지되어 있으며, 위반 시 모든 책임은 당사자에게 있습니다.
+            </p>
+          )}
+          {party.partyType === "commercial" && (
+            <p className="text-blue-600 font-medium mb-1">
+              ℹ️ 사업자 파티입니다. 업체의 관광사업자 등록 여부 및 보험 가입 여부를 직접 확인하시기 바랍니다.
+            </p>
+          )}
+          <p>jeju-party는 개인 간 모임 연결 플랫폼으로, 모임 내 발생하는 사고·분쟁·불이행에 대해 법적 책임을 지지 않습니다. 문제 발생 시 즉시 <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/cs`} className="underline">고객센터</a>에 신고해주세요.</p>
+        </div>
+
         {/* 태그 */}
         <div className="flex flex-wrap gap-2">
           {party.tags.map((tag) => (
@@ -633,9 +944,15 @@ export default function PartyDetailPage() {
                     setShowJoinModal(true);
                   }
                 }}
-                className="flex-1 py-3 bg-orange-500 text-white rounded-xl font-bold text-lg hover:bg-orange-600 transition-colors"
+                className={`flex-1 py-3 text-white rounded-xl font-bold text-lg transition-colors ${
+                  party.partyType === "commercial"
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-orange-500 hover:bg-orange-600"
+                }`}
               >
-                참여 신청 ({spotsLeft}자리)
+                {party.partyType === "commercial"
+                  ? `예약하기 — ₩${Math.round((party.pricePerSeat || 0) * commercialSeats * (1 + (party.platformFeeRate ?? 10) / 100) * (party.depositRate ?? 100) / 100).toLocaleString()}`
+                  : `참여 신청 (${spotsLeft}자리)`}
               </button>
             </>
           )}
@@ -650,9 +967,13 @@ export default function PartyDetailPage() {
             {/* STEP 1: 정보 입력 */}
             {paymentStep === "info" && (
               <>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">참여 신청</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  {party.partyType === "commercial" ? "사업자 파티 예약" : "참여 신청"}
+                </h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  {party.hostName}님의 &quot;{party.title}&quot; 파티에 참여하시겠어요?
+                  {party.partyType === "commercial"
+                    ? `${party.operatorName || party.hostName}의 "${party.title}" 예약`
+                    : `${party.hostName}님의 "${party.title}" 파티에 참여하시겠어요?`}
                 </p>
 
                 <div className="space-y-3 mb-4">
@@ -694,7 +1015,29 @@ export default function PartyDetailPage() {
                   </div>
                 )}
 
-                {party.costType !== "free" && (
+                {party.partyType === "commercial" && party.pricePerSeat ? (
+                  <div className="p-3 bg-blue-50 rounded-xl mb-4 space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-blue-700">1인 요금 × {commercialSeats}명</span>
+                      <span className="text-sm font-bold text-blue-700">
+                        {(party.pricePerSeat * commercialSeats).toLocaleString()}원
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">플랫폼 수수료 ({party.platformFeeRate ?? 10}%)</span>
+                      <span className="text-sm font-bold text-gray-500">
+                        {Math.round(party.pricePerSeat * commercialSeats * (party.platformFeeRate ?? 10) / 100).toLocaleString()}원
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-1.5 border-t border-blue-200">
+                      <span className="text-sm font-bold text-blue-800">결제 금액</span>
+                      <span className="text-lg font-bold text-blue-700">
+                        {Math.round(party.pricePerSeat * commercialSeats * (1 + (party.platformFeeRate ?? 10) / 100) * (party.depositRate ?? 100) / 100).toLocaleString()}원
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-blue-500">플랫폼 수수료 포함</p>
+                  </div>
+                ) : party.costType !== "free" ? (
                   <div className="p-3 bg-orange-50 rounded-xl mb-4 space-y-1.5">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-orange-700">파티비</span>
@@ -720,7 +1063,7 @@ export default function PartyDetailPage() {
                       {party.costType === "split" ? "인당 예상 금액 (엔빵)" : "고정 참여비"}
                     </p>
                   </div>
-                )}
+                ) : null}
 
                 {party.costType === "free" && (
                   <div className="p-3 bg-emerald-50 rounded-xl mb-4">
@@ -880,10 +1223,26 @@ export default function PartyDetailPage() {
             {/* STEP: 카페패스 업셀 */}
             {paymentStep === "pass-offer" && (
               <>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">카페패스도 함께?</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  카페 투어를 더 알뜰하게 즐기고 싶다면
-                </p>
+                <div className="text-center mb-4">
+                  <p className="text-2xl mb-1">☕</p>
+                  <h3 className="text-lg font-bold text-gray-900">카페패스로 더 알뜰하게!</h3>
+                  <p className="text-sm text-gray-500 mt-1">이 파티 경유 카페에서 무료로 음료를 즐겨요</p>
+                </div>
+
+                {/* 경유 가게 미리보기 */}
+                {stopShops.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-1 px-1">
+                    {stopShops.slice(0, 4).map((shop) => (
+                      <div key={shop.id} className="flex-shrink-0 flex flex-col items-center gap-1 w-16">
+                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-lg">☕</div>
+                        <span className="text-[9px] text-gray-500 text-center leading-tight line-clamp-2">{shop.name}</span>
+                      </div>
+                    ))}
+                    {stopShops.length === 0 && party.stopSlugs && party.stopSlugs.length > 0 && (
+                      <p className="text-xs text-gray-400 py-2">경유 카페 {party.stopSlugs.length}곳</p>
+                    )}
+                  </div>
+                )}
 
                 {cafeCount > 0 && savings > 0 && (
                   <div className="p-3 bg-emerald-50 rounded-xl mb-4 text-center">
@@ -942,15 +1301,23 @@ export default function PartyDetailPage() {
             {paymentStep === "done" && (
               <div className="text-center py-4">
                 <p className="text-4xl mb-3">🎉</p>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">참여 완료!</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  {party.partyType === "commercial" ? "예약 완료!" : "참여 완료!"}
+                </h3>
                 <p className="text-sm text-gray-500 mb-1">
-                  {party.hostName}님이 승인하면 카카오톡으로 알려드릴게요
+                  {party.partyType === "commercial"
+                    ? "예약 완료! 업체에서 확인 후 연락드립니다"
+                    : `${party.hostName}님이 승인하면 카카오톡으로 알려드릴게요`}
                 </p>
-                {party.costType !== "free" && (
+                {party.partyType === "commercial" && party.pricePerSeat ? (
+                  <p className="text-xs text-blue-600 mb-4">
+                    결제 {Math.round(party.pricePerSeat * commercialSeats * (1 + (party.platformFeeRate ?? 10) / 100) * (party.depositRate ?? 100) / 100).toLocaleString()}원 완료
+                  </p>
+                ) : party.costType !== "free" ? (
                   <p className="text-xs text-emerald-600 mb-4">
                     결제 {(party.costAmount || 0).toLocaleString()}원 완료
                   </p>
-                )}
+                ) : null}
 
                 {/* 파티 참가자 혜택 — Featured 오퍼 1개 */}
                 {(() => {

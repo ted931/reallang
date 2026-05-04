@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { HOBBY_CATEGORIES, REGIONS, type ScheduleItem } from "@/lib/types";
 import { CAFE_TOURS } from "@/lib/dummy-cafe-tours";
+const RouteMap = lazy(() => import("@/components/route-map"));
 import { CARS, RENTAL_STATIONS, CATEGORY_CAR_MAP } from "@/lib/car-data";
 import PhoneVerify, { usePhoneVerified } from "@/components/phone-verify";
 
@@ -12,6 +13,14 @@ function getInitParam(key: string) {
 }
 
 export default function CreatePartyPage() {
+  const [partyType, setPartyType] = useState<"individual" | "commercial" | "stay">(
+    () => {
+      const t = getInitParam("type");
+      if (t === "commercial") return "commercial";
+      if (t === "stay") return "stay";
+      return "individual";
+    }
+  );
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [customCategory, setCustomCategory] = useState("");
@@ -21,8 +30,17 @@ export default function CreatePartyPage() {
   const [region, setRegion] = useState("");
   const [location, setLocation] = useState("");
   const [maxMembers, setMaxMembers] = useState(4);
+  const [minMembers, setMinMembers] = useState(2);
   const [costType, setCostType] = useState<"split" | "free" | "fixed">("split");
   const [costAmount, setCostAmount] = useState("");
+  const [pricePerSeat, setPricePerSeat] = useState("");
+  const [depositRate, setDepositRate] = useState(100);
+  const [operatorName, setOperatorName] = useState("");
+  const [operatorContact, setOperatorContact] = useState("");
+  const [operatorVerified, setOperatorVerified] = useState(false);
+  const [includedItems, setIncludedItems] = useState<string[]>([""]);
+  const [excludedItems, setExcludedItems] = useState<string[]>([""]);
+  const [refundPolicy, setRefundPolicy] = useState("");
   const [rentalCarMode, setRentalCarMode] = useState<"none" | "own-car" | "rent-together">("none");
   const [carInfo, setCarInfo] = useState("");
   const [selectedCarId, setSelectedCarId] = useState("");
@@ -38,9 +56,30 @@ export default function CreatePartyPage() {
   const [cafePassNote, setCafePassNote] = useState("");
   const [selectedTourId, setSelectedTourId] = useState("");
   const [consentChecked, setConsentChecked] = useState(false);
+  // 장기체류 동행 전용 state
+  const [hostStayDays, setHostStayDays] = useState<number>(30);
+  const [hostStayRegion, setHostStayRegion] = useState("");
+  const [guestCanStayOver, setGuestCanStayOver] = useState(false);
+  const [petFriendly, setPetFriendly] = useState(false);
+  const [petTypes, setPetTypes] = useState<string[]>([]);
+  const [petRules, setPetRules] = useState("");
+  const [hostLocalTips, setHostLocalTips] = useState<string[]>([""]);
   const [showPhoneVerify, setShowPhoneVerify] = useState(false);
   const [showSafetyGuide, setShowSafetyGuide] = useState(false);
+  const [showRouteMap, setShowRouteMap] = useState(false);
+  const [selectedStopSlugs, setSelectedStopSlugs] = useState<string[]>([]);
+  const [allShops, setAllShops] = useState<{ id: string; name: string; slug: string; category: string; address: string }[]>([]);
+  const [shopSearch, setShopSearch] = useState("");
   const phoneVerified = usePhoneVerified();
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/shops")
+      .then((r) => r.json())
+      .then((data) => {
+        setAllShops((data.shops || []).filter((s: any) => s.isPublished));
+      })
+      .catch(() => {});
+  }, []);
 
   const addScheduleItem = () => {
     const lastTime = schedule.length > 0 ? schedule[schedule.length - 1].time : time || "10:00";
@@ -51,7 +90,24 @@ export default function CreatePartyPage() {
 
   const updateScheduleItem = (idx: number, field: keyof ScheduleItem, value: string) => {
     const updated = [...schedule];
-    updated[idx] = { ...updated[idx], [field]: value };
+    if (field === "time") {
+      // 시간 변경 시 뒤 항목들을 같은 델타만큼 이동
+      const toMin = (t: string) => {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+      };
+      const toStr = (min: number) => {
+        const total = ((min % 1440) + 1440) % 1440;
+        return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+      };
+      const delta = toMin(value) - toMin(updated[idx].time);
+      updated[idx] = { ...updated[idx], time: value };
+      for (let i = idx + 1; i < updated.length; i++) {
+        updated[i] = { ...updated[i], time: toStr(toMin(updated[i].time) + delta) };
+      }
+    } else {
+      updated[idx] = { ...updated[idx], [field]: value };
+    }
     setSchedule(updated);
   };
 
@@ -117,6 +173,373 @@ export default function CreatePartyPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-6 py-6 space-y-6">
+        {/* 파티 타입 선택 */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-2 flex gap-1">
+          <button
+            onClick={() => setPartyType("individual")}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              partyType === "individual"
+                ? "bg-orange-500 text-white shadow"
+                : "text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            👤 개인 파티
+          </button>
+          <button
+            onClick={() => setPartyType("commercial")}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              partyType === "commercial"
+                ? "bg-blue-600 text-white shadow"
+                : "text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            🏢 사업자 파티
+          </button>
+          <button
+            onClick={() => setPartyType("stay")}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              partyType === "stay"
+                ? "bg-teal-600 text-white shadow"
+                : "text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            🏠 장기체류 동행
+          </button>
+        </div>
+
+        {/* 사업자 정보 (사업자 파티 전용) */}
+        {partyType === "commercial" && (
+          <div className="bg-blue-50 rounded-2xl border border-blue-200 p-5 space-y-3">
+            <h3 className="text-sm font-bold text-blue-800 flex items-center gap-1.5">
+              🏢 사업자 정보
+            </h3>
+            <div>
+              <label className="block text-xs font-bold text-blue-700 mb-1">업체명</label>
+              <input
+                type="text"
+                value={operatorName}
+                onChange={(e) => setOperatorName(e.target.value)}
+                placeholder="예: 제주 서핑 스쿨"
+                className="w-full px-4 py-2.5 rounded-xl border border-blue-200 bg-white text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-blue-700 mb-1">연락처</label>
+              <input
+                type="tel"
+                value={operatorContact}
+                onChange={(e) => setOperatorContact(e.target.value)}
+                placeholder="예: 064-000-0000"
+                className="w-full px-4 py-2.5 rounded-xl border border-blue-200 bg-white text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none"
+              />
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={operatorVerified}
+                onChange={(e) => setOperatorVerified(e.target.checked)}
+                className="w-4 h-4 rounded border-blue-300 text-blue-600 focus:ring-blue-400"
+              />
+              <span className="text-sm text-blue-700 font-medium">사업자 등록 인증 완료</span>
+              {operatorVerified && <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full">인증됨</span>}
+            </label>
+          </div>
+        )}
+
+        {/* 장기체류 동행 전용 섹션 */}
+        {partyType === "stay" && (
+          <>
+            {/* 체류 정보 */}
+            <div className="bg-teal-50 rounded-2xl border border-teal-200 p-5 space-y-4">
+              <h3 className="text-sm font-bold text-teal-800 flex items-center gap-1.5">
+                🏠 체류 정보
+              </h3>
+              <div>
+                <label className="block text-xs font-bold text-teal-700 mb-2">체류 기간</label>
+                <div className="flex gap-2 flex-wrap">
+                  {([7, 14, 30] as const).map((days) => (
+                    <button
+                      key={days}
+                      onClick={() => setHostStayDays(days)}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                        hostStayDays === days
+                          ? "bg-teal-600 text-white shadow"
+                          : "bg-white border border-teal-200 text-teal-700 hover:bg-teal-100"
+                      }`}
+                    >
+                      {days === 7 ? "7일" : days === 14 ? "14일" : "1개월"}
+                    </button>
+                  ))}
+                  <input
+                    type="number"
+                    value={hostStayDays}
+                    onChange={(e) => setHostStayDays(Number(e.target.value))}
+                    min={1}
+                    placeholder="직접입력"
+                    className="w-24 px-3 py-2 rounded-xl border border-teal-200 bg-white text-sm focus:border-teal-400 outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-teal-700 mb-1">체류 지역</label>
+                <input
+                  type="text"
+                  value={hostStayRegion}
+                  onChange={(e) => setHostStayRegion(e.target.value)}
+                  placeholder="예: 제주시 애월읍"
+                  className="w-full px-4 py-2.5 rounded-xl border border-teal-200 bg-white text-sm focus:border-teal-400 focus:ring-2 focus:ring-teal-100 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-teal-700 mb-2">숙박 가능</label>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="guestStayOver"
+                      checked={guestCanStayOver}
+                      onChange={() => setGuestCanStayOver(true)}
+                      className="w-4 h-4 text-teal-600 border-teal-300 focus:ring-teal-400"
+                    />
+                    <span className="text-sm text-teal-800">가능 (소파/게스트룸)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="guestStayOver"
+                      checked={!guestCanStayOver}
+                      onChange={() => setGuestCanStayOver(false)}
+                      className="w-4 h-4 text-teal-600 border-teal-300 focus:ring-teal-400"
+                    />
+                    <span className="text-sm text-teal-800">당일 동행만</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* 반려동물 */}
+            <div className="bg-teal-50 rounded-2xl border border-teal-200 p-5 space-y-3">
+              <h3 className="text-sm font-bold text-teal-800 flex items-center gap-1.5">
+                🐶 반려동물
+              </h3>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={petFriendly}
+                  onChange={(e) => setPetFriendly(e.target.checked)}
+                  className="w-4 h-4 rounded border-teal-300 text-teal-600 focus:ring-teal-400"
+                />
+                <span className="text-sm text-teal-800 font-medium">반려동물 동반 가능</span>
+              </label>
+              {petFriendly && (
+                <>
+                  <div>
+                    <label className="block text-xs font-bold text-teal-700 mb-2">종류</label>
+                    <div className="flex gap-2">
+                      {["강아지", "고양이", "기타"].map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => {
+                            if (petTypes.includes(type)) {
+                              setPetTypes(petTypes.filter((t) => t !== type));
+                            } else {
+                              setPetTypes([...petTypes, type]);
+                            }
+                          }}
+                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                            petTypes.includes(type)
+                              ? "bg-teal-600 text-white shadow"
+                              : "bg-white border border-teal-200 text-teal-700 hover:bg-teal-100"
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-teal-700 mb-1">안내사항</label>
+                    <input
+                      type="text"
+                      value={petRules}
+                      onChange={(e) => setPetRules(e.target.value)}
+                      placeholder="예: 소형견만 가능, 백신 필수"
+                      className="w-full px-4 py-2.5 rounded-xl border border-teal-200 bg-white text-sm focus:border-teal-400 outline-none"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* 현지 꿀팁 */}
+            <div className="bg-teal-50 rounded-2xl border border-teal-200 p-5 space-y-3">
+              <h3 className="text-sm font-bold text-teal-800 flex items-center gap-1.5">
+                💡 현지 꿀팁 <span className="text-teal-500 font-normal">(선택)</span>
+              </h3>
+              <p className="text-xs text-teal-600">내가 알고 있는 로컬 정보를 공유하세요</p>
+              {hostLocalTips.map((tip, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={tip}
+                    onChange={(e) => {
+                      const updated = [...hostLocalTips];
+                      updated[idx] = e.target.value;
+                      setHostLocalTips(updated);
+                    }}
+                    placeholder="예: 애월 숨겨진 해변 주차 꿀팁"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-teal-200 bg-white text-sm focus:border-teal-400 outline-none"
+                  />
+                  {hostLocalTips.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setHostLocalTips(hostLocalTips.filter((_, i) => i !== idx))}
+                      className="text-teal-300 hover:text-red-400 text-sm px-1"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setHostLocalTips([...hostLocalTips, ""])}
+                className="text-xs text-teal-500 hover:text-teal-600 font-medium"
+              >
+                + 추가
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* 가격 & 예약 설정 (사업자 파티 전용) */}
+        {partyType === "commercial" && (
+          <div className="bg-white rounded-2xl border border-blue-100 p-5 space-y-4">
+            <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+              💰 가격 &amp; 예약 설정
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1">1인 참가비 (원)</label>
+                <input
+                  type="number"
+                  value={pricePerSeat}
+                  onChange={(e) => setPricePerSeat(e.target.value)}
+                  placeholder="예: 65000"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-blue-400 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1">최소 인원 (명)</label>
+                <input
+                  type="number"
+                  value={minMembers}
+                  onChange={(e) => setMinMembers(Number(e.target.value))}
+                  min={1}
+                  max={maxMembers}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-blue-400 outline-none"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">미달 시 자동 취소</p>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2">선입금 비율</label>
+              <div className="flex gap-2">
+                {[30, 50, 100].map((rate) => (
+                  <button
+                    key={rate}
+                    onClick={() => setDepositRate(rate)}
+                    className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
+                      depositRate === rate
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {rate}%
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="p-3 bg-blue-50 rounded-xl">
+              <p className="text-xs text-blue-700 font-medium">플랫폼 수수료: 12% (자동 적용)</p>
+              {pricePerSeat && (
+                <p className="text-[11px] text-blue-500 mt-0.5">
+                  참가비 {Number(pricePerSeat).toLocaleString()}원 → 실수령 {Math.floor(Number(pricePerSeat) * 0.88).toLocaleString()}원/인
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1">포함 사항</label>
+                {includedItems.map((item, idx) => (
+                  <div key={idx} className="flex gap-2 mb-1.5">
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) => {
+                        const updated = [...includedItems];
+                        updated[idx] = e.target.value;
+                        setIncludedItems(updated);
+                      }}
+                      placeholder="예: 장비 대여, 강습비, 보험"
+                      className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:border-blue-400 outline-none"
+                    />
+                    {includedItems.length > 1 && (
+                      <button
+                        onClick={() => setIncludedItems(includedItems.filter((_, i) => i !== idx))}
+                        className="text-gray-300 hover:text-red-400 text-sm px-1"
+                      >✕</button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  onClick={() => setIncludedItems([...includedItems, ""])}
+                  className="text-xs text-blue-500 hover:text-blue-600 font-medium"
+                >+ 항목 추가</button>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1">불포함 사항</label>
+                {excludedItems.map((item, idx) => (
+                  <div key={idx} className="flex gap-2 mb-1.5">
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) => {
+                        const updated = [...excludedItems];
+                        updated[idx] = e.target.value;
+                        setExcludedItems(updated);
+                      }}
+                      placeholder="예: 개인 음료, 교통비"
+                      className="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:border-blue-400 outline-none"
+                    />
+                    {excludedItems.length > 1 && (
+                      <button
+                        onClick={() => setExcludedItems(excludedItems.filter((_, i) => i !== idx))}
+                        className="text-gray-300 hover:text-red-400 text-sm px-1"
+                      >✕</button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  onClick={() => setExcludedItems([...excludedItems, ""])}
+                  className="text-xs text-blue-500 hover:text-blue-600 font-medium"
+                >+ 항목 추가</button>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1">환불 정책</label>
+                <input
+                  type="text"
+                  value={refundPolicy}
+                  onChange={(e) => setRefundPolicy(e.target.value)}
+                  placeholder="예: 3일 전까지 100% 환불, 당일 취소 불가"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:border-blue-400 outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 닉네임 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <label className="block text-sm font-bold text-gray-700 mb-2">파티장 닉네임</label>
@@ -204,18 +627,52 @@ export default function CreatePartyPage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm font-bold text-gray-700">일정 (선택)</label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               {category && region && (
                 <button onClick={handleAiSchedule} disabled={aiLoading}
                   className="text-xs text-orange-500 hover:text-orange-600 font-medium disabled:opacity-50">
-                  {aiLoading ? "생성 중..." : "✨ AI가 일정 짜기"}
+                  {aiLoading ? "생성 중..." : "✨ AI 자동"}
                 </button>
               )}
+              <button
+                onClick={() => setShowRouteMap((v) => !v)}
+                className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-all ${
+                  showRouteMap
+                    ? "bg-indigo-500 text-white"
+                    : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+                }`}
+              >
+                🗺️ 지도로 짜기
+              </button>
               <button onClick={addScheduleItem} className="text-xs text-blue-500 hover:text-blue-600 font-medium">
                 + 직접 추가
               </button>
             </div>
           </div>
+
+          {/* 지도 코스 플래너 */}
+          {showRouteMap && (
+            <div className="mb-4 border border-indigo-100 rounded-2xl p-4 bg-indigo-50/30">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-sm font-bold text-gray-800">🗺️ 코스 지도 플래너</span>
+                <span className="text-[10px] text-indigo-500 bg-indigo-100 px-2 py-0.5 rounded-full">지도 클릭 or 검색으로 경유지 추가</span>
+              </div>
+              <Suspense fallback={<div className="h-[300px] rounded-2xl bg-gray-100 animate-pulse flex items-center justify-center text-sm text-gray-400">지도 불러오는 중...</div>}>
+                <RouteMap
+                  startTime={time || "10:00"}
+                  defaultMode={
+                    rentalCarMode !== "none" ? "driving"
+                    : category === "cycling" ? "cycling"
+                    : "walking"
+                  }
+                  onApply={(items) => {
+                    setSchedule(items);
+                    setShowRouteMap(false);
+                  }}
+                />
+              </Suspense>
+            </div>
+          )}
 
           {schedule.length === 0 ? (
             <div className="text-center py-6 text-gray-300">
@@ -234,7 +691,7 @@ export default function CreatePartyPage() {
                   {/* 시간 */}
                   <input type="time" value={item.time}
                     onChange={(e) => updateScheduleItem(idx, "time", e.target.value)}
-                    className="w-20 px-2 py-2 rounded-lg border border-gray-200 text-xs font-mono focus:border-orange-400 outline-none flex-shrink-0" />
+                    className="w-[120px] px-2 py-2 rounded-lg border border-gray-200 text-xs font-mono focus:border-orange-400 outline-none flex-shrink-0" />
                   {/* 장소 + 메모 */}
                   <div className="flex-1 space-y-1">
                     <input type="text" value={item.place}
@@ -355,6 +812,22 @@ export default function CreatePartyPage() {
               placeholder="차종 (예: 카니발 9인승)" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none" />
           )}
 
+          {/* 같이 빌려요 — 제주패스 렌터카 CTA */}
+          {rentalCarMode === "rent-together" && (
+            <a
+              href="http://localhost:3001/rentcar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between w-full px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 transition-colors"
+            >
+              <div>
+                <p className="text-sm font-bold text-blue-700">🚗 제주패스 렌터카에서 예약 가능</p>
+                <p className="text-[11px] text-blue-500 mt-0.5">최저가 보장 · 풀커버 보험 · 제주 전 지점</p>
+              </div>
+              <span className="text-blue-400 text-sm font-bold">예약 →</span>
+            </a>
+          )}
+
           {/* 같이 빌려요 */}
           {rentalCarMode === "rent-together" && (() => {
             const recommended = CATEGORY_CAR_MAP[category] || [];
@@ -436,6 +909,97 @@ export default function CreatePartyPage() {
             <input type="text" value={equipment} onChange={(e) => setEquipment(e.target.value)}
               placeholder="예: 자전거, 등산화, 수영복 등" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none" />
           </div>
+        </div>
+
+        {/* 경유 가게 선택 — 제주패스 등록 가게 연결 */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">📍</span>
+            <div>
+              <span className="text-sm font-bold text-gray-700">경유 가게 (선택)</span>
+              <p className="text-[11px] text-gray-400 mt-0.5">제주패스 등록 가게를 경유지로 추가해보세요</p>
+            </div>
+            {selectedStopSlugs.length > 0 && (
+              <span className="ml-auto text-[10px] px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full font-bold">
+                {selectedStopSlugs.length}곳 선택됨
+              </span>
+            )}
+          </div>
+
+          {/* 선택된 가게 */}
+          {selectedStopSlugs.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {selectedStopSlugs.map((slug) => {
+                const shop = allShops.find((s) => s.slug === slug);
+                return (
+                  <span key={slug} className="flex items-center gap-1 text-[11px] px-2.5 py-1 bg-orange-50 border border-orange-200 rounded-full text-orange-700 font-medium">
+                    ⭐ {shop?.name || slug}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStopSlugs(selectedStopSlugs.filter((s) => s !== slug))}
+                      className="text-orange-400 hover:text-orange-600 ml-0.5"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
+          )}
+
+          {/* 검색 */}
+          <div className="relative mb-2">
+            <input
+              type="text"
+              value={shopSearch}
+              onChange={(e) => setShopSearch(e.target.value)}
+              placeholder="가게 이름으로 검색..."
+              className="w-full pl-8 pr-4 py-2 rounded-xl border border-gray-200 text-sm focus:border-orange-400 outline-none bg-gray-50"
+            />
+            <span className="absolute left-2.5 top-2.5 text-gray-400 text-xs">🔍</span>
+          </div>
+
+          {/* 가게 목록 */}
+          {allShops.length === 0 ? (
+            <p className="text-xs text-gray-400 text-center py-3">
+              제주패스 서버에 연결 중...
+            </p>
+          ) : (
+            <div className="space-y-1.5 max-h-48 overflow-y-auto">
+              {allShops
+                .filter((s) => !shopSearch || s.name.includes(shopSearch) || s.address.includes(shopSearch))
+                .slice(0, 8)
+                .map((shop) => {
+                  const isSelected = selectedStopSlugs.includes(shop.slug);
+                  return (
+                    <button
+                      key={shop.slug}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) {
+                          setSelectedStopSlugs(selectedStopSlugs.filter((s) => s !== shop.slug));
+                        } else {
+                          setSelectedStopSlugs([...selectedStopSlugs, shop.slug]);
+                        }
+                      }}
+                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all ${
+                        isSelected
+                          ? "border-orange-300 bg-orange-50"
+                          : "border-gray-100 hover:border-orange-200 bg-white"
+                      }`}
+                    >
+                      <span className={`w-4 h-4 rounded border-2 flex items-center justify-center text-[10px] shrink-0 ${
+                        isSelected ? "border-orange-500 bg-orange-500 text-white" : "border-gray-300"
+                      }`}>
+                        {isSelected && "✓"}
+                      </span>
+                      <span className="text-sm font-medium text-gray-900 flex-1 truncate">{shop.name}</span>
+                      <span className="text-[10px] text-orange-500 shrink-0">⭐ 제주패스</span>
+                    </button>
+                  );
+                })}
+            </div>
+          )}
         </div>
 
         {/* 카페패스 추천 — 모든 카테고리에서 노출 */}
@@ -652,13 +1216,50 @@ export default function CreatePartyPage() {
             )}
           </div>
 
+          {/* 법적 고지 */}
+          <div className="text-[10px] text-gray-400 bg-gray-50 rounded-lg p-3 leading-relaxed">
+            <p className="font-medium text-gray-500 mb-1">⚠️ 이용 전 확인해주세요</p>
+            <ul className="space-y-0.5 list-disc list-inside">
+              <li>본 서비스는 개인 간 자유로운 동행·모임 연결 플랫폼입니다.</li>
+              <li>숙소의 <strong>전대차(재임대)</strong>는 임대차보호법 위반 및 계약 위반이 될 수 있습니다. 확인하지 않은 공간 공유는 금지합니다.</li>
+              <li>사업자 파티의 경우 관광사업자 등록 여부를 직접 확인하시기 바랍니다.</li>
+              <li>결제 분쟁, 개인 간 약속 불이행 등은 당사자 간 해결 사항입니다. jeju-party는 중개 플랫폼으로서 책임을 지지 않습니다.</li>
+              <li>불법 콘텐츠, 사기, 허위 게시물은 즉시 신고해주세요.</li>
+            </ul>
+          </div>
+
           <button onClick={handleSubmit}
             disabled={!title || !category || !date || !region || !hostName || !consentChecked}
-            className="w-full py-4 bg-orange-500 text-white font-bold text-lg rounded-2xl hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-lg shadow-orange-200">
-            🎉 파티 만들기
+            className={`w-full py-4 font-bold text-lg rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors ${
+              partyType === "commercial"
+                ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200"
+                : partyType === "stay"
+                ? "bg-teal-600 text-white hover:bg-teal-700 shadow-lg shadow-teal-200"
+                : "bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-200"
+            }`}>
+            {partyType === "commercial" ? "🏢 사업자 파티 등록" : partyType === "stay" ? "🏠 장기체류 동행 등록" : "🎉 파티 만들기"}
           </button>
         </div>
       </main>
+
+      {/* 사업자 파티 예상 수익 고정 바 */}
+      {partyType === "commercial" && pricePerSeat && Number(pricePerSeat) > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-blue-900 text-white px-6 py-3 flex items-center justify-between shadow-2xl">
+          <div>
+            <p className="text-[10px] text-blue-300 mb-0.5">예상 수익 (88% 정산)</p>
+            <p className="text-sm font-bold">
+              {maxMembers}명 × ₩{Number(pricePerSeat).toLocaleString()} × 88% ={" "}
+              <span className="text-blue-200 text-base">
+                ₩{Math.floor(maxMembers * Number(pricePerSeat) * 0.88).toLocaleString()}
+              </span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] text-blue-300">수수료 12%</p>
+            <p className="text-xs text-blue-400">₩{Math.floor(maxMembers * Number(pricePerSeat) * 0.12).toLocaleString()}</p>
+          </div>
+        </div>
+      )}
 
       {/* 본인인증 모달 */}
       {showPhoneVerify && (

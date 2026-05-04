@@ -6,16 +6,17 @@ import { useEffect, useState } from "react";
 const STEPS = [
   // 호스트 플로우
   { href: "/", label: "피드", step: 1, flow: "host" as const },
-  { href: "/create", label: "만들기", step: 2, flow: "host" as const },
-  { href: "/create?step=done", label: "생성됨", step: 3, flow: "host" as const },
+  { href: "/ai-plan", label: "AI 일정", step: 2, flow: "host" as const },
+  { href: "/create", label: "만들기", step: 3, flow: "host" as const },
+  { href: "/create?step=done", label: "생성됨", step: 4, flow: "host" as const },
   // 참여자 플로우
-  { href: "/party/p1", label: "렌터카", step: 4, flow: "user" as const },
-  { href: "/party/p3", label: "상세", step: 5, flow: "user" as const },
-  { href: "/party/p3?modal=join&step=info", label: "신청", step: 6, flow: "user" as const },
-  { href: "/party/p9?modal=join&step=paying", label: "결제", step: 7, flow: "user" as const },
-  { href: "/party/p3?modal=join&step=pass-offer", label: "업셀", step: 8, flow: "user" as const },
-  { href: "/party/p3?modal=pass&step=paying", label: "패스", step: 9, flow: "user" as const },
-  { href: "/party/p3?modal=join&step=done", label: "완료", step: 10, flow: "user" as const },
+  { href: "/party/p1", label: "렌터카", step: 5, flow: "user" as const },
+  { href: "/party/p3", label: "상세", step: 6, flow: "user" as const },
+  { href: "/party/p3?modal=join&step=info", label: "신청", step: 7, flow: "user" as const },
+  { href: "/party/p9?modal=join&step=paying", label: "결제", step: 8, flow: "user" as const },
+  { href: "/party/p3?modal=join&step=pass-offer", label: "업셀", step: 9, flow: "user" as const },
+  { href: "/party/p3?modal=pass&step=paying", label: "패스", step: 10, flow: "user" as const },
+  { href: "/party/p3?modal=join&step=done", label: "완료", step: 11, flow: "user" as const },
 ];
 
 export default function DevNav() {
@@ -48,7 +49,7 @@ export default function DevNav() {
           const isActive = idx === activeIdx;
           const isPast = activeIdx >= 0 && idx < activeIdx;
           const c = colors[page.flow];
-          const showDivider = idx === 3; // 호스트/참여자 구분 (after step 3 "생성됨")
+          const showDivider = idx === 4; // 호스트/참여자 구분 (after step 4 "생성됨")
 
           return (
             <div key={page.href} className="flex items-center">
@@ -72,7 +73,7 @@ export default function DevNav() {
                 </span>
                 {page.label}
               </a>
-              {idx < STEPS.length - 1 && !showDivider && idx !== 2 && (
+              {idx < STEPS.length - 1 && !showDivider && idx !== 3 && (
                 <span className={`mx-0.5 text-[10px] ${isPast ? `${c.past} opacity-40` : "text-gray-700"}`}>›</span>
               )}
             </div>

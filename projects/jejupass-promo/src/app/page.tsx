@@ -42,14 +42,16 @@ export default function Home() {
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
+          <span className="inline-block mb-4 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: BRAND.colorLight, color: BRAND.color }}>
+            완전 무료 · 가입비 없음 · 수수료 없음
+          </span>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-            제주 카페·맛집 사장님,<br />
-            제주패스에서 <span style={{ color: BRAND.color }}>무료</span>로 홍보하세요
+            마케팅 할 시간도, 돈도 없는<br />
+            제주 사장님을 위해 만들었어요
           </h1>
           <p className="mt-4 text-gray-500 text-lg">
-            사진만 올리면 인스타그램 콘텐츠를 자동으로 만들어드립니다.
-            <br />
-            SNS 마케팅, 더 이상 어렵지 않아요.
+            사진만 올리면 인스타그램 콘텐츠가 자동으로 만들어지고,<br />
+            제주패스를 찾는 여행객에게 가게가 노출됩니다.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
@@ -57,15 +59,16 @@ export default function Home() {
               className="px-8 py-3 rounded-xl text-white font-semibold text-base shadow-lg hover:shadow-xl transition-shadow"
               style={{ backgroundColor: BRAND.color }}
             >
-              무료로 시작하기
+              3분 만에 무료 등록하기
             </Link>
             <Link
               href="/explore"
               className="px-8 py-3 rounded-xl text-gray-700 font-semibold text-base border border-gray-200 hover:bg-gray-50"
             >
-              가게 둘러보기
+              등록된 가게 보기
             </Link>
           </div>
+          <p className="mt-4 text-xs text-gray-400">이미 제주패스에는 매월 수만 명의 여행객이 방문합니다</p>
         </div>
       </section>
 
@@ -78,17 +81,17 @@ export default function Home() {
               {
                 emoji: '📸',
                 title: 'SNS 콘텐츠 자동 생성',
-                desc: '사진만 올리면 인스타 카드, 스토리, 카카오톡 공유 카드를 자동으로 만들어드려요.',
+                desc: '사진만 올리면 인스타 카드, 스토리, 카카오톡 공유 카드를 AI가 자동으로 만들어드려요.',
               },
               {
                 emoji: '🔍',
-                title: '검색에 자동 노출',
-                desc: '가게 페이지가 구글/네이버 검색에 최적화되어 여행객이 쉽게 찾을 수 있어요.',
+                title: '제주 여행객에게 노출',
+                desc: '렌트카 예약하러 온 여행객이 가게를 발견합니다. 별도 광고비 없이 자연스럽게.',
               },
               {
                 emoji: '☕',
-                title: '카페패스 입점 기회',
-                desc: '인기 가게에는 카페패스 입점을 제안해드려요. 안정적인 고객 유입이 가능해요.',
+                title: '카페패스 입점으로 성장',
+                desc: '반응이 좋은 가게에는 카페패스 입점을 제안해드려요. 구독 고객의 안정적인 방문이 시작됩니다.',
               },
             ].map((f) => (
               <div key={f.title} className="bg-white rounded-xl p-6 text-center">
@@ -97,6 +100,40 @@ export default function Home() {
                 <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 여행객 유입 퍼널 섹션 */}
+      <section className="py-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="grid sm:grid-cols-2">
+              <div className="p-8">
+                <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">제주패스 생태계</span>
+                <h2 className="text-xl font-bold text-gray-900 mt-2 leading-snug">
+                  렌트카 예약객이<br />자연스럽게 가게를 찾아옵니다
+                </h2>
+                <p className="text-sm text-gray-500 mt-3 leading-relaxed">
+                  제주패스는 렌트카 비교 서비스입니다. 여행 준비 중인 고객이 근처 카페·맛집을 탐색하고, 가게를 발견합니다.
+                </p>
+                <div className="mt-5 space-y-2">
+                  {['렌트카 예약', '근처 카페·맛집 탐색', '내 가게 발견 & 방문'].map((step, i) => (
+                    <div key={step} className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ backgroundColor: BRAND.color }}>
+                        {i + 1}
+                      </div>
+                      <span className="text-sm text-gray-700">{step}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-8 flex flex-col justify-center items-center text-center" style={{ backgroundColor: BRAND.colorLight }}>
+                <div className="text-4xl mb-3">🚗 → ☕</div>
+                <p className="text-sm font-semibold text-gray-800">렌트카 여행객의 자연스러운 동선</p>
+                <p className="text-xs text-gray-500 mt-1">광고 없이도 유입되는 구조</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

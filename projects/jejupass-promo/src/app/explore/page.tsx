@@ -79,6 +79,18 @@ export default function ExplorePage() {
       <div className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-xl font-bold text-gray-900 mb-4">제주 가게 탐색</h1>
 
+        {/* 렌트카 연결 배너 */}
+        <a
+          href="https://www.jejupass.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between mb-4 px-4 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-90"
+          style={{ backgroundColor: BRAND.colorLight, color: BRAND.color }}
+        >
+          <span>🚗 제주 렌트카 최저가 비교는 제주패스에서</span>
+          <span className="text-xs">바로가기 →</span>
+        </a>
+
         {/* 검색창 */}
         <div className="relative mb-3">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">🔍</span>

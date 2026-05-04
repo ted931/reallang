@@ -25,6 +25,57 @@ export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // jejupass-promo 등록 가게 연동
+  useEffect(() => {
+    const SHOP_CAT: Record<string, string> = {
+      cafe: 'cafe', restaurant: 'restaurant', dessert: 'cafe',
+      bakery: 'cafe', brunch: 'cafe', bar: 'restaurant', etc: 'attraction',
+    };
+    const REGION_COORDS: Record<string, [number, number]> = {
+      'jeju-si': [33.499, 126.531], seogwipo: [33.254, 126.560],
+      aewol: [33.464, 126.332], hallim: [33.414, 126.260],
+      hamdeok: [33.543, 126.670], seongsan: [33.458, 126.927],
+      jungmun: [33.250, 126.412],
+    };
+    fetch('http://localhost:3001/api/shops')
+      .then((r) => r.json())
+      .then((data) => {
+        const shops = (data.shops || []).filter((s: any) => s.isPublished);
+        const shopPins: any[] = shops.map((s: any) => {
+          const primaryPhoto = s.photos?.find((p: any) => p.isPrimary) || s.photos?.[0];
+          const avgRating = s.reviews?.length
+            ? s.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / s.reviews.length
+            : undefined;
+          const coords = REGION_COORDS[s.region] ?? [33.38, 126.55];
+          // 좌표 약간 지터로 겹침 방지
+          const jitter = () => (Math.random() - 0.5) * 0.04;
+          return {
+            id: `jp_${s.id}`,
+            name: s.name,
+            category: SHOP_CAT[s.category] || 'cafe',
+            lat: coords[0] + jitter(),
+            lng: coords[1] + jitter(),
+            address: s.address,
+            phone: s.phone,
+            description: s.description,
+            source: 'jejupass',
+            rating: avgRating,
+            reviewCount: s.reviews?.length ?? 0,
+            photoUrl: primaryPhoto?.url,
+            shopSlug: s.slug,
+            shopId: s.id,
+          };
+        });
+        if (shopPins.length > 0) {
+          setPins((prev) => {
+            const existingIds = new Set(prev.map((p) => p.id));
+            return [...prev, ...shopPins.filter((p) => !existingIds.has(p.id))];
+          });
+        }
+      })
+      .catch(() => {}); // 개발 서버 미실행 시 조용히 무시
+  }, []);
+
   // 네이버 벌크 API
   useEffect(() => {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -212,19 +263,30 @@ export default function MapPage() {
       const cat = CATEGORIES.find((c) => c.id === pin.category);
       const isSelected = selectedPin?.id === pin.id;
 
+      const isJejupass = pin.source === 'jejupass';
+      const sz = isSelected ? 44 : isJejupass ? 40 : 36;
+      const borderColor = isJejupass ? '#F97316' : 'white';
+      const ringStyle = isJejupass
+        ? `box-shadow:0 0 0 3px #F9731640, 0 4px 14px rgba(0,0,0,0.3);`
+        : isSelected
+          ? `box-shadow:0 0 0 3px ${(cat?.color || '#6B7280')}40, 0 3px 12px rgba(0,0,0,0.25);`
+          : `box-shadow:0 3px 10px rgba(0,0,0,0.2);`;
       const icon = L.divIcon({
         className: "",
-        html: `<div style="
-          width:${isSelected ? 42 : 36}px;height:${isSelected ? 42 : 36}px;border-radius:50%;
-          background:${cat?.color || "#6B7280"};
-          display:flex;align-items:center;justify-content:center;
-          font-size:${isSelected ? 18 : 16}px;
-          border:${isSelected ? "3px" : "2.5px"} solid white;
-          box-shadow:${isSelected ? "0 0 0 3px " + (cat?.color || "#6B7280") + "40," : ""} 0 3px 12px rgba(0,0,0,0.25);
-          cursor:pointer;transition:all 0.2s;line-height:1;
-        ">${cat?.emoji || "📍"}</div>`,
-        iconSize: [isSelected ? 42 : 36, isSelected ? 42 : 36],
-        iconAnchor: [isSelected ? 21 : 18, isSelected ? 21 : 18],
+        html: `<div style="position:relative;width:${sz}px;height:${sz}px;">
+          <div style="
+            width:${sz}px;height:${sz}px;border-radius:50%;
+            background:${isJejupass ? '#F97316' : (cat?.color || '#6B7280')};
+            display:flex;align-items:center;justify-content:center;
+            font-size:${isSelected ? 18 : 16}px;
+            border:${isSelected ? '3px' : '2.5px'} solid ${borderColor};
+            ${ringStyle}
+            cursor:pointer;transition:all 0.2s;line-height:1;
+          ">${cat?.emoji || '📍'}</div>
+          ${isJejupass ? `<div style="position:absolute;top:-4px;right:-4px;width:14px;height:14px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 1px 4px rgba(0,0,0,0.2);">⭐</div>` : ''}
+        </div>`,
+        iconSize: [sz, sz],
+        iconAnchor: [sz / 2, sz / 2],
       });
 
       const marker = L.marker([pin.lat, pin.lng], { icon });
@@ -435,7 +497,31 @@ export default function MapPage() {
                     </div>
                   </div>
                   <div className="px-5 py-4">
-                    <h2 className="text-lg font-bold text-gray-900 mb-1">{selectedPin.name}</h2>
+                    {/* 제주패스 등록 가게 사진 */}
+                    {selectedPin.source === 'jejupass' && selectedPin.photoUrl && (
+                      <div className="w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100">
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${selectedPin.photoUrl})` }} />
+                      </div>
+                    )}
+                    <div className="flex items-start justify-between mb-1">
+                      <h2 className="text-lg font-bold text-gray-900">{selectedPin.name}</h2>
+                      {selectedPin.source === 'jejupass' && (
+                        <span className="shrink-0 ml-2 px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">제주패스</span>
+                      )}
+                    </div>
+                    {/* 별점/리뷰 */}
+                    {selectedPin.source === 'jejupass' && (selectedPin.rating !== undefined || selectedPin.reviewCount !== undefined) && (
+                      <div className="flex items-center gap-2 mb-2">
+                        {selectedPin.rating !== undefined && (
+                          <span className="flex items-center gap-1 text-sm font-semibold text-yellow-500">
+                            ★ {selectedPin.rating.toFixed(1)}
+                          </span>
+                        )}
+                        {selectedPin.reviewCount !== undefined && (
+                          <span className="text-xs text-gray-400">리뷰 {selectedPin.reviewCount}개</span>
+                        )}
+                      </div>
+                    )}
                     {selectedPin.description && <p className="text-sm text-gray-500 mb-3">{selectedPin.description}</p>}
                     <div className="space-y-2 text-sm mb-4">
                       <div className="flex items-start gap-2">
@@ -449,6 +535,18 @@ export default function MapPage() {
                         </div>
                       )}
                     </div>
+                    {selectedPin.source === 'jejupass' && selectedPin.shopSlug ? (
+                      <a href={`http://localhost:3001/shop/${selectedPin.shopSlug}`} target="_blank" rel="noopener noreferrer"
+                        className="block w-full py-2.5 mb-2 rounded-xl text-white text-sm font-semibold text-center"
+                        style={{ backgroundColor: '#F97316' }}>
+                        제주패스에서 자세히 보기 →
+                      </a>
+                    ) : (
+                      <a href="http://localhost:3001/register" target="_blank" rel="noopener noreferrer"
+                        className="block w-full py-2.5 mb-2 rounded-xl text-sm font-semibold text-center border-2 border-dashed border-orange-300 text-orange-500 hover:bg-orange-50 transition-colors">
+                        📝 제주패스에 무료로 가게 등록하기 →
+                      </a>
+                    )}
                     <div className="grid grid-cols-2 gap-2">
                       <a href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
                         className="py-2.5 bg-indigo-500 text-white rounded-xl text-sm font-medium text-center hover:bg-indigo-600 transition-colors">
@@ -482,12 +580,39 @@ export default function MapPage() {
                   </div>
 
                   <div className="px-6 py-5">
-                    {/* 이름 */}
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">{selectedPin.name}</h2>
+                    {/* 제주패스 가게 — 사진 히어로 */}
+                    {selectedPin.source === 'jejupass' && selectedPin.photoUrl && (
+                      <div className="w-full h-44 rounded-2xl overflow-hidden mb-4 bg-gray-100 -mt-1">
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${selectedPin.photoUrl})` }} />
+                      </div>
+                    )}
+
+                    {/* 이름 + 제주패스 배지 */}
+                    <div className="flex items-start justify-between mb-1">
+                      <h2 className="text-xl font-bold text-gray-900 leading-tight">{selectedPin.name}</h2>
+                      {selectedPin.source === 'jejupass' && (
+                        <span className="shrink-0 ml-2 mt-0.5 px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">⭐ 제주패스</span>
+                      )}
+                    </div>
+
+                    {/* 별점/리뷰 */}
+                    {selectedPin.source === 'jejupass' && (
+                      <div className="flex items-center gap-3 mb-3">
+                        {selectedPin.rating !== undefined && selectedPin.reviewCount && selectedPin.reviewCount > 0 ? (
+                          <>
+                            <span className="flex items-center gap-1 text-sm font-bold text-yellow-500">★ {selectedPin.rating.toFixed(1)}</span>
+                            <span className="text-xs text-gray-400">리뷰 {selectedPin.reviewCount}개</span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">리뷰 없음 · 첫 리뷰를 남겨보세요</span>
+                        )}
+                      </div>
+                    )}
+
                     {selectedPin.description && <p className="text-sm text-gray-500 leading-relaxed mb-5">{selectedPin.description}</p>}
 
                     {/* 정보 */}
-                    <div className="space-y-3 mb-6">
+                    <div className="space-y-2 mb-5">
                       <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
                         <span className="text-gray-400 mt-0.5">📍</span>
                         <span className="text-sm text-gray-700">{selectedPin.address}</span>
@@ -502,8 +627,24 @@ export default function MapPage() {
 
                     {/* 액션 */}
                     <div className="space-y-2">
+                      {selectedPin.source === 'jejupass' && selectedPin.shopSlug ? (
+                        <a href={`http://localhost:3001/shop/${selectedPin.shopSlug}`} target="_blank" rel="noopener noreferrer"
+                          className="flex items-center justify-center w-full py-3 rounded-xl text-white text-sm font-bold transition-opacity hover:opacity-90"
+                          style={{ backgroundColor: '#F97316' }}>
+                          제주패스에서 자세히 보기 →
+                        </a>
+                      ) : (
+                        <a href="http://localhost:3001/register" target="_blank" rel="noopener noreferrer"
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl border-2 border-dashed border-orange-300 hover:bg-orange-50 transition-colors">
+                          <div>
+                            <p className="text-sm font-bold text-orange-600">📝 이 가게를 제주패스에 등록하세요</p>
+                            <p className="text-[11px] text-orange-400 mt-0.5">무료 등록 · 제주 여행자에게 노출</p>
+                          </div>
+                          <span className="text-orange-400 font-bold text-sm">무료 →</span>
+                        </a>
+                      )}
                       <a href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-indigo-500 text-white rounded-xl text-sm font-semibold hover:bg-indigo-600 transition-colors shadow-sm shadow-indigo-200">
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-indigo-500 text-white rounded-xl text-sm font-semibold hover:bg-indigo-600 transition-colors">
                         카카오맵 길찾기
                       </a>
                       <a href={`https://map.kakao.com/link/map/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
@@ -516,11 +657,8 @@ export default function MapPage() {
                       </a>
                     </div>
 
-                    {/* 좌표 */}
-                    <div className="mt-6 p-3 bg-gray-50 rounded-xl text-center">
-                      <p className="text-[11px] text-gray-400">
-                        {selectedPin.lat.toFixed(4)}, {selectedPin.lng.toFixed(4)}
-                      </p>
+                    <div className="mt-5 p-3 bg-gray-50 rounded-xl text-center">
+                      <p className="text-[11px] text-gray-400">{selectedPin.lat.toFixed(4)}, {selectedPin.lng.toFixed(4)}</p>
                     </div>
                   </div>
                 </div>
