@@ -47,7 +47,6 @@ export default function MapPage() {
             ? s.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / s.reviews.length
             : undefined;
           const coords = REGION_COORDS[s.region] ?? [33.38, 126.55];
-          // 좌표 약간 지터로 겹침 방지
           const jitter = () => (Math.random() - 0.5) * 0.04;
           return {
             id: `jp_${s.id}`,
@@ -73,7 +72,7 @@ export default function MapPage() {
           });
         }
       })
-      .catch(() => {}); // 개발 서버 미실행 시 조용히 무시
+      .catch(() => {});
   }, []);
 
   // 네이버 벌크 API
@@ -197,7 +196,6 @@ export default function MapPage() {
           maxZoom: 18,
         }).addTo(map);
       } else {
-        // fallback: OSM 표준 타일 (한국어 지명 지원)
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
           maxZoom: 18,
@@ -207,7 +205,6 @@ export default function MapPage() {
       mapRef.current = map;
       (window as any).__leaflet = L;
 
-      // 마커 클러스터 로드
       try {
         const MCScript = document.createElement("script");
         MCScript.src = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
@@ -230,7 +227,6 @@ export default function MapPage() {
     const MC = (window as any).L?.MarkerClusterGroup || (L as any).MarkerClusterGroup;
     if (!L) return;
 
-    // 기존 제거
     if (clusterRef.current) {
       mapRef.current.removeLayer(clusterRef.current);
     }
@@ -239,7 +235,6 @@ export default function MapPage() {
 
     const filtered = pins.filter((p) => activeCategories.has(p.category));
 
-    // 클러스터 그룹 생성
     let clusterGroup: any = null;
     if (MC) {
       clusterGroup = new MC({
@@ -349,10 +344,10 @@ export default function MapPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* 상단 바 */}
-      <div className="bg-white border-b border-gray-100 shadow-sm relative z-[1001]">
-        {/* 검색 + 필터 토글 */}
+    <div className="h-screen flex flex-col bg-slate-50">
+      {/* ── 상단 바 ── */}
+      <div className="bg-white border-b border-slate-200 shadow-sm relative z-[1001]">
+        {/* 검색 + 날씨 + 필터 */}
         <div className="px-4 py-2.5 flex items-center gap-2">
           <div className="flex-1 relative">
             <input
@@ -360,14 +355,17 @@ export default function MapPage() {
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setShowSearch(true); }}
               onFocus={() => setShowSearch(true)}
-              placeholder="장소 검색..."
-              className="w-full pl-9 pr-4 py-2 bg-gray-50 rounded-xl text-sm border border-gray-100 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-50 outline-none transition-all"
+              placeholder="장소 검색…"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 rounded-xl text-sm border border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all"
             />
-            <svg className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute left-3 top-3 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             {searchQuery && (
-              <button onClick={() => { setSearchQuery(""); setShowSearch(false); }} className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 text-xs">
+              <button
+                onClick={() => { setSearchQuery(""); setShowSearch(false); }}
+                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-xs leading-none"
+              >
                 ✕
               </button>
             )}
@@ -376,8 +374,10 @@ export default function MapPage() {
           {/* 날씨 토글 */}
           <button
             onClick={() => setShowWeather(!showWeather)}
-            className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-              showWeather ? "bg-sky-500 text-white shadow-sm" : "bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100"
+            className={`px-3 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all border ${
+              showWeather
+                ? "bg-sky-500 text-white border-transparent shadow-sm"
+                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
             }`}
           >
             🌤️
@@ -386,36 +386,41 @@ export default function MapPage() {
           {/* 필터 토글 */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-              showFilters ? "bg-indigo-500 text-white shadow-sm" : "bg-gray-50 text-gray-600 border border-gray-100 hover:bg-gray-100"
+            className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all border ${
+              showFilters
+                ? "bg-indigo-500 text-white border-transparent shadow-sm"
+                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
             }`}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            {activeCategories.size}
+            필터 · {activeCategories.size}
           </button>
         </div>
 
         {/* 검색 결과 드롭다운 */}
         {showSearch && searchResults.length > 0 && (
-          <div className="absolute left-4 right-4 top-full bg-white rounded-xl shadow-xl border border-gray-100 mt-1 max-h-80 overflow-y-auto z-[1002]">
+          <div className="absolute left-4 right-4 top-full bg-white rounded-xl shadow-xl border border-slate-200 mt-1 max-h-80 overflow-y-auto z-[1002]">
             {searchResults.map((pin) => {
               const cat = getCategoryInfo(pin.category);
               return (
                 <button
                   key={pin.id}
                   onClick={() => goToPin(pin)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-50 last:border-0"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-50 last:border-0"
                 >
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0" style={{ backgroundColor: cat?.color + "20", color: cat?.color }}>
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0"
+                    style={{ backgroundColor: cat?.color + "20", color: cat?.color }}
+                  >
                     {cat?.emoji}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{pin.name}</p>
-                    <p className="text-[11px] text-gray-400 truncate">{pin.address}</p>
+                    <p className="text-sm font-semibold text-slate-900 truncate">{pin.name}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{pin.address}</p>
                   </div>
-                  <span className="text-[10px] text-gray-400 flex-shrink-0">{cat?.label}</span>
+                  <span className="text-[10px] text-slate-400 flex-shrink-0">{cat?.label}</span>
                 </button>
               );
             })}
@@ -424,12 +429,12 @@ export default function MapPage() {
 
         {/* 카테고리 필터 패널 */}
         {showFilters && (
-          <div className="px-4 pb-3 border-t border-gray-50">
-            <div className="flex items-center justify-between mb-2 pt-2">
-              <span className="text-[11px] text-gray-400">{filteredCount}개 장소</span>
-              <div className="flex gap-2">
-                <button onClick={selectAll} className="text-[11px] text-indigo-500 hover:text-indigo-700">전체 선택</button>
-                <button onClick={clearAll} className="text-[11px] text-gray-400 hover:text-gray-600">초기화</button>
+          <div className="px-4 pb-3 border-t border-slate-100 pt-2.5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] text-slate-400">{filteredCount}개 장소</span>
+              <div className="flex gap-3">
+                <button onClick={selectAll} className="text-[11px] text-indigo-500 hover:text-indigo-700 font-medium">전체 선택</button>
+                <button onClick={clearAll} className="text-[11px] text-slate-400 hover:text-slate-600">초기화</button>
               </div>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -440,14 +445,16 @@ export default function MapPage() {
                   <button
                     key={cat.id}
                     onClick={() => toggleCategory(cat.id)}
-                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                      isActive ? "text-white shadow-sm" : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all border ${
+                      isActive
+                        ? "text-white border-transparent shadow-sm"
+                        : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"
                     }`}
                     style={isActive ? { backgroundColor: cat.color } : {}}
                   >
-                    <span className="text-sm">{cat.emoji}</span>
+                    <span className="text-sm leading-none">{cat.emoji}</span>
                     <span>{cat.label}</span>
-                    <span className={`text-[10px] ${isActive ? "text-white/70" : "text-gray-400"}`}>{count}</span>
+                    <span className={`text-[10px] ${isActive ? "text-white/70" : "text-slate-400"}`}>{count}</span>
                   </button>
                 );
               })}
@@ -456,104 +463,168 @@ export default function MapPage() {
         )}
       </div>
 
-      {/* 지도 + 상세 */}
+      {/* ── 지도 + 상세 ── */}
       <div className="flex-1 relative overflow-hidden">
         <div ref={containerRef} className="w-full h-full" />
 
+        {/* 로딩 스켈레톤 */}
         {!mapReady && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-sky-50 to-white z-[999]">
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-indigo-400 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-sm text-gray-500 mt-4 font-medium">제주 지도를 불러오고 있습니다</p>
+          <div className="absolute inset-0 z-[999] bg-gradient-to-b from-sky-50 to-white flex flex-col">
+            {/* 격자 배경 */}
+            <div className="absolute inset-0 opacity-25 pointer-events-none">
+              <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 400">
+                <defs>
+                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#94a3b8" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="400" height="400" fill="url(#grid)" />
+              </svg>
+            </div>
+            {/* 섬 윤곽 shimmer */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[40%] rounded-[50%/40%] opacity-50"
+              style={{
+                background: "linear-gradient(90deg,#eef2f7 0%,#f8fafc 50%,#eef2f7 100%)",
+                backgroundSize: "200% 100%",
+                animation: "shimmer 1.6s infinite linear",
+              }}
+            />
+            {/* 스피너 + 텍스트 */}
+            <div className="flex-1 grid place-items-center">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full border-[3px] border-indigo-200 border-t-indigo-500 animate-spin" />
+                <p className="text-sm font-semibold text-slate-700">제주 지도를 그리는 중…</p>
+                <p className="text-[11px] text-slate-400 mt-1">jeju · 제주특별자치도</p>
+              </div>
+            </div>
+            {/* 하단 스켈레톤 카드 행 */}
+            <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex-1 h-14 rounded-xl"
+                  style={{
+                    background: "linear-gradient(90deg,#eef2f7 0%,#f8fafc 50%,#eef2f7 100%)",
+                    backgroundSize: "200% 100%",
+                    animation: `shimmer 1.6s ${i * 0.15}s infinite linear`,
+                  }}
+                />
+              ))}
             </div>
           </div>
         )}
 
         {/* 장소 수 카운터 */}
-        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur rounded-xl px-3.5 py-2 text-xs text-gray-600 shadow-lg z-[1000] font-medium">
+        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur rounded-xl px-3.5 py-2 text-xs text-slate-600 shadow-md z-[1000] font-medium">
           {filteredCount}개 장소
         </div>
 
-        {/* 상세 패널 — 데스크톱: 사이드, 모바일: 바텀시트 */}
+        {/* ── 상세 패널 ── */}
         {selectedPin && (() => {
           const cat = getCategoryInfo(selectedPin.category);
           return (
             <>
               {/* 모바일 바텀시트 */}
               <div className="absolute bottom-0 left-0 right-0 md:hidden z-[1001] animate-slide-up">
-                <div className="bg-white rounded-t-2xl shadow-2xl max-h-[60vh] overflow-y-auto">
-                  <div className="sticky top-0 bg-white rounded-t-2xl pt-3 pb-2 px-5 border-b border-gray-50">
-                    <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-3" />
+                <div className="bg-white rounded-t-3xl shadow-2xl max-h-[60vh] overflow-y-auto">
+                  {/* 핸들 + 헤더 */}
+                  <div className="sticky top-0 bg-white rounded-t-3xl pt-3 pb-2 px-5 border-b border-slate-50">
+                    <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3" />
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-full flex items-center justify-center text-sm" style={{ backgroundColor: cat?.color + "20" }}>
+                        <span
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-sm"
+                          style={{ backgroundColor: cat?.color + "20" }}
+                        >
                           {cat?.emoji}
                         </span>
                         <span className="text-[11px] font-semibold" style={{ color: cat?.color }}>{cat?.label}</span>
                       </div>
-                      <button onClick={() => setSelectedPin(null)} className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-xs">
+                      <button
+                        onClick={() => setSelectedPin(null)}
+                        className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 text-xs"
+                      >
                         ✕
                       </button>
                     </div>
                   </div>
+
                   <div className="px-5 py-4">
-                    {/* 제주패스 등록 가게 사진 */}
+                    {/* 제주패스 사진 */}
                     {selectedPin.source === 'jejupass' && selectedPin.photoUrl && (
-                      <div className="w-full h-32 rounded-xl overflow-hidden mb-3 bg-gray-100">
+                      <div className="w-full h-32 rounded-xl overflow-hidden mb-3 bg-slate-100">
                         <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${selectedPin.photoUrl})` }} />
                       </div>
                     )}
+
                     <div className="flex items-start justify-between mb-1">
-                      <h2 className="text-lg font-bold text-gray-900">{selectedPin.name}</h2>
+                      <h2 className="text-lg font-bold text-slate-900 leading-tight">{selectedPin.name}</h2>
                       {selectedPin.source === 'jejupass' && (
                         <span className="shrink-0 ml-2 px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">제주패스</span>
                       )}
                     </div>
-                    {/* 별점/리뷰 */}
+
                     {selectedPin.source === 'jejupass' && (selectedPin.rating !== undefined || selectedPin.reviewCount !== undefined) && (
                       <div className="flex items-center gap-2 mb-2">
                         {selectedPin.rating !== undefined && (
-                          <span className="flex items-center gap-1 text-sm font-semibold text-yellow-500">
-                            ★ {selectedPin.rating.toFixed(1)}
-                          </span>
+                          <span className="text-sm font-bold text-amber-500">★ {selectedPin.rating.toFixed(1)}</span>
                         )}
                         {selectedPin.reviewCount !== undefined && (
-                          <span className="text-xs text-gray-400">리뷰 {selectedPin.reviewCount}개</span>
+                          <span className="text-xs text-slate-400">리뷰 {selectedPin.reviewCount}개</span>
                         )}
                       </div>
                     )}
-                    {selectedPin.description && <p className="text-sm text-gray-500 mb-3">{selectedPin.description}</p>}
-                    <div className="space-y-2 text-sm mb-4">
-                      <div className="flex items-start gap-2">
-                        <span className="text-gray-400">📍</span>
-                        <span className="text-gray-600">{selectedPin.address}</span>
+
+                    {selectedPin.description && (
+                      <p className="text-sm text-slate-500 leading-relaxed mb-3">{selectedPin.description}</p>
+                    )}
+
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                        <span className="text-slate-400 mt-0.5">📍</span>
+                        <span className="text-sm text-slate-700">{selectedPin.address}</span>
                       </div>
                       {selectedPin.phone && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400">📞</span>
-                          <a href={`tel:${selectedPin.phone}`} className="text-indigo-600">{selectedPin.phone}</a>
+                        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                          <span className="text-slate-400">📞</span>
+                          <a href={`tel:${selectedPin.phone}`} className="text-sm text-indigo-600 font-medium">{selectedPin.phone}</a>
                         </div>
                       )}
                     </div>
+
                     {selectedPin.source === 'jejupass' && selectedPin.shopSlug ? (
-                      <a href={`http://localhost:3001/shop/${selectedPin.shopSlug}`} target="_blank" rel="noopener noreferrer"
-                        className="block w-full py-2.5 mb-2 rounded-xl text-white text-sm font-semibold text-center"
-                        style={{ backgroundColor: '#F97316' }}>
+                      <a
+                        href={`http://localhost:3001/shop/${selectedPin.shopSlug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full py-3 mb-2 rounded-xl text-white text-sm font-bold text-center transition-opacity hover:opacity-90"
+                        style={{ backgroundColor: '#F97316' }}
+                      >
                         제주패스에서 자세히 보기 →
                       </a>
                     ) : (
-                      <a href="http://localhost:3001/register" target="_blank" rel="noopener noreferrer"
-                        className="block w-full py-2.5 mb-2 rounded-xl text-sm font-semibold text-center border-2 border-dashed border-orange-300 text-orange-500 hover:bg-orange-50 transition-colors">
+                      <a
+                        href="http://localhost:3001/register"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full py-3 mb-2 rounded-xl text-sm font-bold text-center border-2 border-dashed border-orange-300 text-orange-500 hover:bg-orange-50 transition-colors"
+                      >
                         📝 제주패스에 무료로 가게 등록하기 →
                       </a>
                     )}
                     <div className="grid grid-cols-2 gap-2">
-                      <a href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="py-2.5 bg-indigo-500 text-white rounded-xl text-sm font-medium text-center hover:bg-indigo-600 transition-colors">
+                      <a
+                        href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 bg-indigo-500 text-white rounded-xl text-sm font-extrabold text-center hover:bg-indigo-600 transition-colors"
+                      >
                         길찾기
                       </a>
-                      <a href={`https://map.kakao.com/link/map/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="py-2.5 border border-gray-200 text-gray-700 rounded-xl text-sm font-medium text-center hover:bg-gray-50 transition-colors">
+                      <a
+                        href={`https://map.kakao.com/link/map/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium text-center hover:bg-slate-50 transition-colors"
+                      >
                         카카오맵
                       </a>
                     </div>
@@ -562,34 +633,43 @@ export default function MapPage() {
               </div>
 
               {/* 데스크톱 사이드 패널 */}
-              <div className="hidden md:block absolute top-0 right-0 w-96 h-full z-[1001]">
-                <div className="h-full bg-white/95 backdrop-blur-lg border-l border-gray-100 shadow-2xl overflow-y-auto">
+              <div className="hidden md:block absolute top-0 right-0 w-[420px] h-full z-[1001]">
+                <div className="h-full bg-white/95 backdrop-blur-lg border-l border-slate-100 shadow-2xl overflow-y-auto">
                   {/* 헤더 */}
-                  <div className="sticky top-0 bg-white/95 backdrop-blur-lg border-b border-gray-50 px-6 py-4 flex items-center justify-between">
+                  <div className="sticky top-0 bg-white/95 backdrop-blur-lg border-b border-slate-50 px-5 py-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="w-8 h-8 rounded-full flex items-center justify-center text-base" style={{ backgroundColor: cat?.color + "15" }}>
+                      <span
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-base"
+                        style={{ backgroundColor: cat?.color + "15" }}
+                      >
                         {cat?.emoji}
                       </span>
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full text-white" style={{ backgroundColor: cat?.color }}>
-                        {cat?.label}
-                      </span>
+                      <button
+                        onClick={() => setSelectedPin(null)}
+                        className="text-sm text-slate-400 hover:text-slate-700"
+                      >
+                        ← 목록
+                      </button>
                     </div>
-                    <button onClick={() => setSelectedPin(null)} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition-colors">
+                    <button
+                      onClick={() => setSelectedPin(null)}
+                      className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors text-xs"
+                    >
                       ✕
                     </button>
                   </div>
 
-                  <div className="px-6 py-5">
+                  <div className="px-5 py-5">
                     {/* 제주패스 가게 — 사진 히어로 */}
                     {selectedPin.source === 'jejupass' && selectedPin.photoUrl && (
-                      <div className="w-full h-44 rounded-2xl overflow-hidden mb-4 bg-gray-100 -mt-1">
+                      <div className="w-full h-44 rounded-2xl overflow-hidden mb-4 bg-slate-100">
                         <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${selectedPin.photoUrl})` }} />
                       </div>
                     )}
 
-                    {/* 이름 + 제주패스 배지 */}
+                    {/* 이름 + 배지 */}
                     <div className="flex items-start justify-between mb-1">
-                      <h2 className="text-xl font-bold text-gray-900 leading-tight">{selectedPin.name}</h2>
+                      <h2 className="text-xl font-bold text-slate-900 leading-tight">{selectedPin.name}</h2>
                       {selectedPin.source === 'jejupass' && (
                         <span className="shrink-0 ml-2 mt-0.5 px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">⭐ 제주패스</span>
                       )}
@@ -600,42 +680,52 @@ export default function MapPage() {
                       <div className="flex items-center gap-3 mb-3">
                         {selectedPin.rating !== undefined && selectedPin.reviewCount && selectedPin.reviewCount > 0 ? (
                           <>
-                            <span className="flex items-center gap-1 text-sm font-bold text-yellow-500">★ {selectedPin.rating.toFixed(1)}</span>
-                            <span className="text-xs text-gray-400">리뷰 {selectedPin.reviewCount}개</span>
+                            <span className="text-sm font-bold text-amber-500">★ {selectedPin.rating.toFixed(1)}</span>
+                            <span className="text-xs text-slate-400">리뷰 {selectedPin.reviewCount}개</span>
                           </>
                         ) : (
-                          <span className="text-xs text-gray-400">리뷰 없음 · 첫 리뷰를 남겨보세요</span>
+                          <span className="text-xs text-slate-400">리뷰 없음 · 첫 리뷰를 남겨보세요</span>
                         )}
                       </div>
                     )}
 
-                    {selectedPin.description && <p className="text-sm text-gray-500 leading-relaxed mb-5">{selectedPin.description}</p>}
+                    {selectedPin.description && (
+                      <p className="text-sm text-slate-500 leading-relaxed mb-5">{selectedPin.description}</p>
+                    )}
 
-                    {/* 정보 */}
+                    {/* 정보 블록 */}
                     <div className="space-y-2 mb-5">
-                      <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-400 mt-0.5">📍</span>
-                        <span className="text-sm text-gray-700">{selectedPin.address}</span>
+                      <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                        <span className="text-slate-400 mt-0.5">📍</span>
+                        <span className="text-sm text-slate-700">{selectedPin.address}</span>
                       </div>
                       {selectedPin.phone && (
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                          <span className="text-gray-400">📞</span>
+                        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                          <span className="text-slate-400">📞</span>
                           <a href={`tel:${selectedPin.phone}`} className="text-sm text-indigo-600 font-medium">{selectedPin.phone}</a>
                         </div>
                       )}
                     </div>
 
-                    {/* 액션 */}
+                    {/* 액션 버튼 */}
                     <div className="space-y-2">
                       {selectedPin.source === 'jejupass' && selectedPin.shopSlug ? (
-                        <a href={`http://localhost:3001/shop/${selectedPin.shopSlug}`} target="_blank" rel="noopener noreferrer"
+                        <a
+                          href={`http://localhost:3001/shop/${selectedPin.shopSlug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center justify-center w-full py-3 rounded-xl text-white text-sm font-bold transition-opacity hover:opacity-90"
-                          style={{ backgroundColor: '#F97316' }}>
+                          style={{ backgroundColor: '#F97316' }}
+                        >
                           제주패스에서 자세히 보기 →
                         </a>
                       ) : (
-                        <a href="http://localhost:3001/register" target="_blank" rel="noopener noreferrer"
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl border-2 border-dashed border-orange-300 hover:bg-orange-50 transition-colors">
+                        <a
+                          href="http://localhost:3001/register"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl border-2 border-dashed border-orange-300 hover:bg-orange-50 transition-colors"
+                        >
                           <div>
                             <p className="text-sm font-bold text-orange-600">📝 이 가게를 제주패스에 등록하세요</p>
                             <p className="text-[11px] text-orange-400 mt-0.5">무료 등록 · 제주 여행자에게 노출</p>
@@ -643,22 +733,37 @@ export default function MapPage() {
                           <span className="text-orange-400 font-bold text-sm">무료 →</span>
                         </a>
                       )}
-                      <a href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-indigo-500 text-white rounded-xl text-sm font-semibold hover:bg-indigo-600 transition-colors">
+                      <a
+                        href={`https://map.kakao.com/link/to/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-indigo-500 text-white rounded-xl text-sm font-extrabold hover:bg-indigo-600 transition-colors"
+                      >
                         카카오맵 길찾기
                       </a>
-                      <a href={`https://map.kakao.com/link/map/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
-                        카카오맵에서 보기
-                      </a>
-                      <a href={`https://search.naver.com/search.naver?query=제주+${encodeURIComponent(selectedPin.name)}`} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
-                        네이버 검색
-                      </a>
+                      <div className="grid grid-cols-2 gap-2">
+                        <a
+                          href={`https://map.kakao.com/link/map/${selectedPin.name},${selectedPin.lat},${selectedPin.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium text-center hover:bg-slate-50 transition-colors"
+                        >
+                          카카오맵 보기
+                        </a>
+                        <a
+                          href={`https://search.naver.com/search.naver?query=제주+${encodeURIComponent(selectedPin.name)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium text-center hover:bg-slate-50 transition-colors"
+                        >
+                          네이버 검색
+                        </a>
+                      </div>
                     </div>
 
-                    <div className="mt-5 p-3 bg-gray-50 rounded-xl text-center">
-                      <p className="text-[11px] text-gray-400">{selectedPin.lat.toFixed(4)}, {selectedPin.lng.toFixed(4)}</p>
+                    {/* 좌표 */}
+                    <div className="mt-5 p-3 bg-slate-50 rounded-xl text-center">
+                      <p className="text-[11px] text-slate-400 font-mono">{selectedPin.lat.toFixed(4)}, {selectedPin.lng.toFixed(4)}</p>
                     </div>
                   </div>
                 </div>
@@ -669,6 +774,10 @@ export default function MapPage() {
       </div>
 
       <style jsx global>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
         @keyframes slide-up {
           from { transform: translateY(100%); }
           to { transform: translateY(0); }
