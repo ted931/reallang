@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import DevNav from "@/components/dev-nav";
 
 // ── 더미 데이터 ────────────────────────────────────────────────────────────────
 
@@ -98,7 +97,6 @@ export default function HostProfilePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <DevNav />
 
       {/* 커버 이미지 */}
       <div className="h-48 w-full" style={PLACEHOLDER_STYLE} />

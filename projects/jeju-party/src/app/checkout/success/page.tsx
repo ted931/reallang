@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import DevNav from "@/components/dev-nav";
 
 // --- 더미 데이터 ---
 const DUMMY_BOOKING = {
@@ -70,7 +69,6 @@ export default function CheckoutSuccessPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-slate-50">
-      <DevNav />
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* 성공 헤더 */}
         <div className="text-center mb-10">

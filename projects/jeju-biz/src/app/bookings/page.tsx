@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { DevNav } from "@/components/dev-nav";
 
 // ── 타입 ──────────────────────────────────────────────────────────────────────
 
@@ -92,7 +91,6 @@ export default function BookingsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <DevNav />
 
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
 

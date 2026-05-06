@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import DevNav from "@/components/dev-nav";
 
 // --- 더미 데이터 ---
 const DUMMY_PARTY = {
@@ -116,7 +115,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <DevNav />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* 스텝 인디케이터 */}
         <div className="flex items-center gap-3 mb-8 text-xs font-mono">

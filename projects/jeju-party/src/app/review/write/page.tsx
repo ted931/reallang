@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import DevNav from "@/components/dev-nav";
 
 // --- 더미 데이터 ---
 const DUMMY_PARTY = {
@@ -105,7 +104,6 @@ export default function ReviewWritePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <DevNav />
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* 진행률 */}
         <div className="flex items-center gap-2 mb-6" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>

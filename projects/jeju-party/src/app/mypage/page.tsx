@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import DevNav from "@/components/dev-nav";
 
 // ── 더미 데이터 ────────────────────────────────────────────────────────────────
 
@@ -88,7 +87,6 @@ export default function MyPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <DevNav />
 
       {/* 앱 내비 */}
       <nav className="px-6 h-14 border-b border-slate-200 bg-white flex items-center justify-between sticky top-[36px] z-40 shadow-sm">
