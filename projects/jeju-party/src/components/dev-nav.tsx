@@ -17,6 +17,9 @@ const STEPS = [
   { href: "/party/p3?modal=join&step=pass-offer", label: "업셀", step: 9, flow: "user" as const },
   { href: "/party/p3?modal=pass&step=paying", label: "패스", step: 10, flow: "user" as const },
   { href: "/party/p3?modal=join&step=done", label: "완료", step: 11, flow: "user" as const },
+  // 프로필 플로우
+  { href: "/mypage", label: "마이페이지", step: 12, flow: "user" as const },
+  { href: "/host/surfminjun", label: "호스트", step: 13, flow: "user" as const },
 ];
 
 export default function DevNav() {

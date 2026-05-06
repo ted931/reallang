@@ -9,6 +9,8 @@ export default function MapPage() {
   const [activeCategories, setActiveCategories] = useState<Set<string>>(
     new Set(["cafe", "restaurant", "attraction", "beach"])
   );
+  const [filterOpenOnly, setFilterOpenOnly] = useState(false);
+  const [filterHighRating, setFilterHighRating] = useState(false);
   const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [pins, setPins] = useState<MapPin[]>(ALL_PINS);
@@ -398,6 +400,66 @@ export default function MapPage() {
             필터 · {activeCategories.size}
           </button>
         </div>
+
+        {/* 퀵 필터 칩 행 */}
+        {!showSearch && (() => {
+          const quickCats = [
+            { id: "cafe", label: "카페" },
+            { id: "restaurant", label: "맛집" },
+            { id: "attraction", label: "관광지" },
+            { id: "accommodation", label: "숙박" },
+          ];
+          const activeFilterCount =
+            quickCats.filter((c) => activeCategories.has(c.id)).length +
+            (filterOpenOnly ? 1 : 0) +
+            (filterHighRating ? 1 : 0);
+          return (
+            <div className="px-4 pb-2.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+              {/* 필터 수 뱃지 */}
+              {activeFilterCount > 0 && (
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-500 text-white text-[10px] font-extrabold grid place-items-center">
+                  {activeFilterCount}
+                </span>
+              )}
+              {quickCats.map((cat) => {
+                const on = activeCategories.has(cat.id);
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                      on
+                        ? "bg-indigo-500 text-white border-indigo-500 shadow-sm"
+                        : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setFilterOpenOnly((v) => !v)}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                  filterOpenOnly
+                    ? "bg-indigo-500 text-white border-indigo-500 shadow-sm"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+                }`}
+              >
+                운영중만
+              </button>
+              <button
+                onClick={() => setFilterHighRating((v) => !v)}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                  filterHighRating
+                    ? "bg-indigo-500 text-white border-indigo-500 shadow-sm"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+                }`}
+              >
+                ★ 4이상
+              </button>
+            </div>
+          );
+        })()}
 
         {/* 검색 결과 드롭다운 */}
         {showSearch && searchResults.length > 0 && (

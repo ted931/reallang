@@ -65,14 +65,35 @@ const COMPANION_OPTIONS = [
   { id: "효도여행", emoji: "🧓" },
 ];
 
-const CATEGORY_STYLE: Record<string, { color: string; icon: string }> = {
-  관광지: { color: "bg-emerald-100 text-emerald-700", icon: "🏝️" },
-  식당: { color: "bg-orange-100 text-orange-700", icon: "🍜" },
-  카페: { color: "bg-amber-100 text-amber-700", icon: "☕" },
-  액티비티: { color: "bg-blue-100 text-blue-700", icon: "🤿" },
-  숙소: { color: "bg-purple-100 text-purple-700", icon: "🏨" },
-  공항: { color: "bg-gray-100 text-gray-600", icon: "🛬" },
+const CATEGORY_STYLE: Record<string, { color: string; icon: string; dot: string }> = {
+  관광지: { color: "bg-emerald-100 text-emerald-700", icon: "🏝️", dot: "#10b981" },
+  식당: { color: "bg-orange-100 text-orange-700", icon: "🍜", dot: "#f97316" },
+  카페: { color: "bg-amber-100 text-amber-700", icon: "☕", dot: "#f59e0b" },
+  액티비티: { color: "bg-blue-100 text-blue-700", icon: "🤿", dot: "#0ea5e9" },
+  숙소: { color: "bg-purple-100 text-purple-700", icon: "🏨", dot: "#a855f7" },
+  공항: { color: "bg-gray-100 text-gray-600", icon: "🛬", dot: "#6b7280" },
 };
+
+// 코스 ID별 테마 색상 (A=힐링 teal/emerald, B=액티브 orange, C=미식 amber)
+const COURSE_THEME: Record<string, {
+  badge: string; badgeText: string; border: string; bg: string; accent: string; label: string;
+}> = {
+  A: { badge: "bg-emerald-500", badgeText: "text-white", border: "border-emerald-400", bg: "bg-emerald-50", accent: "text-emerald-700", label: "힐링" },
+  B: { badge: "bg-orange-500", badgeText: "text-white", border: "border-orange-400", bg: "bg-orange-50", accent: "text-orange-700", label: "액티브" },
+  C: { badge: "bg-amber-500", badgeText: "text-white", border: "border-amber-400", bg: "bg-amber-50", accent: "text-amber-700", label: "미식" },
+};
+
+const MOVE_BADGE: Record<number, { label: string; cls: string }> = {
+  0: { label: "도보", cls: "bg-slate-100 text-slate-600" },
+};
+function getMoveBadge(minutes: number): { label: string; cls: string } {
+  if (minutes === 0) return { label: "도보", cls: "bg-slate-100 text-slate-600" };
+  if (minutes <= 10) return { label: `🚶 ${minutes}분`, cls: "bg-slate-100 text-slate-600" };
+  if (minutes <= 20) return { label: `🚗 ${minutes}분`, cls: "bg-sky-100 text-sky-700" };
+  return { label: `🚗 ${minutes}분`, cls: "bg-blue-100 text-blue-700" };
+}
+// suppress unused warning
+void MOVE_BADGE;
 
 const LOADING_STEPS = [
   { label: "여행 스타일 분석 중...", icon: "🔍" },
@@ -569,6 +590,7 @@ export default function AIPlanPage() {
           <div className="space-y-3">
             {courseCards.map((course) => {
               const isActive = selectedCourseId === course.id;
+              const theme = COURSE_THEME[course.id] || COURSE_THEME["A"];
               return (
                 <button
                   key={course.id}
@@ -576,22 +598,25 @@ export default function AIPlanPage() {
                   disabled={loadingDetail && isActive}
                   className={`w-full text-left rounded-2xl border-2 p-5 transition-all hover:shadow-md ${
                     isActive
-                      ? "border-orange-500 bg-orange-50 shadow-lg"
-                      : "border-slate-200 bg-white hover:border-orange-300"
+                      ? `${theme.border} ${theme.bg} shadow-lg`
+                      : "border-slate-200 bg-white hover:border-slate-300"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
-                      {/* ID 뱃지 */}
-                      <span
-                        className={`w-10 h-10 rounded-xl font-extrabold text-sm flex items-center justify-center flex-shrink-0 ${
-                          isActive
-                            ? "bg-orange-500 text-white"
-                            : "bg-orange-100 text-orange-600"
-                        }`}
-                      >
-                        {course.id}
-                      </span>
+                      {/* ID 뱃지 + 코스 라벨 */}
+                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                        <span
+                          className={`w-10 h-10 rounded-xl font-extrabold text-sm flex items-center justify-center ${
+                            isActive ? `${theme.badge} ${theme.badgeText}` : "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          {course.id}
+                        </span>
+                        <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? theme.accent : "text-slate-400"}`}>
+                          {theme.label}
+                        </span>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-extrabold text-slate-900">
@@ -599,7 +624,7 @@ export default function AIPlanPage() {
                           </h3>
                           {course.recommended && (
                             <span className="px-2 py-0.5 bg-violet-100 text-violet-700 text-[10px] font-bold rounded-full">
-                              AI 추천
+                              ✨ AI 추천
                             </span>
                           )}
                         </div>
@@ -610,7 +635,7 @@ export default function AIPlanPage() {
                     </div>
                     {/* 비용/이동 요약 */}
                     <div className="flex-shrink-0 text-right">
-                      <p className="text-sm font-extrabold text-orange-600">
+                      <p className={`text-sm font-extrabold ${isActive ? theme.accent : "text-slate-700"}`}>
                         {formatCost(course.totalCost)}
                       </p>
                       <p className="text-[10px] text-slate-400 mt-0.5 font-mono">
@@ -626,7 +651,9 @@ export default function AIPlanPage() {
                       {course.highlights.map((h, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded-full font-medium"
+                          className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${
+                            isActive ? `${theme.bg} ${theme.accent} border border-current/20` : "bg-slate-100 text-slate-600"
+                          }`}
                         >
                           {h}
                         </span>
@@ -662,13 +689,17 @@ export default function AIPlanPage() {
           {/* 선택 코스 요약 배너 */}
           {(() => {
             const course = courseCards.find((c) => c.id === selectedCourseId);
+            const theme = COURSE_THEME[course?.id || "A"] || COURSE_THEME["A"];
             return course ? (
-              <div className="bg-white border-2 border-orange-200 rounded-2xl p-5 shadow-sm">
+              <div className={`border-2 ${theme.border} ${theme.bg} rounded-2xl p-5 shadow-sm`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-xl bg-orange-500 text-white font-extrabold text-sm flex items-center justify-center flex-shrink-0">
-                      {course.id}
-                    </span>
+                    <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                      <span className={`w-10 h-10 rounded-xl ${theme.badge} ${theme.badgeText} font-extrabold text-sm flex items-center justify-center`}>
+                        {course.id}
+                      </span>
+                      <span className={`text-[9px] font-bold uppercase tracking-wider ${theme.accent}`}>{theme.label}</span>
+                    </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <h2 className="font-extrabold text-slate-900">
@@ -676,7 +707,7 @@ export default function AIPlanPage() {
                         </h2>
                         {course.recommended && (
                           <span className="px-2 py-0.5 bg-violet-100 text-violet-700 text-[10px] font-bold rounded-full">
-                            AI 추천
+                            ✨ AI 추천
                           </span>
                         )}
                       </div>
@@ -690,7 +721,7 @@ export default function AIPlanPage() {
                       setDetailPlan(null);
                       setActiveDay(0);
                     }}
-                    className="text-xs text-orange-500 hover:text-orange-700 font-bold flex-shrink-0 border border-orange-200 px-3 py-1.5 rounded-lg transition-colors"
+                    className={`text-xs ${theme.accent} font-bold flex-shrink-0 border ${theme.border} px-3 py-1.5 rounded-lg transition-colors hover:opacity-80`}
                   >
                     다른 코스
                   </button>
@@ -698,19 +729,19 @@ export default function AIPlanPage() {
 
                 {/* 요약 수치 */}
                 <div className="grid grid-cols-3 gap-2 mt-4">
-                  <div className="bg-slate-50 rounded-xl p-3 text-center">
+                  <div className="bg-white/60 rounded-xl p-3 text-center">
                     <p className="text-[10px] text-slate-400 mb-1">일정</p>
                     <p className="text-sm font-extrabold text-slate-900">
                       {nights}박{nights + 1}일
                     </p>
                   </div>
-                  <div className="bg-orange-50 rounded-xl p-3 text-center">
+                  <div className="bg-white/60 rounded-xl p-3 text-center">
                     <p className="text-[10px] text-slate-400 mb-1">예상 비용</p>
-                    <p className="text-sm font-extrabold text-orange-600">
+                    <p className={`text-sm font-extrabold ${theme.accent}`}>
                       {formatCost(course.totalCost)}
                     </p>
                   </div>
-                  <div className="bg-slate-50 rounded-xl p-3 text-center">
+                  <div className="bg-white/60 rounded-xl p-3 text-center">
                     <p className="text-[10px] text-slate-400 mb-1">총 이동</p>
                     <p className="text-sm font-extrabold text-slate-900">
                       {course.totalDriveKm}km
@@ -722,113 +753,136 @@ export default function AIPlanPage() {
           })()}
 
           {/* Day 탭 */}
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {detailPlan.days.map((day, i) => (
-              <button
-                key={day.day}
-                onClick={() => setActiveDay(i)}
-                className={`px-4 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap flex-shrink-0 transition-all border-2 ${
-                  activeDay === i
-                    ? "border-orange-500 bg-orange-500 text-white shadow-sm shadow-orange-200/60"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-orange-300"
-                }`}
-              >
-                Day {day.day}
-                <span className="block text-[10px] opacity-75 font-normal">
-                  {day.theme}
-                </span>
-              </button>
-            ))}
-          </div>
+          {(() => {
+            const course = courseCards.find((c) => c.id === selectedCourseId);
+            const theme = COURSE_THEME[course?.id || "A"] || COURSE_THEME["A"];
+            return (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {detailPlan.days.map((day, i) => (
+                  <button
+                    key={day.day}
+                    onClick={() => setActiveDay(i)}
+                    className={`px-4 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap flex-shrink-0 transition-all border-2 ${
+                      activeDay === i
+                        ? `${theme.border} ${theme.badge} text-white shadow-sm`
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                    }`}
+                  >
+                    Day {day.day}
+                    <span className="block text-[10px] opacity-75 font-normal">
+                      {day.theme}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
 
           {/* 세로 타임라인 */}
-          {detailPlan.days[activeDay] && (
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="font-extrabold text-slate-900">
-                  Day {detailPlan.days[activeDay].day} ·{" "}
-                  {detailPlan.days[activeDay].theme}
-                </h3>
-                <span className="text-sm font-bold text-orange-600">
-                  {formatCost(detailPlan.days[activeDay].dayCost)}
-                </span>
-              </div>
+          {detailPlan.days[activeDay] && (() => {
+            const course = courseCards.find((c) => c.id === selectedCourseId);
+            const theme = COURSE_THEME[course?.id || "A"] || COURSE_THEME["A"];
+            return (
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h3 className="font-extrabold text-slate-900">
+                      Day {detailPlan.days[activeDay].day} · {detailPlan.days[activeDay].theme}
+                    </h3>
+                    <p className={`text-[11px] font-bold mt-0.5 ${theme.accent}`}>
+                      {theme.label} 코스
+                    </p>
+                  </div>
+                  <span className={`text-sm font-extrabold ${theme.accent}`}>
+                    {formatCost(detailPlan.days[activeDay].dayCost)}
+                  </span>
+                </div>
 
-              {/* 타임라인 본체 */}
-              <div className="relative">
-                {/* 세로 점선 */}
-                <div className="absolute left-[68px] top-0 bottom-0 w-px border-l-2 border-dashed border-slate-200" />
+                {/* 타임라인 본체 */}
+                <div className="relative">
+                  {/* 세로 점선 */}
+                  <div className="absolute left-[68px] top-0 bottom-0 w-px border-l-2 border-dashed border-slate-200" />
 
-                {detailPlan.days[activeDay].stops.map((stop, i) => {
-                  const styleInfo =
-                    CATEGORY_STYLE[stop.category] || CATEGORY_STYLE["관광지"];
-                  return (
-                    <div key={i}>
-                      {/* 이동 구간 */}
-                      {stop.driveMinutes != null && stop.driveMinutes > 0 && (
-                        <div className="flex items-center gap-2 py-2 pl-[88px]">
-                          <span className="text-[11px] text-slate-400">
-                            🚗 {stop.driveMinutes}분 이동
-                          </span>
-                        </div>
-                      )}
-
-                      {/* 스팟 행 */}
-                      <div className="flex items-start gap-3 pb-4 relative">
-                        {/* 왼쪽 시간 라벨 */}
-                        <div className="w-14 shrink-0 text-right pt-0.5">
-                          <p className="text-sm font-bold text-slate-900 tabular-nums">
-                            {stop.time}
-                          </p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                            {stop.estimatedCost > 0
-                              ? formatCost(stop.estimatedCost)
-                              : "무료"}
-                          </p>
-                        </div>
-
-                        {/* 아이콘 노드 */}
-                        <div className="relative shrink-0 z-10">
-                          <div className="w-9 h-9 rounded-full grid place-items-center text-lg bg-white border-2 border-orange-400 shadow-sm">
-                            {styleInfo.icon}
-                          </div>
-                        </div>
-
-                        {/* 오른쪽 카드 */}
-                        <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 hover:border-slate-300 transition-colors">
-                          <div className="flex items-center justify-between gap-2 flex-wrap">
-                            <p className="font-bold text-slate-900">
-                              {stop.name}
-                            </p>
-                            <span
-                              className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styleInfo.color}`}
-                            >
-                              {stop.category}
+                  {detailPlan.days[activeDay].stops.map((stop, i) => {
+                    const styleInfo =
+                      CATEGORY_STYLE[stop.category] || CATEGORY_STYLE["관광지"];
+                    const moveBadge = stop.driveMinutes != null && stop.driveMinutes > 0
+                      ? getMoveBadge(stop.driveMinutes)
+                      : null;
+                    return (
+                      <div key={i}>
+                        {/* 이동 구간 */}
+                        {moveBadge && (
+                          <div className="flex items-center gap-2 py-1.5 pl-[88px]">
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${moveBadge.cls}`}>
+                              {moveBadge.label}
                             </span>
                           </div>
-                          {stop.description && (
-                            <p className="text-xs text-slate-500 mt-1">
-                              {stop.description}
+                        )}
+
+                        {/* 스팟 행 */}
+                        <div className="flex items-start gap-3 pb-4 relative">
+                          {/* 왼쪽 시간 컬럼 */}
+                          <div className="w-14 shrink-0 text-right pt-0.5">
+                            <p className="text-sm font-extrabold text-slate-900 tabular-nums font-mono">
+                              {stop.time}
                             </p>
-                          )}
-                          {stop.address && (
-                            <p className="text-[11px] text-slate-400 mt-1">
-                              📍 {stop.address}
+                            <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                              {stop.estimatedCost > 0
+                                ? formatCost(stop.estimatedCost)
+                                : "무료"}
                             </p>
-                          )}
-                          {stop.tip && (
-                            <p className="text-[11px] text-orange-600 mt-1.5 bg-orange-50 px-2.5 py-1.5 rounded-lg inline-block">
-                              TIP: {stop.tip}
-                            </p>
-                          )}
+                          </div>
+
+                          {/* 카테고리 아이콘 노드 */}
+                          <div className="relative shrink-0 z-10">
+                            <div className={`w-9 h-9 rounded-full grid place-items-center text-lg bg-white border-2 shadow-sm`}
+                              style={{ borderColor: styleInfo.dot }}>
+                              {styleInfo.icon}
+                            </div>
+                          </div>
+
+                          {/* 오른쪽 장소 카드 */}
+                          <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 hover:border-slate-300 transition-colors">
+                            <div className="flex items-start justify-between gap-2 flex-wrap">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-extrabold text-slate-900 text-sm leading-snug">
+                                  {stop.name}
+                                </p>
+                                {/* 카테고리 뱃지 + 소요시간 */}
+                                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                                  <span
+                                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${styleInfo.color}`}
+                                  >
+                                    {styleInfo.icon} {stop.category}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            {stop.description && (
+                              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                                {stop.description}
+                              </p>
+                            )}
+                            {stop.address && (
+                              <p className="text-[11px] text-slate-400 mt-1">
+                                📍 {stop.address}
+                              </p>
+                            )}
+                            {stop.tip && (
+                              <p className={`text-[11px] mt-1.5 ${theme.accent} ${theme.bg} px-2.5 py-1.5 rounded-lg inline-block`}>
+                                TIP: {stop.tip}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* 예산 분석 */}
           {detailPlan.budgetBreakdown?.length > 0 && (
@@ -891,22 +945,28 @@ export default function AIPlanPage() {
       {!loadingCourses &&
         !loadingDetail &&
         phase === "detail" &&
-        detailPlan && (
-          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-slate-200 p-3 flex gap-2 safe-bottom">
-            <a
-              href="http://localhost:3001/rentcar"
-              className="flex-1 py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5"
-            >
-              🚗 렌터카 예약
-            </a>
-            <button
-              onClick={handleCreateParty}
-              className="flex-[1.5] py-3 rounded-xl bg-orange-500 text-white font-extrabold text-sm hover:bg-orange-600 transition-colors shadow-md shadow-orange-200/60 flex items-center justify-center gap-1.5"
-            >
-              🎉 이 코스로 파티 만들기
-            </button>
-          </div>
-        )}
+        detailPlan && (() => {
+          const course = courseCards.find((c) => c.id === selectedCourseId);
+          const theme = COURSE_THEME[course?.id || "A"] || COURSE_THEME["A"];
+          return (
+            <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-slate-200 p-3 safe-bottom">
+              <div className="max-w-2xl mx-auto flex gap-2">
+                <a
+                  href="http://localhost:3001/rentcar"
+                  className="flex-1 py-3.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5"
+                >
+                  🚗 렌터카 함께 예약
+                </a>
+                <button
+                  onClick={handleCreateParty}
+                  className={`flex-[1.5] py-3.5 rounded-xl ${theme.badge} text-white font-extrabold text-sm transition-colors shadow-md flex items-center justify-center gap-1.5 hover:opacity-90`}
+                >
+                  🎉 이 코스로 파티 만들기
+                </button>
+              </div>
+            </div>
+          );
+        })()}
     </div>
   );
 }

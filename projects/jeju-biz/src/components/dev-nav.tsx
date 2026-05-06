@@ -8,6 +8,8 @@ const PAGES = [
   { href: "/cs", label: "CS챗봇", emoji: "💬", step: "3" },
   { href: "/partner", label: "파트너센터", emoji: "📣", step: "4" },
   { href: "/commercial", label: "사업자파티", emoji: "🏢", step: "5" },
+  { href: "/onboarding", label: "온보딩", emoji: "🚀", step: "6" },
+  { href: "/settlements/withdraw", label: "출금신청", emoji: "💸", step: "7" },
 ];
 
 export function DevNav() {
