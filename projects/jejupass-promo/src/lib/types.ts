@@ -1,5 +1,13 @@
-export type ShopCategory = 'cafe' | 'restaurant' | 'dessert' | 'bakery' | 'brunch' | 'bar' | 'etc';
-export type ShopRegion = 'jeju-si' | 'seogwipo' | 'aewol' | 'hallim' | 'hamdeok' | 'seongsan' | 'jungmun';
+export type ShopCategory =
+  | 'cafe' | 'restaurant' | 'dessert' | 'bakery' | 'brunch' | 'bar'
+  | 'seafood' | 'blackpork' | 'korean' | 'japanese' | 'western' | 'chinese' | 'snack' | 'noodle'
+  | 'pension' | 'guesthouse'
+  | 'activity' | 'surfing' | 'experience' | 'fishing' | 'cycling'
+  | 'spa' | 'shopping' | 'souvenir' | 'market'
+  | 'etc';
+export type ShopRegion =
+  | 'jeju-si' | 'seogwipo' | 'aewol' | 'hallim' | 'hamdeok' | 'seongsan' | 'jungmun'
+  | 'udo' | 'moseulpo' | 'namwon' | 'pyoseon' | 'jocheon' | 'gujwa' | 'andeok' | 'daejeong';
 
 export interface ShopPhoto {
   id: string;
