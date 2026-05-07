@@ -226,6 +226,73 @@ const DOCS: Record<string, PageDoc> = {
       },
     ]
   },
+  "/dashboard/cafepass": {
+    title: "☕ 카페패스 관리",
+    summary: "사장님이 카페패스 입점 현황을 확인하고 패스 적용 메뉴를 설정하는 페이지.",
+    userFlow: [
+      "대시보드에서 '카페패스' 메뉴 진입",
+      "현재 카페패스 입점 상태(활성/대기) 확인",
+      "패스 적용 메뉴 목록 설정 및 저장",
+      "방문 횟수 통계 확인",
+    ],
+    features: [
+      {
+        name: "입점 상태 표시",
+        desc: "카페패스 활성/대기/미입점 상태 표시. 상태에 따라 배지 색상 분기.",
+        status: "완료"
+      },
+      {
+        name: "적용 메뉴 설정",
+        desc: "패스 적용 가능 메뉴 토글 선택 + 저장. 엣지 케이스: 메뉴 없으면 '메뉴를 먼저 등록해주세요' 안내.",
+        status: "완료"
+      },
+    ]
+  },
+  "/dashboard/shop/[id]/edit": {
+    title: "✏️ 가게 정보 수정",
+    summary: "등록된 가게의 기본 정보, 메뉴, 영업시간을 수정하는 편집 폼.",
+    userFlow: [
+      "대시보드 가게 목록에서 '수정' 클릭 → /dashboard/shop/[id]/edit 진입",
+      "기존 가게 정보 자동 로딩",
+      "가게명 / 소개 / 주소 / 카테고리 수정",
+      "메뉴 추가·삭제·인기 여부 토글",
+      "'저장하기' 클릭 → PUT /api/shops/[id] 호출 → 성공 시 /shop/[slug]으로 이동",
+    ],
+    features: [
+      {
+        name: "기본 정보 편집",
+        desc: "입력: 가게명·카테고리·지역·주소·전화·소개. 출력: PUT /api/shops/[id] 저장. 엣지 케이스: 필수값 비면 저장 버튼 disabled.",
+        status: "완료"
+      },
+      {
+        name: "메뉴 편집",
+        desc: "행 추가/삭제, 인기 토글. 저장 시 기존 menus 배열 교체.",
+        status: "완료"
+      },
+    ]
+  },
+  "/rentcar": {
+    title: "🚗 렌터카 연계",
+    summary: "여행자에게 제주 렌터카 업체를 소개하고 파티(동승) 연계 예약을 안내하는 페이지.",
+    userFlow: [
+      "내비 또는 jeju-party 배너에서 /rentcar 진입",
+      "렌터카 업체 목록 카드 확인 (차종·가격·좌석)",
+      "AI 추천 버튼 클릭 → 인원·일정 입력 → 추천 차량 반환",
+      "예약 문의 클릭 → 외부 업체 페이지 또는 문의 모달",
+    ],
+    features: [
+      {
+        name: "차량 목록",
+        desc: "차종·좌석·일일 요금·엔빵 계산 카드 그리드 표시. 엣지 케이스: 목록 없으면 '준비 중' 표시.",
+        status: "완료"
+      },
+      {
+        name: "AI 차량 추천",
+        desc: "인원·카테고리 입력 → POST /api/rentcar/recommend → 추천 차량 + 이유 반환.",
+        status: "완료"
+      },
+    ]
+  },
   "/dashboard/sns": {
     title: "📸 SNS 콘텐츠 관리",
     summary: "가게의 SNS 홍보 이미지를 자동 생성하는 도구. 인스타 피드/스토리/카카오톡 3가지 템플릿, AI 홍보 문구, Canvas API 이미지 렌더링.",
@@ -274,8 +341,66 @@ const DOCS: Record<string, PageDoc> = {
   }
 };
 
+const STRATEGY = {
+  oneLiner: "제주를 여행하는 사람과 제주에서 장사하는 사람 사이의 모든 거래를 연결하는 SEO 기반 플랫폼",
+  phases: [
+    {
+      label: "초기 (0~6개월)",
+      color: "emerald",
+      title: "SEO + 데이터 축적",
+      goal: "수익보다 트래픽. 사람들이 실제로 원하는지 검증한다.",
+      items: [
+        "구글 롱테일 키워드 상위노출 50개 확보",
+        "파티 후기 500건 · 가게 리뷰 2,000건 누적 → 자동 SEO",
+        "서핑·낚시·자전거 업체 10곳 직접 섭외 (0% 수수료 6개월)",
+        "인스타 감성 계정 팔로워 5,000명",
+        "가게 등록 300개 · 파티 월 100개",
+      ],
+    },
+    {
+      label: "중기 (6~18개월)",
+      color: "blue",
+      title: "수익화 검증",
+      goal: "트래픽을 돈으로. 어떤 사장님이 왜 결제하는지 패턴을 찾는다.",
+      items: [
+        "사장님 유료 플랜 출시 (3만/10만/30만원)",
+        "렌터카 제휴 수수료 (예약당 3,000~15,000원)",
+        "파티 예약 수수료 (거래액 3~5%)",
+        "유료 사장님 200명 · MRR 1,500만원",
+        "월 순방문자 20만",
+      ],
+    },
+    {
+      label: "장기 (18개월~)",
+      color: "violet",
+      title: "제주 여행 인프라",
+      goal: "네이버 없이도 제주 여행자가 반드시 거치는 플랫폼이 된다.",
+      items: [
+        "직접 트래픽 30% 이상 (광고·검색 의존 탈출)",
+        "렌터카·숙박·체험·파티 한 곳에서 예약",
+        "제주 관광공사 · 카드사 B2B 제휴",
+        "MRR 5,000만원",
+        "강원 · 부산 · 오키나와 확장",
+      ],
+    },
+  ],
+  why: [
+    { who: "혼자 여행자", pain: "동행 찾을 공식 창구가 없다", value: "카테고리·날짜·지역 필터로 1클릭 신청" },
+    { who: "렌터카 비용 절감", pain: "혼자 빌리면 비쌈", value: "동승자 모집 → 반값" },
+    { who: "일정 짜기 귀찮음", pain: "블로그 수십 개 읽어야 함", value: "AI가 1분 안에 내 스타일 코스" },
+    { who: "사장님", pain: "마케팅 비용 대비 효과 불투명", value: "3분 가입 · AI 홍보글 자동 · 수수료는 매출 후" },
+  ],
+  acquisition: [
+    "액티비티 업체 10곳 직접 섭외 → 파티 50개 · 후기 200개로 SEO 시작",
+    "제주 한달살기 유튜버·블로거 5~10명 협업 (카페패스 무료 제공)",
+    "제주살기 네이버카페 · 당근 제주 커뮤니티 홍보",
+    "인스타 '제주에서 이런 사람 만났다' 스토리 연재",
+  ],
+};
+
 export function DevFeaturePanel() {
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<"guide" | "flow" | "spec">("guide");
   const pathname = usePathname();
   const key = Object.keys(DOCS).find(k => {
     if (k === pathname) return true;
@@ -284,6 +409,20 @@ export function DevFeaturePanel() {
   }) ?? "/";
   const doc = DOCS[key];
   if (!doc) return null;
+
+  const phaseColor: Record<string, string> = {
+    emerald: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    blue: "bg-blue-100 text-blue-700 border-blue-200",
+    violet: "bg-violet-100 text-violet-700 border-violet-200",
+  };
+  const phaseDot: Record<string, string> = {
+    emerald: "bg-emerald-500",
+    blue: "bg-blue-500",
+    violet: "bg-violet-500",
+  };
+
+  const tabLabel = { guide: "전체가이드", flow: "유저플로우", spec: "기능명세" } as const;
+  const headerTitle = tab === "guide" ? "🧭 전략 개요" : tab === "flow" ? `${doc.title} — 유저플로우` : doc.title;
 
   return (
     <>
@@ -298,18 +437,79 @@ export function DevFeaturePanel() {
       )}
       {open && (
         <div className="fixed right-0 top-9 bottom-0 w-[500px] bg-white z-[9995] overflow-y-auto shadow-2xl border-l border-gray-200">
-          <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
-            <h2 className="font-bold text-base text-gray-900">{doc.title}</h2>
-            <button
-              onClick={() => setOpen(false)}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 text-xl transition-colors"
-            >×</button>
+          <div className="sticky top-0 bg-white border-b border-gray-100 z-10">
+            <div className="px-6 py-4 flex items-center justify-between">
+              <h2 className="font-bold text-base text-gray-900">{headerTitle}</h2>
+              <button onClick={() => setOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 text-xl transition-colors">×</button>
+            </div>
+            <div className="flex px-6 gap-1 pb-3">
+              {(["guide", "flow", "spec"] as const).map(t => (
+                <button key={t} onClick={() => setTab(t)}
+                  className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${tab === t ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
+                  {tabLabel[t]}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="px-6 py-5 space-y-6">
-            <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 rounded-xl p-4">{doc.summary}</p>
-            {doc.userFlow && doc.userFlow.length > 0 && (
+
+          {tab === "guide" && (
+            <div className="px-6 py-5 space-y-6">
+              <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">한 줄 정의</p>
+                <p className="text-sm text-indigo-900 font-medium leading-relaxed">{STRATEGY.oneLiner}</p>
+              </div>
               <div>
-                <h3 className="text-xs font-semibold text-indigo-500 uppercase tracking-wider mb-3">유저 플로우</h3>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">단계별 목표</h3>
+                <div className="space-y-3">
+                  {STRATEGY.phases.map((phase, i) => (
+                    <div key={i} className={`rounded-xl border p-4 ${phaseColor[phase.color]}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`w-2 h-2 rounded-full ${phaseDot[phase.color]}`} />
+                        <span className="text-xs font-semibold">{phase.label}</span>
+                      </div>
+                      <p className="font-bold text-sm mb-1">{phase.title}</p>
+                      <p className="text-xs opacity-70 mb-2">{phase.goal}</p>
+                      <ul className="space-y-1">
+                        {phase.items.map((item, j) => (
+                          <li key={j} className="text-xs flex gap-1.5"><span>•</span><span>{item}</span></li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">쓸 수밖에 없는 이유</h3>
+                <div className="space-y-2">
+                  {STRATEGY.why.map((w, i) => (
+                    <div key={i} className="rounded-xl bg-gray-50 border border-gray-100 p-3">
+                      <span className="text-xs font-semibold text-gray-700">{w.who}</span>
+                      <div className="flex gap-2 mt-1 text-xs text-gray-500">
+                        <span className="text-rose-400">😓 {w.pain}</span>
+                      </div>
+                      <div className="text-xs text-emerald-700 mt-0.5">✓ {w.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">초기 사람 모으는 법</h3>
+                <div className="space-y-2">
+                  {STRATEGY.acquisition.map((item, i) => (
+                    <div key={i} className="flex gap-2.5 text-xs text-gray-600">
+                      <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex-shrink-0 flex items-center justify-center font-bold">{i + 1}</span>
+                      <span className="leading-relaxed">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {tab === "flow" && (
+            <div className="px-6 py-5 space-y-6">
+              <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 rounded-xl p-4">{doc.summary}</p>
+              {doc.userFlow && doc.userFlow.length > 0 ? (
                 <div className="space-y-2.5">
                   {doc.userFlow.map((step, i) => (
                     <div key={i} className="flex gap-3 text-sm text-gray-700 leading-relaxed">
@@ -318,10 +518,14 @@ export function DevFeaturePanel() {
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-            <div>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">기능 명세</h3>
+              ) : (
+                <p className="text-sm text-gray-400">이 페이지의 유저플로우가 아직 작성되지 않았습니다.</p>
+              )}
+            </div>
+          )}
+
+          {tab === "spec" && (
+            <div className="px-6 py-5 space-y-6">
               <div className="space-y-3">
                 {doc.features.map((f, i) => (
                   <div key={i} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
@@ -339,13 +543,13 @@ export function DevFeaturePanel() {
                   </div>
                 ))}
               </div>
+              {doc.notes && (
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                  <p className="text-sm text-amber-800 leading-relaxed">📌 {doc.notes}</p>
+                </div>
+              )}
             </div>
-            {doc.notes && (
-              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
-                <p className="text-sm text-amber-800 leading-relaxed">📌 {doc.notes}</p>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       )}
     </>
