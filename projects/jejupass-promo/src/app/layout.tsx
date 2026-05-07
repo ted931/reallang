@@ -80,6 +80,11 @@ export default function RootLayout({
         <DevNav />
         <DevFeaturePanel />
         {children}
+        <footer className="bg-slate-900 text-slate-400 text-center text-xs py-3">
+          <a href="http://13.125.33.79:3010" target="_blank" rel="noopener noreferrer">
+            🎉 제주 파티 참가하기 → jeju-party 바로가기
+          </a>
+        </footer>
       </body>
     </html>
   );

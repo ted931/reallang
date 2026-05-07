@@ -45,6 +45,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <DevFeaturePanel />
         {children}
         <Footer />
+        <footer className="bg-slate-900 text-slate-400 text-center text-xs py-3">
+          <a href="http://13.125.33.79:3001" target="_blank" rel="noopener noreferrer">
+            🏪 사장님이신가요? → jejupass-promo 바로가기
+          </a>
+        </footer>
       </body>
     </html>
   );
