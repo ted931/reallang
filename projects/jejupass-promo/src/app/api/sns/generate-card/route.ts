@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { generateCard, type TemplateType } from '@/lib/sns/generateCard';
 import { getShopById } from '@/lib/store';
