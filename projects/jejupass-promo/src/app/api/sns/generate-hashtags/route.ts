@@ -4,9 +4,8 @@ import OpenAI from 'openai';
 import { getShopById } from '@/lib/store';
 import { CATEGORY_MAP, REGION_MAP } from '@/lib/constants';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-
 export async function POST(req: NextRequest) {
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const { shopId, selectedMenus } = await req.json() as { shopId: string; selectedMenus?: string[] };
 
   const shop = await getShopById(shopId);

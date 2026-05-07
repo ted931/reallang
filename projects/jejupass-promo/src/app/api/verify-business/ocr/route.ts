@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 // 사업자등록번호 체크섬 검증
 function isValidBusinessNumber(num: string): boolean {
@@ -20,6 +19,7 @@ function isValidBusinessNumber(num: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const formData = await req.formData();
   const file = formData.get('image') as File | null;
 

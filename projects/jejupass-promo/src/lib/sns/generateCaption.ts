@@ -1,9 +1,8 @@
 import OpenAI from 'openai';
 import type { CaptionRequest, CaptionResponse } from '../types';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-
 export async function generateCaption(req: CaptionRequest): Promise<CaptionResponse> {
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   const { shopName, category, region, description, menuHighlights } = req;
 
   const menuText = menuHighlights?.length
