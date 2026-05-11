@@ -160,6 +160,23 @@
 
 ---
 
+## 3014 — fishing (피싱로그 낚시 커뮤니티)
+
+| Step | 경로 | 페이지 |
+|------|------|--------|
+| 1 | `/` | 🎣 홈 피드 (조황·좌대·모임) |
+| 2 | `/catch` | 🐟 조황 피드 |
+| 3 | `/catch/[id]` | 📋 조황 상세 |
+| 4 | `/jwaedae` | 🛖 좌대 목록 |
+| 5 | `/jwaedae/[id]` | 🛖 좌대 상세·예약 |
+| 6 | `/community` | 💬 커뮤니티 게시판 |
+| 7 | `/community/[id]` | 📄 게시글 상세 |
+| 8 | `/gathering` | 🤝 낚시 모임 |
+| 9 | `/gathering/[id]` | 🤝 모임 상세·참가 |
+| 10 | `/map` | 🗺️ 포인트 지도 |
+
+---
+
 ## 빠른 실행 명령어
 
 ```bash
@@ -179,4 +196,5 @@ npm run dev:smart-fuel    # 3013
 npm run dev:jeju-travel   # 3020
 npm run dev:jeju-car      # 3021
 npm run dev:jeju-biz      # 3022
+npm run dev:fishing       # 3014
 ```
