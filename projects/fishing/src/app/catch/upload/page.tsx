@@ -176,7 +176,7 @@ export default function CatchUploadPage() {
         <div className="flex flex-wrap gap-2">
           {REGIONS.map(r => (
             <button key={r} onClick={() => setRegion(r)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-ocean-600 text-white" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-hook text-ocean-950" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
               {r}
             </button>
           ))}

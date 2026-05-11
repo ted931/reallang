@@ -52,7 +52,7 @@ export default function StayPage() {
       <div className="flex gap-1.5 mb-5 overflow-x-auto pb-1">
         {REGIONS.map((r) => (
           <button key={r} onClick={() => setRegion(r)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-ocean-600 text-white" : "bg-ocean-900 border border-ocean-800 text-slate-500 hover:text-slate-300"}`}>
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-hook text-ocean-950" : "bg-ocean-900 border border-ocean-800 text-slate-500 hover:text-slate-300"}`}>
             {r}
           </button>
         ))}

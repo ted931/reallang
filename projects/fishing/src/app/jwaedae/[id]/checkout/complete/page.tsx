@@ -23,7 +23,7 @@ export default function CheckoutCompletePage({ params }: { params: Promise<{ id:
         <div className="w-20 h-20 rounded-full bg-teal-900/40 border-2 border-teal-500 flex items-center justify-center text-4xl mx-auto mb-4">
           🔐
         </div>
-        <h1 className="text-2xl font-black text-white mb-1">결제 완료!</h1>
+        <h1 className="text-2xl font-black text-slate-200 mb-1">결제 완료!</h1>
         <p className="text-slate-400 text-sm">에스크로 안전 보관이 시작되었습니다</p>
         <div className="mt-3 inline-block bg-ocean-800 rounded-xl px-4 py-1.5 text-xs text-slate-400">
           예약번호 <span className="text-hook font-bold font-mono">{reservationNo}</span>

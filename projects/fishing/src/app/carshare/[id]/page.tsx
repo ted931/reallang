@@ -22,7 +22,7 @@ export default function CarShareDetailPage({ params }: { params: Promise<{ id: s
         <div className="flex items-center gap-3 mb-4">
           <span className="text-4xl">{item.hostAvatar}</span>
           <div>
-            <div className="font-black text-white text-lg">{item.hostName}</div>
+            <div className="font-black text-slate-200 text-lg">{item.hostName}</div>
             <div className="text-xs text-slate-400">{item.carType} · {item.region}</div>
           </div>
           <span className={`ml-auto text-xs font-bold px-3 py-1.5 rounded-full ${full ? "bg-slate-800 text-slate-500" : "bg-teal-900/40 text-teal-300 border border-teal-800"}`}>

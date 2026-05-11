@@ -54,7 +54,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
                 <label className="text-xs text-slate-400 mb-1.5 block">인원 (최대 {item.capacity}명)</label>
                 <div className="flex items-center gap-3">
                   <button onClick={() => setPeople(Math.max(1, people - 1))} className="w-10 h-10 rounded-full bg-ocean-800 hover:bg-ocean-700 text-slate-200 font-bold transition-colors">−</button>
-                  <span className="text-2xl font-black text-white w-8 text-center">{people}</span>
+                  <span className="text-2xl font-black text-slate-200 w-8 text-center">{people}</span>
                   <button onClick={() => setPeople(Math.min(item.capacity, people + 1))} className="w-10 h-10 rounded-full bg-ocean-800 hover:bg-ocean-700 text-slate-200 font-bold transition-colors">+</button>
                   <span className="text-sm text-slate-400">명</span>
                 </div>
