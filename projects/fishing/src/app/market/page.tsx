@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   DUMMY_MARKET, MARKET_CATEGORY_LABEL, MARKET_CATEGORY_ICON, CONDITION_LABEL,
   type MarketCategory,
@@ -411,14 +412,8 @@ function MarketList({ onOpen }: { onOpen: (it: MarketItem) => void }) {
 }
 
 export default function MarketPage() {
-  const [detail, setDetail] = useState<MarketItem | null>(null);
+  const router = useRouter();
   return (
-    <>
-      {detail ? (
-        <MarketDetail it={detail} onClose={() => setDetail(null)} />
-      ) : (
-        <MarketList onOpen={setDetail} />
-      )}
-    </>
+    <MarketList onOpen={(it) => router.push(`/market/${it.id}`)} />
   );
 }

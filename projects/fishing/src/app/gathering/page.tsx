@@ -1,5 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DUMMY_GATHERINGS } from "@/lib/dummy-gatherings";
 import type { FishingGathering } from "@/lib/types";
 
@@ -84,15 +86,16 @@ export default function GatheringPage() {
       </div>
 
       {/* FAB */}
-      <button className="fl-fab" aria-label="모임 만들기">
+      <Link href="/gathering/new" className="fl-fab" aria-label="모임 만들기">
         <span style={{ fontSize: 20, lineHeight: 1 }}>+</span>
         <span>모임 만들기</span>
-      </button>
+      </Link>
     </>
   );
 }
 
 function GatheringCard({ g }: { g: FishingGathering }) {
+  const router = useRouter();
   const full = g.currentMembers >= g.maxMembers;
   const urgent = !full && g.maxMembers - g.currentMembers <= 2;
   const pct = (g.currentMembers / g.maxMembers) * 100;
@@ -114,7 +117,11 @@ function GatheringCard({ g }: { g: FishingGathering }) {
       : "";
 
   return (
-    <article className={`fl-gt-card${urgent ? " urgent" : ""}${full ? " full" : ""}`}>
+    <article
+      className={`fl-gt-card${urgent ? " urgent" : ""}${full ? " full" : ""}`}
+      onClick={() => router.push(`/gathering/${g.id}`)}
+      style={{ cursor: "pointer" }}
+    >
       {urgent && <div className="fl-gt-pulse" />}
       <div className="fl-gt-side" style={{ background: `linear-gradient(180deg, ${color}, ${color}aa)` }}>
         <div className="fl-gt-dday">
@@ -183,7 +190,14 @@ function GatheringCard({ g }: { g: FishingGathering }) {
           </div>
         </div>
 
-        <button className="fl-gt-cta" disabled={full}>
+        <button
+          className="fl-gt-cta"
+          disabled={full}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!full) router.push(`/gathering/${g.id}`);
+          }}
+        >
           {full ? "모집 완료" : "참가 신청"}
         </button>
       </div>

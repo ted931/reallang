@@ -124,7 +124,9 @@ function ReserveCard({ r }: { r: Reservation }) {
         <div className="fl-mp-res-id">{r.id}</div>
       </div>
 
-      <div className="fl-mp-res-name">{r.jwaedaeName}</div>
+      <Link href={`/jwaedae/${r.jwaedaeId}`} className="fl-mp-res-name" style={{ textDecoration: "none", color: "inherit" }}>
+        {r.jwaedaeName}
+      </Link>
       <div className="fl-mp-res-meta">
         <span>📅 {r.date} {r.time} · {r.people}명</span>
         <span>📍 {r.region}</span>

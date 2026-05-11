@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { DUMMY_JWAEDAE } from "@/lib/dummy-jwaedae";
 import type { Jwaedae } from "@/lib/types";
 
@@ -105,6 +106,7 @@ export default function JwaedaePage() {
 }
 
 function JwaedaeCard({ s }: { s: Jwaedae }) {
+  const router = useRouter();
   const urgent = s.availableSeats > 0 && s.availableSeats <= 3;
   const closed = s.availableSeats === 0;
   const pct = s.capacity > 0 ? ((s.capacity - s.availableSeats) / s.capacity) * 100 : 100;
@@ -113,7 +115,11 @@ function JwaedaeCard({ s }: { s: Jwaedae }) {
   const rateVal = s.catchRate === "상" ? 3 : s.catchRate === "중" ? 2 : 1;
 
   return (
-    <article className={`fl-jw-card${urgent ? " urgent" : ""}${closed ? " closed" : ""}`}>
+    <article
+      className={`fl-jw-card${urgent ? " urgent" : ""}${closed ? " closed" : ""}`}
+      onClick={() => router.push(`/jwaedae/${s.id}`)}
+      style={{ cursor: "pointer" }}
+    >
       {/* 이미지 영역 */}
       <div className="fl-jw-img">
         <SeatImageSvg name={s.name} hue={nameToHue(s.name)} />
@@ -203,7 +209,14 @@ function JwaedaeCard({ s }: { s: Jwaedae }) {
               </div>
             </>
           )}
-          <button className="fl-jw-book" disabled={closed}>
+          <button
+            className="fl-jw-book"
+            disabled={closed}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!closed) router.push(`/jwaedae/${s.id}`);
+            }}
+          >
             {closed ? "마감" : "예약 →"}
           </button>
         </div>

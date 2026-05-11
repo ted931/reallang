@@ -1,20 +1,44 @@
 "use client";
 import { useState, useMemo } from "react";
+import Link from "next/link";
+import { DUMMY_CATCHES } from "@/lib/dummy-catch";
 
-const CATCH_FEED = [
-  { id: 1, fish: '농어', size: 82, angler: '박민수', avatar: 'B', loc: '한림 갯바위', region: '한림', when: '4시간 전', wind: '동풍 3m/s', tide: '만조', water: '21℃', hue: 210, likes: 42, comments: 8 },
-  { id: 2, fish: '광어', size: 64, angler: '김지훈', avatar: 'K', loc: '모슬포 방파제', region: '모슬포', when: '2시간 전', wind: '남풍 2m/s', tide: '간조', water: '20℃', hue: 195, likes: 28, comments: 5 },
-  { id: 3, fish: '참돔', size: 56, angler: '최영진', avatar: 'C', loc: '마라도', region: '마라도', when: '8시간 전', wind: '서풍 4m/s', tide: '만조', water: '22℃', hue: 350, likes: 64, comments: 12 },
-  { id: 4, fish: '우럭', size: 45, angler: '이서연', avatar: 'L', loc: '성산 선상', region: '성산', when: '5시간 전', wind: '북동 2m/s', tide: '간조', water: '19℃', hue: 30, likes: 18, comments: 3 },
-  { id: 5, fish: '감성돔', size: 38, angler: '정태호', avatar: 'J', loc: '애월 좌대', region: '애월', when: '6시간 전', wind: '동풍 3m/s', tide: '만조', water: '21℃', hue: 230, likes: 22, comments: 4 },
-  { id: 6, fish: '벵에돔', size: 32, angler: '한미진', avatar: 'H', loc: '한림 방파제', region: '한림', when: '1일 전', wind: '서풍 5m/s', tide: '간조', water: '20℃', hue: 180, likes: 15, comments: 2 },
-  { id: 7, fish: '문어', size: 28, angler: '서지혜', avatar: 'S', loc: '애월 갯바위', region: '애월', when: '1일 전', wind: '남풍 2m/s', tide: '만조', water: '21℃', hue: 280, likes: 31, comments: 6 },
-  { id: 8, fish: '농어', size: 71, angler: '오태식', avatar: 'O', loc: '모슬포 선상', region: '모슬포', when: '2일 전', wind: '동풍 4m/s', tide: '만조', water: '20℃', hue: 210, likes: 51, comments: 9 },
-];
-
-const REGIONS = ['전체', '애월', '한림', '모슬포', '성산', '마라도'];
-const SPECIES = ['전체 어종', '농어', '광어', '참돔', '우럭', '감성돔', '벵에돔', '문어'];
+// derive a display-friendly region list from dummy data
+const REGIONS = ['전체', '서귀포', '성산', '모슬포', '한림', '애월', '구좌', '제주시', '우도'];
+const SPECIES = ['전체 어종', '감성돔', '벵에돔', '참돔', '방어', '부시리', '농어', '볼락', '갈치', '넙치'];
 const SORTS = ['최신순', '크기순', '인기순'];
+
+// Map DUMMY_CATCHES to a display format compatible with the existing card UI
+const CATCH_FEED = DUMMY_CATCHES.map((c) => {
+  const mainCatch = c.catches[0];
+  const sizeNum = mainCatch ? parseInt(mainCatch.size) : 0;
+  const hueMap: Record<string, number> = {
+    서귀포: 210, 성산: 195, 모슬포: 30, 한림: 180, 애월: 230, 구좌: 280, 제주시: 150, 우도: 350,
+  };
+  const createdAt = new Date(c.createdAt);
+  const now = new Date("2026-05-11T12:00:00Z");
+  const diffMs = now.getTime() - createdAt.getTime();
+  const diffH = Math.floor(diffMs / 3600000);
+  const diffD = Math.floor(diffH / 24);
+  const when = diffH < 24 ? `${diffH}시간 전` : `${diffD}일 전`;
+
+  return {
+    id: c.id,
+    fish: mainCatch?.fishName ?? "기타",
+    size: sizeNum,
+    angler: c.authorName,
+    avatar: c.authorName[0],
+    loc: c.location,
+    region: c.region,
+    when,
+    wind: c.weather.windSpeed,
+    tide: c.tidePhase,
+    water: `${c.weather.temp}℃`,
+    hue: hueMap[c.region] ?? 200,
+    likes: c.likeCount,
+    comments: c.commentCount,
+  };
+});
 
 function FilterChips({ items, value, onChange }: { items: string[]; value: string; onChange: (v: string) => void }) {
   return (
@@ -33,7 +57,7 @@ function FilterChips({ items, value, onChange }: { items: string[]; value: strin
 }
 
 interface CatchItem {
-  id: number; fish: string; size: number; angler: string; avatar: string;
+  id: string; fish: string; size: number; angler: string; avatar: string;
   loc: string; region: string; when: string; wind: string; tide: string;
   water: string; hue: number; likes: number; comments: number;
 }
@@ -41,6 +65,7 @@ interface CatchItem {
 function CatchFeedCard({ c }: { c: CatchItem }) {
   const big = c.size >= 50;
   return (
+    <Link href={`/catch/${c.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
     <article className={`fl-feed-card ${big ? 'big' : ''}`}>
       <div className="fl-feed-img" style={{ '--hue': c.hue } as React.CSSProperties}>
         {big && (
@@ -86,6 +111,7 @@ function CatchFeedCard({ c }: { c: CatchItem }) {
         </div>
       </div>
     </article>
+    </Link>
   );
 }
 
