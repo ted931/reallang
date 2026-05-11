@@ -18,9 +18,15 @@ const USER_STEPS = [
   { href: "/stay", label: "숙소", step: 12 },
   { href: "/stay/st1", label: "숙소상세", step: 13 },
   { href: "/stay/share", label: "방쉐어", step: 14 },
-  { href: "/community", label: "커뮤니티", step: 15 },
-  { href: "/gathering", label: "모임", step: 16 },
-  { href: "/map", label: "포인트지도", step: 17 },
+  { href: "/tide", label: "물때", step: 15 },
+  { href: "/ranking", label: "랭킹", step: 16 },
+  { href: "/market", label: "중고마켓", step: 17 },
+  { href: "/market/mk1", label: "마켓상세", step: 18 },
+  { href: "/logbook", label: "낚시일지", step: 19 },
+  { href: "/coupon", label: "쿠폰", step: 20 },
+  { href: "/community", label: "커뮤니티", step: 21 },
+  { href: "/gathering", label: "모임", step: 22 },
+  { href: "/map", label: "포인트지도", step: 23 },
 ];
 
 const BIZ_STEPS = [

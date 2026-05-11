@@ -81,6 +81,29 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 빠른 메뉴 */}
+      <section className="bg-ocean-900 border-b border-ocean-800">
+        <div className="max-w-5xl mx-auto px-4 py-4 grid grid-cols-5 sm:grid-cols-10 gap-2">
+          {[
+            { href: "/tide", icon: "🌊", label: "물때" },
+            { href: "/ranking", icon: "🏆", label: "랭킹" },
+            { href: "/market", icon: "🛒", label: "중고" },
+            { href: "/coupon", icon: "🎫", label: "쿠폰" },
+            { href: "/logbook", icon: "📓", label: "일지" },
+            { href: "/carshare", icon: "🚗", label: "카풀" },
+            { href: "/stay", icon: "🏠", label: "숙소" },
+            { href: "/mypage", icon: "📋", label: "내예약" },
+            { href: "/catch/upload", icon: "📸", label: "사진등록" },
+            { href: "/map", icon: "📍", label: "지도" },
+          ].map(m => (
+            <a key={m.href} href={m.href} className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-ocean-800 transition-colors">
+              <span className="text-xl">{m.icon}</span>
+              <span className="text-[10px] text-slate-400">{m.label}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-12">
         {/* HOT 조황 */}
         <section>
