@@ -617,3 +617,107 @@
 - 기존 convertToWebP, canvas 로직 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
+
+---
+
+## 25. 피싱로그 커뮤니티 목록 + 게시글 상세
+
+```
+아래 2개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/community/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/community/[id]/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 카테고리별 고유 색상, 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[목록]
+1. 게시글 카드 — 카테고리(조황/자유/질문/장터/후기)별 왼쪽 컬러 스트립 + 아이콘으로 한눈에 구분
+2. HOT 게시글 — 상단 고정 핀 or 불꽃🔥 뱃지 강조, 조회/댓글 수 인라인 표시
+3. 검색바 — 포커스 시 확장 애니메이션, 검색 결과 하이라이트 텍스트 처리
+4. 카테고리 필터 탭 — 선택 시 해당 카테고리 고유 색상으로 탭 인디케이터 변경
+5. 글쓰기 버튼 — 우하단 플로팅(fl-fab) 버튼으로 이동, 항상 보이도록
+
+[게시글 상세]
+6. 본문 헤더 — 카테고리 뱃지 + 작성일 + 조회수 깔끔하게 정리
+7. 댓글 입력창 — sticky 하단 고정, 아바타 + 인풋 + 등록 버튼 한 줄 레이아웃
+8. 좋아요 버튼 — 누를 때 하트 채워지는 트랜지션 + 카운트 +1 애니메이션
+9. 관련 게시글 — 하단에 같은 카테고리 최신 3개 추천
+
+유지할 것:
+- useState, 더미 데이터 import, 좋아요/댓글 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 26. 피싱로그 조황 상세
+
+```
+/Users/ted/reallang/projects/fishing/src/app/catch/[id]/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4 (서버/클라이언트 혼용)
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 메인 이미지 — 대형 플레이스홀더(어종 이모지 + 그라데이션)에 어종 이름을 물결처럼 오버레이
+2. 어획 정보 카드 — 어종명 크게 + cm 수치 골드 컬러, 마릿수 시각화 (물고기 아이콘 반복)
+3. 날씨/물때 정보 — 아이콘 그리드로 깔끔하게 (기온/풍속/파고/조류 각 카드)
+4. 위치 정보 — 지도 핀 아이콘 + 포인트명, 지도 페이지 링크 버튼
+5. 댓글 섹션 — sticky 하단 입력창, 댓글 아바타 + 시간 표시 정리
+6. 조황 등록 유도 — "나도 비슷한 포인트에서 잡았어요" CTA → /catch/upload 링크
+
+유지할 것:
+- 더미 데이터 import, notFound 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 27. 피싱로그 숙소 방 쉐어 등록
+
+```
+/Users/ted/reallang/projects/fishing/src/app/stay/share/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 폼 섹션 구분 — 각 카드에 번호(①②③) + 아이콘 헤더로 흐름 명확하게
+2. 숙소 유형 선택 — 펜션/민박/게스트하우스/캠핑 아이콘 카드 그리드 (선택 시 강조)
+3. 인원 조절 버튼 — ＋/− 버튼을 크게, 현재 숫자 가운데 크게 표시
+4. 사진 업로드 영역 — 드래그앤드롭 스타일 + 첫 번째 사진 "대표사진" 라벨
+5. 낚시 포인트 연결 — "가까운 낚시 포인트" 칩 선택 UI (지도 페이지와 연동 느낌)
+6. 제출 후 완료 화면 — 등록 완료 애니메이션 + 숙소 목록 바로가기 버튼
+
+유지할 것:
+- useState, form submit 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 28. 피싱로그 카풀 상세
+
+```
+/Users/ted/reallang/projects/fishing/src/app/carshare/[id]/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 경로 시각화 — 출발지 → 목적지를 점선 화살표 라인 + 중간 거리/시간 표시로 시각화
+2. 호스트 프로필 — 아바타 이모지 크게 + 이름/차종/지역 정보 카드 스타일로
+3. 좌석 현황 — 차량 평면도 느낌의 좌석 아이콘 그리드 (탑승/빈자리 색상 구분)
+4. 목표 어종 칩 — 물고기 이모지 앞에 붙여서 시각적으로 생동감
+5. 동승 신청 버튼 — 마감 시 흐릿한 회색이 아닌 명확한 "마감" 오버레이 스타일
+6. 신청 완료 상태 — 체크마크 애니메이션 + "호스트 연락 대기 중" 진행 상태 표시
+
+유지할 것:
+- useState(requested), 더미 데이터 import, disabled 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
