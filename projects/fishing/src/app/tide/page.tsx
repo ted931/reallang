@@ -35,7 +35,7 @@ function TideWaveSVG() {
   const pathD = `M0,${H} L${pts.join(' L')} L${W},${H} Z`;
   const lineD = pts.join(' L');
   return (
-    <div style={{ background: '#0a1628', borderRadius: 18, padding: '24px 16px 16px', margin: '0 20px 4px' }}>
+    <div className="fl-tide-wave-wrap" style={{ background: '#0a1628', borderRadius: 18, padding: '24px 16px 16px', margin: '0 20px 4px' }}>
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: 200, display: 'block' }}>
         <defs>
           <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">

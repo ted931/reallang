@@ -21,7 +21,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
   const toOperator = total - fee;
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
+    <div className="max-w-xl lg:max-w-2xl mx-auto px-4 py-8">
       <Link href={`/jwaedae/${id}`} className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 좌대 상세로</Link>
 
       {/* 단계 표시 */}

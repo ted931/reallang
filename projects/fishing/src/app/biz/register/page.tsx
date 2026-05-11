@@ -9,7 +9,7 @@ const FACILITIES = ["낚시대 대여", "생미끼 제공", "화장실", "취사
 
 export default function BizRegisterPage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl lg:max-w-3xl mx-auto px-4 py-8">
       <Link href="/biz" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 사장님 전용 홈으로</Link>
 
       <div className="mb-8">

@@ -7,7 +7,7 @@ export default function StaySharePage() {
   const [requested, setRequested] = useState<string | null>(null);
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
+    <div className="max-w-xl lg:max-w-3xl mx-auto px-4 py-6">
       <Link href="/stay" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 숙소 목록</Link>
 
       <div className="mb-5">
@@ -27,7 +27,7 @@ export default function StaySharePage() {
       </div>
 
       {/* 공유 목록 */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {DUMMY_STAY_SHARE.map((s) => (
           <div key={s.id} className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
             {/* 호스트 */}

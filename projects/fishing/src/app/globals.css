@@ -1502,6 +1502,11 @@ html, body {
 
   /* 마이페이지 그리드 */
   .fl-mp-res-list { gap: 16px; }
+  .fl-mp-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 
   /* 섹션별 좌우 패딩 제거 — fl-main이 32px 담당 */
   .fl-filters,
@@ -1511,6 +1516,44 @@ html, body {
   .fl-seat-list,
   .fl-party-list,
   .fl-mp-list,
+  .fl-mp-hero,
+  .fl-tabs,
   .fl-sec-head,
+  .fl-tide-graph,
+  .fl-podium,
+  .fl-fbar-list,
+  .fl-big-list,
+  .fl-prow-list,
+  .fl-mk-grid,
   .fl-empty { padding-left: 0; padding-right: 0; }
+
+  /* 조석 날짜 — PC에서 스크롤 없이 flex-wrap */
+  .fl-tide-dates {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+
+  /* 조석 그래프 래퍼 — PC에서 좌우 여백 제거 */
+  .fl-tide-wave-wrap { margin-left: 0 !important; margin-right: 0 !important; }
+
+  /* 기상 정보 — PC에서 6열 */
+  .fl-tide-weather {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* 랭킹 — 어종바 + 빅피쉬 PC 2열 */
+  .fl-rk-fish-big-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* 랭킹 — 포디엄 + 포인트 PC 2열 */
+  .fl-rk-podium-points-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
 }

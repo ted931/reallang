@@ -34,7 +34,7 @@ const maxReservation = Math.max(...MONTHLY_STATS.map(m => m.reservations));
 
 export default function BizDashboardPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl lg:max-w-6xl mx-auto px-4 py-8">
       {/* 헤더 */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>

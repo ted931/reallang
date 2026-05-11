@@ -17,7 +17,7 @@ export default function CheckoutCompletePage({ params }: { params: Promise<{ id:
   ];
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
+    <div className="max-w-xl lg:max-w-2xl mx-auto px-4 py-8">
       {/* 완료 헤더 */}
       <div className="text-center mb-8">
         <div className="w-20 h-20 rounded-full bg-teal-900/40 border-2 border-teal-500 flex items-center justify-center text-4xl mx-auto mb-4">

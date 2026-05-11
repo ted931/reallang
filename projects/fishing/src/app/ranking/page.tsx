@@ -189,22 +189,32 @@ export default function RankingPage() {
         </div>
       </div>
 
-      <SectionHeader kicker="HOT JWAEDAE" title="HOT 좌대 TOP 3" subtitle="이번 주 가장 핫한 좌대" accent="#fbbf24" />
-      <Podium />
-
-      <SectionHeader kicker="FISH" title="어종별 마릿수" subtitle="가장 많이 잡힌 어종" accent="#5fa3cf" />
-      <div className="fl-fbar-list">
-        {TOP_FISH.map(f => <FishBar key={f.name} f={f} max={maxFish} />)}
+      <div className="fl-rk-podium-points-grid">
+        <div>
+          <SectionHeader kicker="HOT JWAEDAE" title="HOT 좌대 TOP 3" subtitle="이번 주 가장 핫한 좌대" accent="#fbbf24" />
+          <Podium />
+        </div>
+        <div>
+          <SectionHeader kicker="POINTS" title="포인트 랭킹" subtitle="조황이 잘 잡힌 포인트" accent="#86efac" />
+          <div className="fl-prow-list">
+            {TOP_POINTS.map(p => <PointRow key={p.rank} p={p} />)}
+          </div>
+        </div>
       </div>
 
-      <SectionHeader kicker="BIG FISH" title="이번 주 빅 피쉬" subtitle="가장 큰 사이즈 TOP 5" accent="#fbbf24" />
-      <div className="fl-big-list">
-        {BIG_FISH.map(b => <BigFishRow key={b.rank} b={b} />)}
-      </div>
-
-      <SectionHeader kicker="POINTS" title="포인트 랭킹" subtitle="조황이 잘 잡힌 포인트" accent="#86efac" />
-      <div className="fl-prow-list">
-        {TOP_POINTS.map(p => <PointRow key={p.rank} p={p} />)}
+      <div className="fl-rk-fish-big-grid">
+        <div>
+          <SectionHeader kicker="FISH" title="어종별 마릿수" subtitle="가장 많이 잡힌 어종" accent="#5fa3cf" />
+          <div className="fl-fbar-list">
+            {TOP_FISH.map(f => <FishBar key={f.name} f={f} max={maxFish} />)}
+          </div>
+        </div>
+        <div>
+          <SectionHeader kicker="BIG FISH" title="이번 주 빅 피쉬" subtitle="가장 큰 사이즈 TOP 5" accent="#fbbf24" />
+          <div className="fl-big-list">
+            {BIG_FISH.map(b => <BigFishRow key={b.rank} b={b} />)}
+          </div>
+        </div>
       </div>
     </>
   );

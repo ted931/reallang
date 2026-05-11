@@ -46,7 +46,7 @@ export default function CouponPage() {
   });
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
+    <div className="max-w-xl lg:max-w-4xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="mb-5">
         <h1 className="text-xl font-black text-ocean-50">🎫 쿠폰 허브</h1>
@@ -83,7 +83,7 @@ export default function CouponPage() {
       </div>
 
       {/* 쿠폰 목록 */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {filtered.map(c => {
           const isDownloaded = downloaded.includes(c.id);
           const usedPct = Math.round((1 - c.remainCount / c.totalCount) * 100);

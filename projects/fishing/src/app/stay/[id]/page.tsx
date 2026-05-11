@@ -22,77 +22,121 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6 pb-32">
+    <div className="max-w-5xl mx-auto px-4 lg:px-0 py-6 pb-32 lg:pb-6">
       <Link href="/stay" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 숙소 목록</Link>
 
-      {/* 이미지 플레이스홀더 */}
-      <div className="rounded-2xl h-48 flex items-center justify-center text-6xl mb-5 border" style={{ background: "var(--ocean-800)", borderColor: "var(--line)" }}>
-        {s.images[0]}
-      </div>
-
-      {/* 기본 정보 */}
-      <div className="mb-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <span className="text-xs mb-1 block" style={{ color: "var(--text-mute)" }}>{STAY_TYPE_LABEL[s.type]} · {s.region}</span>
-            <h1 className="text-xl font-black" style={{ color: "var(--text-strong)" }}>{s.name}</h1>
+      <div className="lg:flex lg:gap-8">
+        {/* 왼쪽: 메인 콘텐츠 */}
+        <div className="flex-1 min-w-0">
+          {/* 이미지 플레이스홀더 */}
+          <div className="rounded-2xl h-48 lg:h-72 flex items-center justify-center text-6xl mb-5 border" style={{ background: "var(--ocean-800)", borderColor: "var(--line)" }}>
+            {s.images[0]}
           </div>
-          <div className="text-right shrink-0">
-            <div className="text-xl font-black text-hook">{s.pricePerNight.toLocaleString()}원</div>
-            <div className="text-xs" style={{ color: "var(--text-mute)" }}>/박</div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 mt-2">
-          <span className="text-hook text-sm">★ {s.rating}</span>
-          <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.reviewCount}개 리뷰)</span>
-          <span style={{ color: "var(--line)" }}>·</span>
-          <span className="text-xs" style={{ color: "var(--text-mute)" }}>최대 {s.capacity}명 · {s.rooms}개 방</span>
-        </div>
-      </div>
 
-      {/* 포인트 정보 */}
-      <div className="rounded-2xl p-4 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
-        <div className="flex items-center gap-2 mb-1">
-          <span>🎣</span>
-          <span className="text-sm font-bold" style={{ color: "var(--text)" }}>{s.nearbySpot}</span>
-          <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.distanceToSpot})</span>
-        </div>
-        <div className="flex flex-wrap gap-1">
-          {s.targetFish.map(f => (
-            <span key={f} className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }}>{f}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* 설명 */}
-      <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
-        <h2 className="font-bold mb-2" style={{ color: "var(--text-strong)" }}>숙소 소개</h2>
-        <p className="text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>{s.description}</p>
-        <div className="mt-3 text-xs" style={{ color: "var(--text-mute)" }}>호스트: {s.hostName}</div>
-      </div>
-
-      {/* 편의시설 */}
-      <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
-        <h2 className="font-bold mb-3" style={{ color: "var(--text-strong)" }}>편의시설</h2>
-        <div className="grid grid-cols-2 gap-2">
-          {s.amenities.map(a => (
-            <div key={a} className="flex items-center gap-2 text-sm" style={{ color: "var(--text)" }}>
-              <span>{amenityIcons[a] ?? "✓"}</span>
-              <span>{a}</span>
+          {/* 기본 정보 */}
+          <div className="mb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-xs mb-1 block" style={{ color: "var(--text-mute)" }}>{STAY_TYPE_LABEL[s.type]} · {s.region}</span>
+                <h1 className="text-xl font-black" style={{ color: "var(--text-strong)" }}>{s.name}</h1>
+              </div>
+              <div className="text-right shrink-0 lg:hidden">
+                <div className="text-xl font-black text-hook">{s.pricePerNight.toLocaleString()}원</div>
+                <div className="text-xs" style={{ color: "var(--text-mute)" }}>/박</div>
+              </div>
             </div>
-          ))}
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-hook text-sm">★ {s.rating}</span>
+              <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.reviewCount}개 리뷰)</span>
+              <span style={{ color: "var(--line)" }}>·</span>
+              <span className="text-xs" style={{ color: "var(--text-mute)" }}>최대 {s.capacity}명 · {s.rooms}개 방</span>
+            </div>
+          </div>
+
+          {/* 포인트 정보 */}
+          <div className="rounded-2xl p-4 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+            <div className="flex items-center gap-2 mb-1">
+              <span>🎣</span>
+              <span className="text-sm font-bold" style={{ color: "var(--text)" }}>{s.nearbySpot}</span>
+              <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.distanceToSpot})</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {s.targetFish.map(f => (
+                <span key={f} className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }}>{f}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* 설명 */}
+          <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+            <h2 className="font-bold mb-2" style={{ color: "var(--text-strong)" }}>숙소 소개</h2>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>{s.description}</p>
+            <div className="mt-3 text-xs" style={{ color: "var(--text-mute)" }}>호스트: {s.hostName}</div>
+          </div>
+
+          {/* 편의시설 */}
+          <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+            <h2 className="font-bold mb-3" style={{ color: "var(--text-strong)" }}>편의시설</h2>
+            <div className="grid grid-cols-2 gap-2">
+              {s.amenities.map(a => (
+                <div key={a} className="flex items-center gap-2 text-sm" style={{ color: "var(--text)" }}>
+                  <span>{amenityIcons[a] ?? "✓"}</span>
+                  <span>{a}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 태그 */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {s.tags.map(t => (
+              <span key={t} className="px-3 py-1.5 bg-hook/10 text-hook border border-hook/20 rounded-full text-xs font-bold">{t}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* 오른쪽: 예약 패널 (PC only) */}
+        <div className="hidden lg:block w-80 shrink-0">
+          <div className="sticky top-6 self-start rounded-2xl p-5" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+            <div className="text-right mb-4">
+              <div className="text-2xl font-black text-hook">{s.pricePerNight.toLocaleString()}원</div>
+              <div className="text-xs" style={{ color: "var(--text-mute)" }}>/박</div>
+            </div>
+            <div className="flex flex-col gap-3 mb-4">
+              <div>
+                <label className="text-xs block mb-1 font-bold" style={{ color: "var(--text-mute)" }}>체크인</label>
+                <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)}
+                  className="w-full h-10 rounded-xl px-3 text-sm focus:outline-none"
+                  style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }} />
+              </div>
+              <div>
+                <label className="text-xs block mb-1 font-bold" style={{ color: "var(--text-mute)" }}>체크아웃</label>
+                <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)}
+                  className="w-full h-10 rounded-xl px-3 text-sm focus:outline-none"
+                  style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }} />
+              </div>
+              <div>
+                <label className="text-xs block mb-1 font-bold" style={{ color: "var(--text-mute)" }}>인원</label>
+                <div className="flex items-center gap-2 h-10">
+                  <button onClick={() => setGuests(Math.max(1, guests - 1))} className="w-8 h-8 rounded-full text-sm font-bold" style={{ background: "var(--ocean-800)", color: "var(--text)" }}>−</button>
+                  <span className="flex-1 text-center text-sm font-bold" style={{ color: "var(--text-strong)" }}>{guests}명</span>
+                  <button onClick={() => setGuests(Math.min(s.capacity, guests + 1))} className="w-8 h-8 rounded-full text-sm font-bold" style={{ background: "var(--ocean-800)", color: "var(--text)" }}>+</button>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between text-sm mb-4 pt-3" style={{ borderTop: "1px solid var(--line)" }}>
+              <span style={{ color: "var(--text-mute)" }}>{s.pricePerNight.toLocaleString()}원 × {nights}박</span>
+              <span className="font-black text-hook">{total.toLocaleString()}원</span>
+            </div>
+            <button className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
+              🏠 {nights}박 예약
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 태그 */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {s.tags.map(t => (
-          <span key={t} className="px-3 py-1.5 bg-hook/10 text-hook border border-hook/20 rounded-full text-xs font-bold">{t}</span>
-        ))}
-      </div>
-
-      {/* 하단 예약 패널 */}
-      <div className="fixed bottom-20 left-0 right-0 z-40 px-4 py-3 backdrop-blur-sm" style={{ background: "var(--ocean-950)", borderTop: "1px solid var(--line)" }}>
+      {/* 모바일 하단 예약 패널 */}
+      <div className="lg:hidden fixed bottom-20 left-0 right-0 z-40 px-4 py-3 backdrop-blur-sm" style={{ background: "var(--ocean-950)", borderTop: "1px solid var(--line)" }}>
         <div className="max-w-xl mx-auto">
           <div className="flex gap-2 mb-3">
             <div className="flex-1">
