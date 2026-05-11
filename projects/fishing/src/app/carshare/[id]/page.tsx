@@ -1,164 +1,216 @@
 "use client";
 import { use, useState } from "react";
 import Link from "next/link";
-import { DUMMY_CARSHARE } from "@/lib/dummy-carshare";
+
+const CSD_TRIP = {
+  host: { name: '김선장', avatar: '🚗', level: 'Lv.18', rating: 4.9, trips: 47, car: '카니발 9인승' },
+  from: '제주공항', fromTime: '04:30', to: '한림 갯바위 P-12', toTime: '05:15',
+  distance: '38km', duration: '45분', date: '11/15 토',
+  capacity: 8, joined: 5, fee: 8000,
+  fish: ['갈치', '벵에돔'],
+  notes: '낚시대 + 아이스박스 OK. 미끼는 각자 준비해주세요. 픽업 후 편의점 1회 들러요.',
+  members: [
+    { name: '나', avatar: '😎', isMe: true },
+    { name: '이낚시', avatar: '🎣', isMe: false },
+    { name: '벵돔장인', avatar: '🐟', isMe: false },
+    { name: '낚시선생', avatar: '👨‍🏫', isMe: false },
+    { name: '바다왕', avatar: '🌊', isMe: false },
+  ],
+};
+
+const FISH_EMOJI: Record<string, string> = {
+  갈치: '🐟', 벵에돔: '🐠', 참돔: '🐡', 광어: '🐟', 고등어: '🐟',
+};
 
 export default function CarShareDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const item = DUMMY_CARSHARE.find((c) => c.id === id);
+  void id;
+
+  const trip = CSD_TRIP;
   const [requested, setRequested] = useState(false);
 
-  if (!item) return <div className="p-8 text-center text-slate-400">카풀을 찾을 수 없습니다.</div>;
+  const empty = trip.capacity - trip.joined;
 
-  const remain = item.seats - item.seatsTaken;
-  const full = remain === 0;
+  // Build seat grid: driver + passengers + empty slots
+  // Front row: driver seat + co-pilot empty
+  // Back rows: members (excluding driver, slot 0 = me) + empties
+  const passengersWithoutHost = trip.members; // all 5 members are passengers/host
+  // We'll treat slot 0 as host (driver), rest as passengers
+  const driver = trip.members[0]; // me as driver for illustration
+  const passengers = trip.members.slice(1); // 4 passengers
+  const emptySeats = Array.from({ length: empty });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 lg:px-0 py-6">
-      <Link href="/carshare" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 카풀 목록</Link>
+    <div className="max-w-5xl mx-auto pb-32">
+      {/* Back */}
+      <div style={{ padding: '14px 20px 0' }}>
+        <Link href="/carshare" className="text-sm" style={{ color: 'var(--ocean-300)' }}>← 카풀 목록</Link>
+      </div>
 
-      <div className="lg:flex lg:gap-8">
-        {/* 왼쪽: 메인 콘텐츠 */}
-        <div className="flex-1 min-w-0">
-          {/* 호스트 정보 */}
-          <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-4xl">{item.hostAvatar}</span>
-              <div>
-                <div className="font-black text-slate-200 text-lg">{item.hostName}</div>
-                <div className="text-xs text-slate-400">{item.carType} · {item.region}</div>
-              </div>
-              <span className={`ml-auto text-xs font-bold px-3 py-1.5 rounded-full ${full ? "bg-slate-800 text-slate-500" : "bg-teal-900/40 text-teal-300 border border-teal-800"}`}>
-                {full ? "마감" : `잔여 ${remain}석`}
-              </span>
-            </div>
+      {/* Hero */}
+      <div className="fl-csd-hero" style={{ marginTop: 12 }}>
+        <div className="fl-csd-date-badge">{trip.date}</div>
 
-            {/* 경로 */}
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 p-3 bg-ocean-800/60 rounded-xl">
-                <span className="text-lg mt-0.5">📍</span>
-                <div>
-                  <div className="text-xs text-slate-500 mb-0.5">출발지</div>
-                  <div className="text-sm font-bold text-slate-200">{item.departure}</div>
-                </div>
-              </div>
-              <div className="flex justify-center text-slate-600 text-sm">↓</div>
-              <div className="flex items-start gap-3 p-3 bg-hook/5 border border-hook/20 rounded-xl">
-                <span className="text-lg mt-0.5">🎣</span>
-                <div>
-                  <div className="text-xs text-slate-500 mb-0.5">목적지</div>
-                  <div className="text-sm font-bold text-hook">{item.destination}</div>
-                </div>
-              </div>
-            </div>
+        <div className="fl-csd-route">
+          {/* From */}
+          <div className="fl-csd-route-end">
+            <div className="fl-csd-route-time">{trip.fromTime}</div>
+            <div className="fl-csd-route-loc">{trip.from}</div>
+            <span className="fl-csd-route-tag">픽업</span>
           </div>
 
-          {/* 상세 정보 */}
-          <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-            <h2 className="font-bold text-slate-200 mb-3">출조 정보</h2>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="bg-ocean-800/60 rounded-xl p-3">
-                <div className="text-xs text-slate-500 mb-1">출조 날짜</div>
-                <div className="font-bold text-slate-200">{item.date}</div>
-              </div>
-              <div className="bg-ocean-800/60 rounded-xl p-3">
-                <div className="text-xs text-slate-500 mb-1">출발 시간</div>
-                <div className="font-bold text-slate-200">{item.time}</div>
-              </div>
-              <div className="bg-ocean-800/60 rounded-xl p-3">
-                <div className="text-xs text-slate-500 mb-1">전체 좌석</div>
-                <div className="font-bold text-slate-200">{item.seats}석</div>
-              </div>
-              <div className="bg-ocean-800/60 rounded-xl p-3">
-                <div className="text-xs text-slate-500 mb-1">1인 분담금</div>
-                <div className="font-bold text-hook">{item.pricePerSeat.toLocaleString()}원</div>
-              </div>
-            </div>
-
-            {/* 좌석 현황 */}
-            <div className="mt-4">
-              <div className="text-xs text-slate-500 mb-2">좌석 현황</div>
-              <div className="flex gap-2">
-                {Array.from({ length: item.seats }).map((_, i) => (
-                  <div key={i} className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${i < item.seatsTaken ? "bg-ocean-700 text-slate-500" : "bg-teal-900/40 border border-teal-700 text-teal-300"}`}>
-                    {i < item.seatsTaken ? "👤" : "🪑"}
-                  </div>
-                ))}
-              </div>
-              <div className="text-xs text-slate-500 mt-1">{item.seatsTaken}/{item.seats} 탑승 · {remain}석 남음</div>
-            </div>
+          {/* Mid SVG */}
+          <div className="fl-csd-route-mid">
+            <svg className="fl-csd-route-svg" viewBox="0 0 120 32">
+              <line x1="8" y1="16" x2="112" y2="16" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeDasharray="4 3" />
+              {/* Car icon */}
+              <g transform="translate(48,8)">
+                <rect x="2" y="6" width="20" height="10" rx="3" fill="rgba(255,255,255,0.85)" />
+                <rect x="5" y="3" width="13" height="7" rx="2" fill="rgba(255,255,255,0.7)" />
+                <circle cx="6" cy="17" r="2.5" fill="rgba(255,255,255,0.9)" />
+                <circle cx="18" cy="17" r="2.5" fill="rgba(255,255,255,0.9)" />
+                <rect x="14" y="7" width="1" height="4" rx="0.5" fill="rgba(100,150,200,0.5)" />
+              </g>
+            </svg>
+            <div className="fl-csd-route-info">{trip.distance} · {trip.duration}</div>
           </div>
 
-          {/* 대상 어종 */}
-          <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-            <h2 className="font-bold text-slate-200 mb-3">목표 어종</h2>
-            <div className="flex flex-wrap gap-2">
-              {item.targetFish.map(f => (
-                <span key={f} className="px-3 py-1.5 bg-hook/10 text-hook border border-hook/20 rounded-full text-sm font-bold">{f}</span>
-              ))}
+          {/* To */}
+          <div className="fl-csd-route-end" style={{ textAlign: 'right' }}>
+            <div className="fl-csd-route-time">{trip.toTime}</div>
+            <div className="fl-csd-route-loc">{trip.to}</div>
+            <span className="fl-csd-route-tag arr">도착</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Host card */}
+      <div className="fl-csd-host-card">
+        <div className="fl-csd-host-avatar">{trip.host.avatar}</div>
+        <div className="fl-csd-host-info">
+          <div className="fl-csd-host-name">
+            {trip.host.name}
+            <span className="fl-csd-host-lvl">{trip.host.level}</span>
+          </div>
+          <div className="fl-csd-host-stats">⭐ {trip.host.rating} · 출조 {trip.host.trips}회</div>
+          <div className="fl-csd-host-car">🚗 {trip.host.car}</div>
+        </div>
+        <button className="fl-csd-msg-btn">메시지</button>
+      </div>
+
+      {/* Seats section */}
+      <div style={{ padding: '0 20px 8px' }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--ocean-400)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>SEATS</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 4 }}>좌석 현황</div>
+        <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>{trip.joined}/{trip.capacity}석 탑승 · {empty}석 남음</div>
+      </div>
+
+      <div className="fl-csd-seats">
+        <div className="fl-csd-car-layout">
+          {/* Front row: steering + co-pilot */}
+          <div className="fl-csd-car-front">
+            <div className="fl-csd-car-wheel" />
+            {/* Driver */}
+            <div className="fl-csd-car-host">
+              <div style={{ fontSize: 24 }}>🚗</div>
+              <div style={{ fontSize: 10, color: 'var(--ocean-300)', fontWeight: 700, marginTop: 2 }}>{trip.host.name}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>운전자</div>
             </div>
-          </div>
-
-          {/* 메모 */}
-          <div className="rounded-2xl border border-ocean-800 bg-ocean-900/50 p-5 mb-6">
-            <h2 className="font-bold text-slate-200 mb-2">호스트 메모</h2>
-            <p className="text-sm text-slate-400 leading-relaxed">💬 {item.note}</p>
-          </div>
-
-          {/* 모바일 CTA */}
-          <div className="lg:hidden">
-            {requested ? (
-              <div className="w-full py-4 bg-teal-900/40 border border-teal-700 text-teal-300 font-black text-center rounded-2xl">
-                ✅ 동승 신청 완료! 호스트 연락을 기다려주세요
+            {/* Co-pilot — first passenger or empty */}
+            {passengers[0] ? (
+              <div className={`fl-csd-seat ${passengers[0].isMe ? 'me' : 'taken'}`}>
+                <div className="fl-csd-seat-icon">{passengers[0].avatar}</div>
+                <div className="fl-csd-seat-label">{passengers[0].isMe ? '나' : passengers[0].name}</div>
               </div>
             ) : (
-              <button
-                disabled={full}
-                onClick={() => setRequested(true)}
-                className={`w-full py-4 font-black text-lg rounded-2xl transition-colors ${full ? "bg-ocean-800 text-slate-600 cursor-not-allowed" : "bg-hook hover:bg-hook-light text-ocean-950"}`}>
-                {full ? "마감된 카풀입니다" : `🚗 동승 신청 — ${item.pricePerSeat.toLocaleString()}원`}
-              </button>
+              <div className="fl-csd-seat empty">
+                <div className="fl-csd-seat-icon" style={{ opacity: 0.3 }}>💺</div>
+                <div className="fl-csd-seat-label">빈자리</div>
+              </div>
             )}
-            <p className="text-center text-xs text-slate-600 mt-3">신청 후 카카오톡으로 호스트와 연결됩니다</p>
+          </div>
+
+          {/* Back rows */}
+          <div className="fl-csd-car-rows">
+            {passengers.slice(1).map((p, i) => (
+              <div key={i} className={`fl-csd-seat ${p.isMe ? 'me' : 'taken'}`}>
+                <div className="fl-csd-seat-icon">{p.avatar}</div>
+                <div className="fl-csd-seat-label">{p.isMe ? '나' : p.name}</div>
+              </div>
+            ))}
+            {emptySeats.map((_, i) => (
+              <div key={`e${i}`} className="fl-csd-seat empty">
+                <div className="fl-csd-seat-icon" style={{ opacity: 0.3 }}>💺</div>
+                <div className="fl-csd-seat-label">빈자리</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* 오른쪽: 예약 카드 (PC only) */}
-        <div className="hidden lg:block w-80 shrink-0">
-          <div className="sticky top-6 self-start rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-            <div className="mb-4">
-              <div className="text-2xl font-black text-hook">{item.pricePerSeat.toLocaleString()}원</div>
-              <div className="text-xs text-slate-500">1인 분담금</div>
-            </div>
-            <div className="space-y-2 text-sm mb-5">
-              <div className="flex justify-between py-2" style={{ borderBottom: "1px solid var(--ocean-800)" }}>
-                <span className="text-slate-400">출발</span>
-                <span className="font-bold text-slate-200">{item.date} {item.time}</span>
-              </div>
-              <div className="flex justify-between py-2" style={{ borderBottom: "1px solid var(--ocean-800)" }}>
-                <span className="text-slate-400">경로</span>
-                <span className="font-bold text-slate-200 text-right text-xs">{item.departure} → {item.destination}</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-slate-400">잔여 좌석</span>
-                <span className={`font-bold ${full ? "text-slate-500" : "text-teal-300"}`}>{full ? "마감" : `${remain}석`}</span>
-              </div>
-            </div>
-            {requested ? (
-              <div className="w-full py-3 bg-teal-900/40 border border-teal-700 text-teal-300 font-black text-center rounded-2xl text-sm">
-                ✅ 동승 신청 완료!
-              </div>
-            ) : (
-              <button
-                disabled={full}
-                onClick={() => setRequested(true)}
-                className={`w-full py-3 font-black rounded-2xl transition-colors text-sm ${full ? "bg-ocean-800 text-slate-600 cursor-not-allowed" : "bg-hook hover:bg-hook-light text-ocean-950"}`}>
-                {full ? "마감된 카풀입니다" : `🚗 동승 신청`}
-              </button>
-            )}
-            <p className="text-center text-xs text-slate-600 mt-3">신청 후 카카오톡으로 호스트와 연결됩니다</p>
-          </div>
+        {/* Legend */}
+        <div className="fl-csd-seat-legend">
+          <span><span className="fl-csd-dot taken" />탑승</span>
+          <span><span className="fl-csd-dot me" />나</span>
+          <span><span className="fl-csd-dot empty" />빈자리</span>
         </div>
+      </div>
+
+      {/* Fish section */}
+      <div style={{ padding: '0 20px 8px' }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--ocean-400)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>TARGET</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 10 }}>목표 어종</div>
+      </div>
+      <div className="fl-csd-fish">
+        {trip.fish.map((f) => (
+          <div key={f} className="fl-csd-fish-chip">
+            <span className="fl-csd-fish-emoji">{FISH_EMOJI[f] ?? '🐟'}</span>
+            <span className="fl-csd-fish-name">{f}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Notes section */}
+      <div style={{ padding: '0 20px 8px' }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--ocean-400)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>NOTES</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 6 }}>안내사항</div>
+      </div>
+      <div className="fl-csd-notes">
+        💬 {trip.notes}
+      </div>
+
+      {/* Cost card */}
+      <div style={{ padding: '0 20px 8px' }}>
+        <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--ocean-400)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>COST</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 6 }}>분담금</div>
+      </div>
+      <div className="fl-csd-cost">
+        <div className="fl-csd-cost-row">
+          <span>1인 분담금</span>
+          <strong>{trip.fee.toLocaleString()}원</strong>
+        </div>
+        <div className="fl-csd-cost-sub">총 {trip.capacity}인 기준 · 유류비 균등 분할</div>
+      </div>
+
+      {/* Sticky bottom bar */}
+      <div className="fl-csd-sticky">
+        {requested ? (
+          <div className="fl-csd-status">
+            <div className="fl-csd-status-check">
+              <svg viewBox="0 0 36 36" fill="none">
+                <circle cx="18" cy="18" r="17" stroke="#22c55e" strokeWidth="2" fill="rgba(34,197,94,0.1)" />
+                <path d="M10 18 L15.5 24 L26 12" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <div>
+              <div className="fl-csd-status-t">동승 신청 완료!</div>
+              <div className="fl-csd-status-s">호스트 연락을 기다려주세요 · 카카오톡 연결</div>
+            </div>
+          </div>
+        ) : (
+          <button className="fl-csd-join" onClick={() => setRequested(true)}>
+            🚗 동승 신청 — {trip.fee.toLocaleString()}원
+          </button>
+        )}
       </div>
     </div>
   );
