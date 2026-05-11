@@ -6,7 +6,7 @@ import type { PostCategory } from "@/lib/types";
 
 const CAT_COLOR: Record<string, { bg: string; color: string; border: string }> = {
   "조황": { bg: "rgba(20,184,166,0.12)", color: "#5eead4", border: "rgba(20,184,166,0.3)" },
-  "자유": { bg: "rgba(255,255,255,0.06)", color: "var(--text-dim)", border: "var(--line)" },
+  "자유": { bg: "var(--tint-06)", color: "var(--text-dim)", border: "var(--line)" },
   "질문": { bg: "rgba(59,130,246,0.12)", color: "#93c5fd", border: "rgba(59,130,246,0.3)" },
   "장터": { bg: "rgba(249,115,22,0.12)", color: "#fdba74", border: "rgba(249,115,22,0.3)" },
   "후기": { bg: "rgba(168,85,247,0.12)", color: "#d8b4fe", border: "rgba(168,85,247,0.3)" },

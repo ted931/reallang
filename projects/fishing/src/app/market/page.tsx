@@ -88,7 +88,7 @@ function MarketCard({ it, onOpen }: { it: MarketItem; onOpen: (it: MarketItem) =
       onClick={() => !isSold && onOpen(it)}
     >
       <div className="fl-mk-strip" style={{ background: cond.color.split(' ')[0].replace('bg-', '') }}>
-        <span style={{ color: '#0a1224', fontWeight: 800 }}>{cond.label}</span>
+        <span style={{ color: 'var(--ocean-950)', fontWeight: 800 }}>{cond.label}</span>
         <span className="fl-mk-strip-cat">{catMeta.icon} {MARKET_CATEGORY_LABEL[it.category]}</span>
       </div>
       <div className="fl-mk-img" style={{ '--hue': hue } as React.CSSProperties}>
@@ -154,7 +154,7 @@ function MarketDetail({ it, onClose }: { it: MarketItem; onClose: () => void }) 
       </div>
       <div className="fl-mk-detail-body">
         <div className="fl-mk-detail-strip">
-          <span className="fl-mk-detail-cond" style={{ background: '#5eead4', color: '#0a1224' }}>{cond.label}</span>
+          <span className="fl-mk-detail-cond" style={{ background: '#5eead4', color: 'var(--ocean-950)' }}>{cond.label}</span>
           <span className="fl-mk-detail-cat">{catMeta.icon} {MARKET_CATEGORY_LABEL[it.category]}</span>
         </div>
         <h1 className="fl-mk-detail-title">{it.title}</h1>
