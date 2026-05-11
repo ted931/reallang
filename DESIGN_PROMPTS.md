@@ -195,25 +195,28 @@
 
 ---
 
-## 9. 피싱로그 낚시 모임
+## 9. 피싱로그 낚시 동아리 (클럽)
 
 ```
 /Users/ted/reallang/projects/fishing/src/app/gathering/page.tsx 와
-/Users/ted/reallang/projects/fishing/src/components/gathering-card.tsx 를 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/gathering/[id]/page.tsx 를 읽고 디자인을 개선해줘.
+
+※ 컨셉 변경: "당일 같이 가기 모집" → "낚시 동아리/클럽" (정기 출조, 회원 가입 형태)
 
 스택: Next.js App Router, Tailwind CSS v4
 색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
 폰트: Noto Sans KR
 
 개선 요청:
-1. GatheringCard 참가 현황 바 — 얇고 눈에 안 띔, 더 두껍게 + 남은 자리 숫자 강조
-2. 마감임박 카드 — 뱃지만 있는데 카드 전체 border를 rose 계열로 강조 (펄스 애니메이션 옵션)
-3. 호스트 정보 — 조획 마리 수가 신뢰 지표인데 더 눈에 띄게 (물고기 아이콘 + 색상)
-4. 날짜/시간 표시 — D-day 카운트다운 배지 추가 (D-6 식으로)
-5. "모임 만들기" CTA — 현재 필터 옆에 작게 있는데, 하단 플로팅 버튼으로 이동
+1. 클럽 카드 — 레벨 뱃지(입문/중급/고급)를 색상으로 차별화 (입문=teal, 중급=blue, 고급=amber)
+2. 회원 현황 바 — 클럽 정원 대비 현재 회원수 progress bar, 거의 찰 때 긴박감 강조
+3. 정기 출조 정보 — "매주 토요일", 다음 출조일 D-day 배지 강조
+4. 월회비 표시 — 무료 클럽은 "FREE" 그린 뱃지, 유료는 금액 + amber 강조
+5. "동아리 만들기" — 하단 플로팅 버튼(fl-fab 클래스 활용)
+6. 상세 페이지 — 가입 신청 CTA sticky 하단 바 + 활동 사진 갤러리 플레이스홀더
 
 유지할 것:
-- 더미 데이터, import 로직 건드리지 말 것
+- 더미 데이터(FishingClub), import 로직 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
 
@@ -268,12 +271,12 @@
 
 ---
 
-## 12. 피싱로그 카풀 + 숙소
+## 12. 피싱로그 카풀 등록 + 숙소
 
 ```
 아래 4개 파일을 읽고 디자인을 개선해줘.
 /Users/ted/reallang/projects/fishing/src/app/carshare/page.tsx
-/Users/ted/reallang/projects/fishing/src/app/carshare/[id]/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/carshare/new/page.tsx
 /Users/ted/reallang/projects/fishing/src/app/stay/page.tsx
 /Users/ted/reallang/projects/fishing/src/app/stay/[id]/page.tsx
 
@@ -282,17 +285,19 @@
 폰트: Noto Sans KR
 
 개선 요청:
-[카풀]
+[카풀 목록]
 1. 카풀 카드 — 출발지 → 목적지 경로 표시가 텍스트만 있음, 화살표 or 루트 라인 시각화
 2. 좌석 현황 — 아이콘(👤🪑) 나열이 단조로움, 좌석을 차 평면도 느낌으로 시각화
 3. 마감 카드 — 흐릿하게만 처리됨, "마감" 오버레이 + 유사한 카풀 추천 링크 추가
+[카풀 등록 폼]
+4. 스텝별 섹션 구분 — 각 카드에 번호 + 아이콘 헤더 추가로 시각적 흐름 명확하게
+5. 목표 어종 선택 칩 — 선택 시 물고기 이모지 크게 + 컬러 강조
 [숙소]
-4. 숙소 카드 — 이미지 플레이스홀더가 큰 이모지 하나, CSS 패턴 배경 + 유형 아이콘 조합으로
-5. 포인트 거리 — "도보 5분" 텍스트만 있음, 작은 지도 핀 + 거리 바 시각화 제안
-6. 예약 패널 — 체크인/아웃 날짜 선택 레이아웃이 답답함, 달력 UI 힌트 or 더 넓은 입력 개선
+6. 숙소 카드 — 이미지 플레이스홀더가 큰 이모지 하나, CSS 패턴 배경 + 유형 아이콘 조합으로
+7. 포인트 거리 — "도보 5분" 텍스트만 있음, 작은 지도 핀 + 거리 바 시각화 제안
 
 유지할 것:
-- useState, 더미 데이터 import, 동승 신청/예약 로직 건드리지 말 것
+- useState, 더미 데이터 import, 동승 신청/예약/form submit 로직 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
 
@@ -495,7 +500,32 @@
 
 ---
 
-## 21. 피싱로그 커뮤니티 글쓰기
+## 21. 피싱로그 땡처리 렌터카
+
+```
+/Users/ted/reallang/projects/fishing/src/app/rentcar/page.tsx 를 읽고 디자인을 개선해줘.
+
+※ 컨셉: 당일 예약 가능한 렌터카를 20~40% 할인 제공 (낚시꾼 전용 마지막 자리 땡처리)
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 히어로 — "오늘만 이 가격!" 카운트다운 타이머 느낌 (자정까지 남은 시간) 강조
+2. 차량 카드 — 할인율을 크고 빨간 스티커 배지로, 낚시 특화 차량은 🎣 골드 뱃지 추가
+3. 픽업 위치 + 마감 시간 — 긴박감 있게 (X시까지 가능 빨간 텍스트)
+4. 필터 — 지역/차종 필터 위에 "지금 예약 가능" 개수 강조 배너 추가
+5. 예약 완료 상태 — 버튼이 초록으로 변하면서 ✓ 애니메이션 트랜지션
+
+유지할 것:
+- useState(reserved), filter/sort 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 22. 피싱로그 커뮤니티 글쓰기
 
 ```
 /Users/ted/reallang/projects/fishing/src/app/community/write/page.tsx 를 읽고 디자인을 개선해줘.
@@ -513,5 +543,77 @@
 
 유지할 것:
 - convertToWebP, handleFiles, canSubmit, toggleFish 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 23. 피싱로그 바다/민물 구분 + 어종·지역 확장
+
+```
+아래 파일들을 읽고 바다/민물 구분 토글과 어종·지역 확장을 적용해줘.
+/Users/ted/reallang/projects/fishing/src/app/catch/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/jwaedae/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/ranking/page.tsx
+/Users/ted/reallang/projects/fishing/src/lib/dummy-catch.ts
+/Users/ted/reallang/projects/fishing/src/lib/dummy-jwaedae.ts
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 바다=ocean-500/teal, 민물=green-600/emerald, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[바다/민물 토글]
+1. 조황·좌대·랭킹 페이지 상단에 "🌊 바다 / 🏞 민물" 세그먼트 토글 추가
+2. 바다 선택 시 ocean-blue 계열, 민물 선택 시 emerald-green 계열로 페이지 포인트 컬러 동적 변경
+3. 히어로 kicker 텍스트도 SEA / FRESHWATER 로 동적 변경
+
+[어종 확장]
+바다 어종: 갈치, 참돔, 감성돔, 광어, 농어, 방어, 삼치, 볼락, 벵에돔, 부시리, 고등어, 문어, 오징어
+민물 어종: 붕어, 잉어, 메기, 쏘가리, 배스, 블루길, 향어, 가물치, 피라냐(X), 뱀장어
+4. 어종 필터 칩에 어종별 고유 컬러 or 이모지 통일
+
+[지역 확장]
+현재: 서귀포/성산/모슬포/한림/애월/구좌
+추가: 제주시, 우도, 마라도, 가파도, 비양도, 추자도 (도서 지역)
+민물: 한천, 천지연, 효돈천, 산지천 (제주 민물 낚시 포인트)
+5. 지역 필터에 "도서" 섹션 구분 추가
+
+[더미 데이터]
+- 민물 낚시 조황 데이터 5건 추가 (붕어/잉어/쏘가리 위주)
+- 민물 전용 좌대 or 낚시터 3건 추가
+
+유지할 것:
+- 기존 더미 데이터 삭제하지 말고 바다 타입으로 분류만 할 것
+- 필터 useState 로직 확장 (fishingType: "바다" | "민물" | "전체" 추가)
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 24. 피싱로그 홈 카메라 FAB + 조황 등록 연동
+
+```
+아래 파일들을 읽고 카메라 FAB 디자인을 개선하고 조황 등록 플로우를 다듬어줘.
+/Users/ted/reallang/projects/fishing/src/app/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/catch/upload/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client", Canvas API
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[홈 카메라 FAB]
+1. 📸 버튼 — 그라데이션 배경 + 살짝 pulse 애니메이션으로 눈에 띄게
+2. 캡처 후 모달 — 이미지 미리보기를 더 크게 (화면 80% 높이), 스탬프 옵션 UI 개선
+3. 날짜·어종·길이 스탬프 — Canvas 합성 후 결과 이미지 미리보기 즉시 갱신
+4. 어종 선택 — 텍스트 input 대신 자주 쓰는 어종 칩 6개 + 직접입력 조합
+5. "조황 등록하기" 버튼 누르면 canvas 이미지를 sessionStorage에 저장 후 /catch/upload로 이동
+
+[업로드 페이지 연동]
+6. /catch/upload 진입 시 sessionStorage에 카메라 이미지 있으면 자동으로 사진 슬롯에 삽입
+
+유지할 것:
+- 기존 convertToWebP, canvas 로직 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
