@@ -29,7 +29,7 @@ export default function StayPage() {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-black text-white">🏠 낚시 숙소</h1>
+          <h1 className="text-xl font-black text-ocean-50">🏠 낚시 숙소</h1>
           <p className="text-xs text-slate-500 mt-0.5">포인트 바로 옆, 낚시꾼을 위한 숙소</p>
         </div>
         <Link href="/stay/share"

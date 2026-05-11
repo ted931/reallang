@@ -18,6 +18,16 @@
   --color-hook-dim: var(--hook-200);
   --color-teal-sea: #0d9488;
   --color-navy-deep: #080f1e;
+
+  /* slate 텍스트를 테마 변수에 연결 — text-slate-* 클래스가 테마를 따름 */
+  --color-slate-50:  var(--text-strong);
+  --color-slate-100: var(--text-strong);
+  --color-slate-200: var(--text-strong);
+  --color-slate-300: var(--text);
+  --color-slate-400: var(--text-dim);
+  --color-slate-500: var(--text-mute);
+  --color-slate-600: var(--text-mute);
+  --color-slate-700: var(--text-mute);
 }
 
 /* ═══════════════════════════════════════
@@ -165,6 +175,9 @@ html, body {
   padding: calc(env(safe-area-inset-top,0px) + 18px) 18px 8px;
   display: flex; align-items: center; justify-content: space-between;
   background: linear-gradient(180deg, rgba(8,15,30,0.92) 70%, rgba(8,15,30,0));
+}
+[data-theme="coastal"] .fl-header {
+  background: transparent;
 }
 .fl-logo { display: flex; align-items: center; gap: 10px; }
 .fl-logo-mark {
