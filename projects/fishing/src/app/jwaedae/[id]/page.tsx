@@ -30,48 +30,48 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
 
       {/* 핵심 정보 */}
       <div className="grid grid-cols-3 sm:grid-cols-3 gap-3 mb-6">
-        <div className="rounded-xl bg-ocean-900 border border-ocean-800 p-3 text-center">
+        <div className="rounded-xl p-3 text-center" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
           <div className={`text-lg font-black ${availableColor}`}>
             {item.availableSeats === 0 ? "마감" : `${item.availableSeats}석`}
           </div>
-          <div className="text-xs text-slate-500">잔여석/{item.capacity}석</div>
+          <div className="text-xs" style={{ color: "var(--text-mute)" }}>잔여석/{item.capacity}석</div>
         </div>
-        <div className="rounded-xl bg-ocean-900 border border-ocean-800 p-3 text-center">
+        <div className="rounded-xl p-3 text-center" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
           <div className={`text-lg font-black ${catchRateColor}`}>{item.catchRate}</div>
-          <div className="text-xs text-slate-500">조황등급</div>
+          <div className="text-xs" style={{ color: "var(--text-mute)" }}>조황등급</div>
         </div>
-        <div className="rounded-xl bg-ocean-900 border border-ocean-800 p-3 text-center">
+        <div className="rounded-xl p-3 text-center" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
           <div className="text-lg font-black text-hook">★ {item.rating}</div>
-          <div className="text-xs text-slate-500">{item.reviewCount}개 후기</div>
+          <div className="text-xs" style={{ color: "var(--text-mute)" }}>{item.reviewCount}개 후기</div>
         </div>
       </div>
 
       {/* 소개 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-4">
-        <h2 className="text-sm font-bold text-slate-300 mb-2">좌대 소개</h2>
-        <p className="text-sm text-slate-300 leading-relaxed">{item.description}</p>
+      <div className="rounded-2xl p-5 mb-4" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-2" style={{ color: "var(--text-strong)" }}>좌대 소개</h2>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>{item.description}</p>
       </div>
 
       {/* 대상 어종 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-4">
-        <h2 className="text-sm font-bold text-slate-300 mb-3">주요 대상 어종</h2>
+      <div className="rounded-2xl p-5 mb-4" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-3" style={{ color: "var(--text-strong)" }}>주요 대상 어종</h2>
         <div className="flex flex-wrap gap-2 mb-2">
           {item.targetFish.map((f) => <FishBadge key={f} name={f} />)}
         </div>
-        <div className="text-xs text-slate-500">최적 시즌: {item.bestSeason.join(" · ")}</div>
+        <div className="text-xs" style={{ color: "var(--text-mute)" }}>최적 시즌: {item.bestSeason.join(" · ")}</div>
       </div>
 
       {/* 요금 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-4">
-        <h2 className="text-sm font-bold text-slate-300 mb-3">요금</h2>
+      <div className="rounded-2xl p-5 mb-4" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-3" style={{ color: "var(--text-strong)" }}>요금</h2>
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-400">주간 (1인)</span>
+            <span className="text-sm" style={{ color: "var(--text-dim)" }}>주간 (1인)</span>
             <span className="text-hook font-bold">{item.priceDay.toLocaleString()}원</span>
           </div>
           {item.priceNight && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-400">야간 (1인)</span>
+              <span className="text-sm" style={{ color: "var(--text-dim)" }}>야간 (1인)</span>
               <span className="text-hook font-bold">{item.priceNight.toLocaleString()}원</span>
             </div>
           )}
@@ -79,34 +79,36 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 시설 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-4">
-        <h2 className="text-sm font-bold text-slate-300 mb-3">시설 및 서비스</h2>
+      <div className="rounded-2xl p-5 mb-4" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-3" style={{ color: "var(--text-strong)" }}>시설 및 서비스</h2>
         <div className="flex flex-wrap gap-2">
           {item.facilities.map((f) => (
-            <span key={f} className="text-xs bg-ocean-800 text-ocean-300 border border-ocean-700 px-3 py-1 rounded-full">✓ {f}</span>
+            <span key={f} className="text-xs px-3 py-1 rounded-full" style={{ background: "var(--ocean-800)", color: "var(--text)", border: "1px solid var(--line)" }}>✓ {f}</span>
           ))}
         </div>
       </div>
 
       {/* 운영 일정 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-4">
-        <h2 className="text-sm font-bold text-slate-300 mb-2">운영 일정</h2>
-        <p className="text-sm text-slate-300">{item.schedule}</p>
+      <div className="rounded-2xl p-5 mb-4" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-2" style={{ color: "var(--text-strong)" }}>운영 일정</h2>
+        <p className="text-sm" style={{ color: "var(--text)" }}>{item.schedule}</p>
       </div>
 
       {/* 교통 */}
-      <div className="rounded-2xl bg-ocean-900 border border-ocean-800 p-5 mb-6">
-        <h2 className="text-sm font-bold text-slate-300 mb-2">교통 안내</h2>
-        <p className="text-sm text-slate-300">🚢 {item.transportInfo}</p>
-        <p className="text-xs text-slate-500 mt-2">📞 예약: {item.operatorPhone}</p>
+      <div className="rounded-2xl p-5 mb-6" style={{ background: "var(--ocean-900)", border: "1px solid var(--line)" }}>
+        <h2 className="text-sm font-bold mb-2" style={{ color: "var(--text-strong)" }}>교통 안내</h2>
+        <p className="text-sm" style={{ color: "var(--text)" }}>🚢 {item.transportInfo}</p>
+        <p className="text-xs mt-2" style={{ color: "var(--text-mute)" }}>📞 예약: {item.operatorPhone}</p>
       </div>
 
       {/* CTA */}
       <div className="sticky bottom-24 md:bottom-4">
-        <button className={`w-full py-4 rounded-2xl text-white font-bold text-lg transition-colors shadow-lg ${item.availableSeats === 0 ? "bg-slate-700 cursor-not-allowed" : "bg-hook hover:bg-hook-light"}`} disabled={item.availableSeats === 0}>
+        <button className={`w-full py-4 rounded-2xl font-bold text-lg transition-colors shadow-lg ${item.availableSeats === 0 ? "cursor-not-allowed" : "bg-hook hover:bg-hook-light"}`}
+          style={item.availableSeats === 0 ? { background: "var(--ocean-800)", color: "var(--text-dim)" } : { color: "var(--ocean-950)" }}
+          disabled={item.availableSeats === 0}>
           {item.availableSeats === 0 ? "예약 마감" : `예약하기 — ${item.priceDay.toLocaleString()}원/인`}
         </button>
-        <p className="text-center text-xs text-slate-500 mt-2">전화 예약: {item.operatorPhone}</p>
+        <p className="text-center text-xs mt-2" style={{ color: "var(--text-mute)" }}>전화 예약: {item.operatorPhone}</p>
       </div>
     </div>
   );

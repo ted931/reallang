@@ -26,7 +26,7 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
       <Link href="/stay" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 숙소 목록</Link>
 
       {/* 이미지 플레이스홀더 */}
-      <div className="rounded-2xl bg-ocean-800 h-48 flex items-center justify-center text-6xl mb-5 border border-ocean-700">
+      <div className="rounded-2xl h-48 flex items-center justify-center text-6xl mb-5 border" style={{ background: "var(--ocean-800)", borderColor: "var(--line)" }}>
         {s.images[0]}
       </div>
 
@@ -34,49 +34,49 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
       <div className="mb-4">
         <div className="flex items-start justify-between">
           <div>
-            <span className="text-xs text-slate-500 mb-1 block">{STAY_TYPE_LABEL[s.type]} · {s.region}</span>
-            <h1 className="text-xl font-black text-white">{s.name}</h1>
+            <span className="text-xs mb-1 block" style={{ color: "var(--text-mute)" }}>{STAY_TYPE_LABEL[s.type]} · {s.region}</span>
+            <h1 className="text-xl font-black" style={{ color: "var(--text-strong)" }}>{s.name}</h1>
           </div>
           <div className="text-right shrink-0">
             <div className="text-xl font-black text-hook">{s.pricePerNight.toLocaleString()}원</div>
-            <div className="text-xs text-slate-500">/박</div>
+            <div className="text-xs" style={{ color: "var(--text-mute)" }}>/박</div>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-2">
           <span className="text-hook text-sm">★ {s.rating}</span>
-          <span className="text-xs text-slate-500">({s.reviewCount}개 리뷰)</span>
-          <span className="text-slate-700">·</span>
-          <span className="text-xs text-slate-500">최대 {s.capacity}명 · {s.rooms}개 방</span>
+          <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.reviewCount}개 리뷰)</span>
+          <span style={{ color: "var(--line)" }}>·</span>
+          <span className="text-xs" style={{ color: "var(--text-mute)" }}>최대 {s.capacity}명 · {s.rooms}개 방</span>
         </div>
       </div>
 
       {/* 포인트 정보 */}
-      <div className="rounded-2xl border border-teal-800/50 bg-teal-900/10 p-4 mb-4">
+      <div className="rounded-2xl p-4 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
         <div className="flex items-center gap-2 mb-1">
           <span>🎣</span>
-          <span className="text-sm font-bold text-teal-300">{s.nearbySpot}</span>
-          <span className="text-xs text-slate-500">({s.distanceToSpot})</span>
+          <span className="text-sm font-bold" style={{ color: "var(--text)" }}>{s.nearbySpot}</span>
+          <span className="text-xs" style={{ color: "var(--text-mute)" }}>({s.distanceToSpot})</span>
         </div>
         <div className="flex flex-wrap gap-1">
           {s.targetFish.map(f => (
-            <span key={f} className="text-xs px-2 py-0.5 bg-teal-900/40 border border-teal-800 text-teal-300 rounded-full">{f}</span>
+            <span key={f} className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }}>{f}</span>
           ))}
         </div>
       </div>
 
       {/* 설명 */}
-      <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-        <h2 className="font-bold text-slate-200 mb-2">숙소 소개</h2>
-        <p className="text-sm text-slate-400 leading-relaxed">{s.description}</p>
-        <div className="mt-3 text-xs text-slate-500">호스트: {s.hostName}</div>
+      <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+        <h2 className="font-bold mb-2" style={{ color: "var(--text-strong)" }}>숙소 소개</h2>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>{s.description}</p>
+        <div className="mt-3 text-xs" style={{ color: "var(--text-mute)" }}>호스트: {s.hostName}</div>
       </div>
 
       {/* 편의시설 */}
-      <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-        <h2 className="font-bold text-slate-200 mb-3">편의시설</h2>
+      <div className="rounded-2xl p-5 mb-4" style={{ border: "1px solid var(--line)", background: "var(--ocean-900)" }}>
+        <h2 className="font-bold mb-3" style={{ color: "var(--text-strong)" }}>편의시설</h2>
         <div className="grid grid-cols-2 gap-2">
           {s.amenities.map(a => (
-            <div key={a} className="flex items-center gap-2 text-sm text-slate-300">
+            <div key={a} className="flex items-center gap-2 text-sm" style={{ color: "var(--text)" }}>
               <span>{amenityIcons[a] ?? "✓"}</span>
               <span>{a}</span>
             </div>
@@ -92,25 +92,27 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* 하단 예약 패널 */}
-      <div className="fixed bottom-20 left-0 right-0 z-40 bg-ocean-950/95 border-t border-ocean-800 px-4 py-3 backdrop-blur-sm">
+      <div className="fixed bottom-20 left-0 right-0 z-40 px-4 py-3 backdrop-blur-sm" style={{ background: "var(--ocean-950)", borderTop: "1px solid var(--line)" }}>
         <div className="max-w-xl mx-auto">
           <div className="flex gap-2 mb-3">
             <div className="flex-1">
-              <label className="text-[10px] text-slate-500 block mb-1">체크인</label>
+              <label className="text-[10px] block mb-1" style={{ color: "var(--text-mute)" }}>체크인</label>
               <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)}
-                className="w-full h-9 bg-ocean-800 border border-ocean-700 rounded-xl px-3 text-xs text-slate-200 focus:outline-none" />
+                className="w-full h-9 rounded-xl px-3 text-xs focus:outline-none"
+                style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }} />
             </div>
             <div className="flex-1">
-              <label className="text-[10px] text-slate-500 block mb-1">체크아웃</label>
+              <label className="text-[10px] block mb-1" style={{ color: "var(--text-mute)" }}>체크아웃</label>
               <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)}
-                className="w-full h-9 bg-ocean-800 border border-ocean-700 rounded-xl px-3 text-xs text-slate-200 focus:outline-none" />
+                className="w-full h-9 rounded-xl px-3 text-xs focus:outline-none"
+                style={{ background: "var(--ocean-800)", border: "1px solid var(--line)", color: "var(--text)" }} />
             </div>
             <div className="w-20">
-              <label className="text-[10px] text-slate-500 block mb-1">인원</label>
+              <label className="text-[10px] block mb-1" style={{ color: "var(--text-mute)" }}>인원</label>
               <div className="flex items-center gap-1 h-9">
-                <button onClick={() => setGuests(Math.max(1, guests - 1))} className="w-7 h-7 rounded-full bg-ocean-800 text-slate-300 text-sm font-bold">−</button>
-                <span className="w-4 text-center text-sm text-white font-bold">{guests}</span>
-                <button onClick={() => setGuests(Math.min(s.capacity, guests + 1))} className="w-7 h-7 rounded-full bg-ocean-800 text-slate-300 text-sm font-bold">+</button>
+                <button onClick={() => setGuests(Math.max(1, guests - 1))} className="w-7 h-7 rounded-full text-sm font-bold" style={{ background: "var(--ocean-800)", color: "var(--text)" }}>−</button>
+                <span className="w-4 text-center text-sm font-bold" style={{ color: "var(--text-strong)" }}>{guests}</span>
+                <button onClick={() => setGuests(Math.min(s.capacity, guests + 1))} className="w-7 h-7 rounded-full text-sm font-bold" style={{ background: "var(--ocean-800)", color: "var(--text)" }}>+</button>
               </div>
             </div>
           </div>
