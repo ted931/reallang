@@ -69,7 +69,7 @@ export default function LogbookPage() {
   const fishRanking = Object.entries(fishMap).sort((a, b) => b[1] - a[1]);
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
+    <div className="max-w-xl lg:max-w-4xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
         <div>
@@ -93,7 +93,7 @@ export default function LogbookPage() {
       </div>
 
       {tab === "log" ? (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {DUMMY_LOGS.map(log => {
             const totalFish = log.fish.reduce((a, f) => a + f.count, 0);
             const bigFish = log.fish.reduce((a, f) => (f.size > a ? f.size : a), 0);

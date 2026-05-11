@@ -239,6 +239,11 @@ function MarketList({ onOpen }: { onOpen: (it: MarketItem) => void }) {
             <span className="fl-cond-sep" />
             <span>제주 지역 직거래</span>
           </div>
+          <div style={{ marginTop: 16 }}>
+            <Link href="/market/sell" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--hook)', color: 'var(--ocean-950)', fontWeight: 800, fontSize: 14, padding: '10px 20px', borderRadius: 12, textDecoration: 'none' }}>
+              ✏️ 판매글 올리기
+            </Link>
+          </div>
         </div>
         <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none">
           <path d="M0,50 C80,30 160,70 240,50 C320,30 360,60 400,50 L400,80 L0,80 Z" />

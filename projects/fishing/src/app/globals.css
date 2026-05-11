@@ -1439,3 +1439,78 @@ html, body {
 /* 순위 변동 화살표 — 라이트에서 #4ade80 연두 가독성 보완 */
 [data-theme="coastal"] .fl-ch.up { color: #16a34a; }
 [data-theme="coastal"] .fl-ch.down { color: #dc2626; }
+
+/* ═══════════════════════════════════════
+   PC 반응형 그리드 (≥1024px)
+═══════════════════════════════════════ */
+@media (min-width: 1024px) {
+  /* 좌대 목록 — 3열 */
+  .fl-jw-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 0 24px;
+  }
+
+  /* 낚시 모임 — 2열 */
+  .fl-gt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 0 24px;
+  }
+
+  /* 조황 피드 — 3열 */
+  .fl-feed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 0 0 24px;
+  }
+
+  /* 중고마켓 — 4열 */
+  .fl-mk-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 0 24px;
+  }
+
+  /* 홈 카드 캐러셀 — 가로 스크롤 대신 그리드 */
+  .fl-carousel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 0 8px;
+    overflow: visible;
+  }
+  .fl-catch { min-width: unset; }
+
+  /* hero 섹션 좌우 여백 제거 (fl-main 이 패딩 담당) */
+  .fl-jw-hero,
+  .fl-gt-hero,
+  .fl-catch-hero,
+  .fl-tide-hero { padding-left: 0; padding-right: 0; }
+
+  .fl-jw-hero-inner,
+  .fl-catch-hero-inner,
+  .fl-tide-hero-inner { padding: 0; }
+
+  /* 필터/정렬 여백 제거 */
+  .fl-filters,
+  .fl-cat-pick,
+  .fl-tide-dates { padding-left: 0; padding-right: 0; }
+
+  /* 마이페이지 그리드 */
+  .fl-mp-res-list { gap: 16px; }
+
+  /* 섹션별 좌우 패딩 제거 — fl-main이 32px 담당 */
+  .fl-filters,
+  .fl-cat-pick,
+  .fl-tide-dates,
+  .fl-tide-weather,
+  .fl-seat-list,
+  .fl-party-list,
+  .fl-mp-list,
+  .fl-sec-head,
+  .fl-empty { padding-left: 0; padding-right: 0; }
+}

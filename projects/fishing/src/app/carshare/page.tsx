@@ -16,7 +16,7 @@ export default function CarSharePage() {
   });
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="max-w-2xl lg:max-w-5xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="mb-5">
         <h1 className="text-xl font-black text-ocean-50">🚗 낚시 카풀</h1>
@@ -29,9 +29,9 @@ export default function CarSharePage() {
           <div className="font-bold text-teal-300 text-sm">내 카풀 등록하기</div>
           <div className="text-xs text-slate-400 mt-0.5">빈 자리 공유하고 유류비 절약</div>
         </div>
-        <button className="shrink-0 px-4 py-2 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-colors">
+        <Link href="/carshare/new" className="shrink-0 px-4 py-2 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-colors">
           + 등록
-        </button>
+        </Link>
       </div>
 
       {/* 필터 */}
@@ -55,7 +55,7 @@ export default function CarSharePage() {
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-slate-500">조건에 맞는 카풀이 없습니다</div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((c) => {
             const taken = c.seatsTaken;
             const remain = c.seats - taken;

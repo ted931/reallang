@@ -25,7 +25,7 @@ export default function StayPage() {
   });
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="max-w-2xl lg:max-w-5xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
         <div>
@@ -62,7 +62,7 @@ export default function StayPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-slate-500">조건에 맞는 숙소가 없습니다</div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((s) => (
             <Link key={s.id} href={`/stay/${s.id}`}
               className="block rounded-2xl border border-ocean-800 bg-ocean-900 p-5 hover:border-ocean-600 transition-colors">
