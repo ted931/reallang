@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ocean-950: #080f1e;
-  --color-ocean-900: #0a1628;
-  --color-ocean-800: #102544;
-  --color-ocean-700: #133356;
-  --color-ocean-600: #194d75;
-  --color-ocean-500: #1e6595;
-  --color-ocean-400: #3a82b3;
-  --color-ocean-300: #5fa3cf;
-  --color-ocean-200: #95c3e0;
-  --color-ocean-100: #c8dceb;
-  --color-ocean-50:  #e6eef5;
+  --color-ocean-950: var(--ocean-950);
+  --color-ocean-900: var(--ocean-900);
+  --color-ocean-800: var(--ocean-800);
+  --color-ocean-700: var(--ocean-700);
+  --color-ocean-600: var(--ocean-600);
+  --color-ocean-500: var(--ocean-500);
+  --color-ocean-400: var(--ocean-400);
+  --color-ocean-300: var(--ocean-300);
+  --color-ocean-200: var(--ocean-200);
+  --color-ocean-100: var(--ocean-100);
+  --color-ocean-50:  var(--ocean-50);
 
-  --color-hook: #f59e0b;
-  --color-hook-light: #fbbf24;
-  --color-hook-dim: #fcd34d;
+  --color-hook: var(--hook);
+  --color-hook-light: var(--hook-300);
+  --color-hook-dim: var(--hook-200);
   --color-teal-sea: #0d9488;
   --color-navy-deep: #080f1e;
 }
