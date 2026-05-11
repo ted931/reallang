@@ -38,7 +38,7 @@ export default async function GatheringDetailPage({ params }: { params: Promise<
         </div>
 
         {/* 상세 정보 */}
-        <div className="p-5 grid grid-cols-2 gap-4 border-b border-ocean-800">
+        <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-ocean-800">
           <div className="space-y-3">
             <div>
               <div className="text-xs text-slate-500 mb-1">일시</div>

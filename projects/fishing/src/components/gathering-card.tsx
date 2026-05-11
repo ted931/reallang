@@ -44,7 +44,7 @@ export default function GatheringCard({ item }: GatheringCardProps) {
         </div>
 
         {/* 정보 그리드 */}
-        <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-1.5 mb-3">
           <div className="flex items-center gap-1.5 text-xs text-slate-400">
             <span>📅</span><span>{dateStr} {item.time}</span>
           </div>

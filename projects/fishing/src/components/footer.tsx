@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="flex items-center gap-4 text-xs text-slate-500">
             <span>© 2026 피싱로그</span>
             <span>·</span>
-            <span>조황 공유 · 좌대 예약 · 모임 매칭</span>
+            <a href="/biz" className="text-hook hover:text-hook-light font-bold transition-colors">🏪 사장님 업체 등록</a>
           </div>
         </div>
         <div className="mt-4 text-center text-xs text-slate-600">

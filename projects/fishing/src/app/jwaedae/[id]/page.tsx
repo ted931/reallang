@@ -29,7 +29,7 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* 핵심 정보 */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-3 gap-3 mb-6">
         <div className="rounded-xl bg-ocean-900 border border-ocean-800 p-3 text-center">
           <div className={`text-lg font-black ${availableColor}`}>
             {item.availableSeats === 0 ? "마감" : `${item.availableSeats}석`}
@@ -102,7 +102,7 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* CTA */}
-      <div className="sticky bottom-20 md:bottom-4">
+      <div className="sticky bottom-24 md:bottom-4">
         <button className={`w-full py-4 rounded-2xl text-white font-bold text-lg transition-colors shadow-lg ${item.availableSeats === 0 ? "bg-slate-700 cursor-not-allowed" : "bg-hook hover:bg-hook-light"}`} disabled={item.availableSeats === 0}>
           {item.availableSeats === 0 ? "예약 마감" : `예약하기 — ${item.priceDay.toLocaleString()}원/인`}
         </button>

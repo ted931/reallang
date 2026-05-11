@@ -21,6 +21,7 @@
 //   3020  jeju-travel (통합)  → /travel
 //   3021  jeju-car (통합)     → /car
 //   3022  jeju-biz (통합)     → /biz
+//   3014  fishing             → /fishing
 
 module.exports = {
   apps: [
@@ -44,6 +45,9 @@ module.exports = {
     { name: "car-pick", cwd: "./projects/car-pick", script: "node_modules/.bin/next", args: "start -p 3011", env: { NODE_ENV: "production" } },
     { name: "weather-drive", cwd: "./projects/weather-drive", script: "node_modules/.bin/next", args: "start -p 3012", env: { NODE_ENV: "production" } },
     { name: "smart-fuel", cwd: "./projects/smart-fuel", script: "node_modules/.bin/next", args: "start -p 3013", env: { NODE_ENV: "production" } },
+
+    // ── 커뮤니티 ──
+    { name: "fishing", cwd: "./projects/fishing", script: "node_modules/.bin/next", args: "start -p 3014", env: { NODE_ENV: "production" } },
 
     // ── 도구 & 내부 ──
     { name: "mini-xd", cwd: "./projects/mini-xd", script: "node_modules/.bin/next", args: "start -p 3002", env: { NODE_ENV: "production" } },

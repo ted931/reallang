@@ -36,9 +36,9 @@ export default function CatchCard({ report, compact }: CatchCardProps) {
         </div>
 
         {/* 위치 */}
-        <div className="px-4 pb-2 flex items-center gap-1.5 text-xs text-slate-400">
+        <div className="px-4 pb-2 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs text-slate-400">
           <span>{SPOT_TYPE_ICON[report.spotType]}</span>
-          <span className="truncate">{report.location}</span>
+          <span className="truncate max-w-[140px] sm:max-w-none">{report.location}</span>
           <span className="text-ocean-600">·</span>
           <span>{METHOD_ICON[report.fishingMethod]}</span>
           <span>{report.fishingMethod}</span>

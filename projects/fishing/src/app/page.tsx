@@ -66,16 +66,16 @@ export default function HomePage() {
 
       {/* 통계 바 */}
       <section className="bg-ocean-900 border-b border-ocean-800">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-around text-center">
+        <div className="max-w-5xl mx-auto px-2 py-3 flex items-center justify-between text-center">
           {[
             { value: "38건", label: "오늘 조황" },
             { value: "127개", label: "활성 포인트" },
             { value: "24개", label: "진행중 모임" },
             { value: "8,420명", label: "등록 낚시꾼" },
           ].map(({ value, label }) => (
-            <div key={label}>
-              <div className="text-hook font-black text-lg">{value}</div>
-              <div className="text-slate-500 text-xs">{label}</div>
+            <div key={label} className="flex-1">
+              <div className="text-hook font-black text-base sm:text-lg">{value}</div>
+              <div className="text-slate-500 text-[10px] sm:text-xs">{label}</div>
             </div>
           ))}
         </div>
