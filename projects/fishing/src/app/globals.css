@@ -21,9 +21,25 @@
 }
 
 /* ═══════════════════════════════════════
-   디자인 토큰 — CSS 변수 (Deep 기본)
+   디자인 토큰 — CSS 변수 (Coastal 라이트 기본)
 ═══════════════════════════════════════ */
-:root, [data-theme="deep"] {
+:root, [data-theme="coastal"] {
+  --ocean-50:#0f1a2e; --ocean-100:#14253d; --ocean-200:#1e3a5f;
+  --ocean-300:#3b6ea0; --ocean-400:#5b8bc0; --ocean-500:#2c6ea0;
+  --ocean-600:#2c4d7a; --ocean-700:#c8d8e8; --ocean-800:#e8f0f7;
+  --ocean-900:#f8fafb; --ocean-950:#ffffff;
+  --hook:#e94e3b; --hook-300:#fb7755; --hook-200:#fda486;
+  --text:#1e3a5f; --text-strong:#0f1a2e; --text-dim:#5b738f; --text-mute:#94a3b8;
+  --tint-03:rgba(30,58,95,0.03); --tint-04:rgba(30,58,95,0.04);
+  --tint-05:rgba(30,58,95,0.05); --tint-06:rgba(30,58,95,0.06);
+  --tint-08:rgba(30,58,95,0.08); --tint-10:rgba(30,58,95,0.10);
+  --tint-12:rgba(30,58,95,0.12); --tint-15:rgba(30,58,95,0.15);
+  --tint-50:rgba(30,58,95,0.4);
+  --line:var(--tint-08); --line-2:var(--tint-12);
+  --r-card: 18px; --r-sm: 12px;
+  --catch-overlay:rgba(15,26,46,0.55);
+}
+[data-theme="deep"] {
   --ocean-50:  #e6eef5; --ocean-100: #c8dceb; --ocean-200: #95c3e0;
   --ocean-300: #5fa3cf; --ocean-400: #3a82b3; --ocean-500: #1e6595;
   --ocean-600: #194d75; --ocean-700: #133356; --ocean-800: #102544;
@@ -38,21 +54,6 @@
   --line: var(--tint-06); --line-2: var(--tint-10);
   --r-card: 18px; --r-sm: 12px;
   --catch-overlay: rgba(0,0,0,0.55);
-}
-[data-theme="coastal"] {
-  --ocean-50:#0f1a2e; --ocean-100:#14253d; --ocean-200:#1e3a5f;
-  --ocean-300:#3b6ea0; --ocean-400:#5b8bc0; --ocean-500:#1e3a5f;
-  --ocean-600:#2c4d7a; --ocean-700:#d0dde9; --ocean-800:#eaf0f4;
-  --ocean-900:#ffffff; --ocean-950:#f5f7f5;
-  --hook:#e94e3b; --hook-300:#fb7755; --hook-200:#fda486;
-  --text:#1e3a5f; --text-strong:#0f1a2e; --text-dim:#5b738f; --text-mute:#94a3b8;
-  --tint-03:rgba(30,58,95,0.03); --tint-04:rgba(30,58,95,0.04);
-  --tint-05:rgba(30,58,95,0.05); --tint-06:rgba(30,58,95,0.06);
-  --tint-08:rgba(30,58,95,0.08); --tint-10:rgba(30,58,95,0.10);
-  --tint-12:rgba(30,58,95,0.12); --tint-15:rgba(30,58,95,0.15);
-  --tint-50:rgba(30,58,95,0.4);
-  --line:var(--tint-08); --line-2:var(--tint-12);
-  --catch-overlay:rgba(15,26,46,0.55);
 }
 
 html, body {
@@ -99,7 +100,7 @@ html, body {
   .fl-bnav { display: none !important; }
   .fl-side-nav {
     position: fixed;
-    top: 0; left: 0; bottom: 0;
+    top: 38px; left: 0; bottom: 0;
     width: 240px;
     display: flex;
     flex-direction: column;
@@ -135,7 +136,15 @@ html, body {
     color: var(--hook-300);
     border: 1px solid rgba(245,158,11,0.25);
   }
-  .fl-side-foot { padding-top: 16px; border-top: 1px solid var(--line); }
+  .fl-side-foot { padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .fl-side-theme-btn {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; padding: 8px 12px; border-radius: 10px;
+    border: 1px solid var(--line-2); background: var(--tint-04);
+    color: var(--text-dim); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .fl-side-theme-btn:hover { background: var(--tint-08); color: var(--text); }
   .fl-side-profile {
     display: flex; align-items: center; gap: 10px;
     padding: 8px; border-radius: 12px; background: var(--tint-03);

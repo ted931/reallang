@@ -23,35 +23,50 @@ const WEATHER_STATIC = [
 ];
 
 function TideWaveSVG() {
-  const W = 600, H = 160;
+  const W = 600, H = 200;
+  const amp = 68;
+  const mid = H / 2;
   const pts: string[] = [];
-  for (let x = 0; x <= W; x += 4) {
+  for (let x = 0; x <= W; x += 3) {
     const t = (x / W) * 4 * Math.PI - 0.3;
-    const y = H / 2 + Math.sin(t) * 50 + Math.cos(t * 0.5) * 8;
-    pts.push(`${x},${y}`);
+    const y = mid + Math.sin(t) * amp + Math.cos(t * 0.5) * 10;
+    pts.push(`${x},${y.toFixed(1)}`);
   }
+  const pathD = `M0,${H} L${pts.join(' L')} L${W},${H} Z`;
+  const lineD = pts.join(' L');
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="fl-tide-wave-svg">
-      <defs>
-        <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(95,163,207,0.4)" />
-          <stop offset="100%" stopColor="rgba(30,101,149,0.05)" />
-        </linearGradient>
-      </defs>
-      <path d={`M0,${H} L${pts.join(' L')} L${W},${H} Z`} fill="url(#tideGrad)" />
-      <path d={`M0,${H / 2} L${pts.join(' L')}`} stroke="var(--hook)" strokeWidth="2.5" fill="none" />
-      {TIDE_POINTS_STATIC.map((p, i) => {
-        const x = (i + 0.5) * (W / TIDE_POINTS_STATIC.length);
-        const y = p.type === '만조' ? H / 2 - 50 : H / 2 + 50;
-        return (
-          <g key={i}>
-            <circle cx={x} cy={y} r="6" fill="var(--hook)" stroke="#fff" strokeWidth="2" />
-            <text x={x} y={y - 14} textAnchor="middle" fill="var(--text-strong)" fontSize="13" fontWeight="800">{p.t}</text>
-            <text x={x} y={y + 22} textAnchor="middle" fill="var(--text-dim)" fontSize="11">{p.type} · {p.h}cm</text>
-          </g>
-        );
-      })}
-    </svg>
+    <div style={{ background: '#0a1628', borderRadius: 18, padding: '24px 16px 16px', margin: '0 20px 4px' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: 200, display: 'block' }}>
+        <defs>
+          <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(95,163,207,0.35)" />
+            <stop offset="100%" stopColor="rgba(30,101,149,0.03)" />
+          </linearGradient>
+        </defs>
+        <path d={pathD} fill="url(#tideGrad)" />
+        <path d={`M0,${mid} L${lineD}`} stroke="#f59e0b" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
+        {TIDE_POINTS_STATIC.map((p, i) => {
+          const x = (i + 0.5) * (W / TIDE_POINTS_STATIC.length);
+          const y = p.type === '만조' ? mid - amp : mid + amp;
+          return (
+            <g key={i}>
+              <circle cx={x} cy={y} r="7" fill="#f59e0b" stroke="#fff" strokeWidth="2.5" />
+              <text x={x} y={y - 16} textAnchor="middle" fill="#ffffff" fontSize="14" fontWeight="800">{p.t}</text>
+              <text x={x} y={y + 26} textAnchor="middle" fill="#9fb3c8" fontSize="12">{p.type} · {p.h}cm</text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 12 }}>
+        {TIDE_POINTS_STATIC.map((p, i) => (
+          <div key={i} style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 11, color: '#62788f' }}>{p.type}</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: p.type === '만조' ? '#fbbf24' : '#5fa3cf' }}>{p.t}</div>
+            <div style={{ fontSize: 12, color: '#9fb3c8' }}>{p.h}cm</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -130,9 +145,7 @@ export default function TidePage() {
       </div>
 
       <SectionHeader kicker="TIDE GRAPH" title="조석 예보" subtitle={`${cur.date} 만조·간조 그래프`} accent="#5fa3cf" />
-      <div className="fl-tide-graph">
-        <TideWaveSVG />
-      </div>
+      <TideWaveSVG />
 
       <SectionHeader kicker="WEATHER" title="기상 정보" subtitle="출조 컨디션 한눈에 확인" accent="#5fa3cf" />
       <div className="fl-tide-weather">

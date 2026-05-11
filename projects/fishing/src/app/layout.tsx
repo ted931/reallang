@@ -15,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('fl-theme');document.documentElement.setAttribute('data-theme',t||'coastal');})();` }} />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
       </head>
       <body className="fl-page">

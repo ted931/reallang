@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -99,10 +100,10 @@ export default function DevNav() {
           const isPast = activeUserIdx >= 0 && idx < activeUserIdx;
           return (
             <div key={page.href} className="flex items-center">
-              <a href={page.href} className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium whitespace-nowrap transition-all ${isActive ? "bg-cyan-600 text-white" : isPast ? "text-cyan-400 hover:bg-gray-700" : "text-gray-500 hover:text-white hover:bg-gray-700"}`}>
+              <Link href={page.href} scroll={false} className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium whitespace-nowrap transition-all ${isActive ? "bg-cyan-600 text-white" : isPast ? "text-cyan-400 hover:bg-gray-700" : "text-gray-500 hover:text-white hover:bg-gray-700"}`}>
                 <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold flex-shrink-0 ${isActive ? "bg-white text-cyan-600" : isPast ? "bg-cyan-400/20 text-cyan-400" : "bg-gray-700 text-gray-500"}`}>{page.step}</span>
                 {page.label}
-              </a>
+              </Link>
               {idx < USER_STEPS.length - 1 && <span className={`mx-0.5 text-[10px] ${isPast ? "text-cyan-400 opacity-40" : "text-gray-700"}`}>›</span>}
             </div>
           );
@@ -118,10 +119,10 @@ export default function DevNav() {
           const isPast = activeBizIdx >= 0 && idx < activeBizIdx;
           return (
             <div key={page.href} className="flex items-center">
-              <a href={page.href} className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium whitespace-nowrap transition-all ${isActive ? "bg-amber-600 text-white" : isPast ? "text-amber-400 hover:bg-gray-700" : "text-gray-500 hover:text-white hover:bg-gray-700"}`}>
+              <Link href={page.href} scroll={false} className={`flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium whitespace-nowrap transition-all ${isActive ? "bg-amber-600 text-white" : isPast ? "text-amber-400 hover:bg-gray-700" : "text-gray-500 hover:text-white hover:bg-gray-700"}`}>
                 <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold flex-shrink-0 ${isActive ? "bg-white text-amber-600" : isPast ? "bg-amber-400/20 text-amber-400" : "bg-gray-700 text-gray-500"}`}>{page.step}</span>
                 {page.label}
-              </a>
+              </Link>
               {idx < BIZ_STEPS.length - 1 && <span className={`mx-0.5 text-[10px] ${isPast ? "text-amber-400 opacity-40" : "text-gray-700"}`}>›</span>}
             </div>
           );
