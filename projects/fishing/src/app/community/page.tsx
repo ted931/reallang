@@ -5,11 +5,11 @@ import { DUMMY_POSTS } from "@/lib/dummy-posts";
 import type { PostCategory } from "@/lib/types";
 
 const CAT_COLOR: Record<string, { bg: string; color: string; border: string }> = {
-  "조황": { bg: "rgba(20,184,166,0.12)", color: "#5eead4", border: "rgba(20,184,166,0.3)" },
+  "조황": { bg: "rgba(20,184,166,0.12)", color: "var(--cat-teal, #0d9488)", border: "rgba(20,184,166,0.35)" },
   "자유": { bg: "var(--tint-06)", color: "var(--text-dim)", border: "var(--line)" },
-  "질문": { bg: "rgba(59,130,246,0.12)", color: "#93c5fd", border: "rgba(59,130,246,0.3)" },
-  "장터": { bg: "rgba(249,115,22,0.12)", color: "#fdba74", border: "rgba(249,115,22,0.3)" },
-  "후기": { bg: "rgba(168,85,247,0.12)", color: "#d8b4fe", border: "rgba(168,85,247,0.3)" },
+  "질문": { bg: "rgba(59,130,246,0.10)", color: "var(--cat-blue, #2563eb)", border: "rgba(59,130,246,0.3)" },
+  "장터": { bg: "rgba(249,115,22,0.10)", color: "var(--cat-orange, #ea6d00)", border: "rgba(249,115,22,0.3)" },
+  "후기": { bg: "rgba(168,85,247,0.10)", color: "var(--cat-purple, #7c3aed)", border: "rgba(168,85,247,0.3)" },
 };
 
 const CATEGORIES: Array<PostCategory | "전체"> = ["전체", "조황", "자유", "질문", "장터", "후기"];
