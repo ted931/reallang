@@ -1,178 +1,211 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import { DUMMY_CATCHES as DUMMY_CATCH } from "@/lib/dummy-catch";
 import { DUMMY_JWAEDAE } from "@/lib/dummy-jwaedae";
-import { DUMMY_POINTS } from "@/lib/dummy-points";
-import { FISH_COLOR } from "@/lib/constants";
 
-// 어종별 집계
-function topFish(n = 10) {
-  const map: Record<string, number> = {};
-  DUMMY_CATCH.forEach(c => c.catches.forEach(f => { map[f.fish] = (map[f.fish] ?? 0) + f.count; }));
-  return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, n);
+const TOP_JWAEDAE = [
+  { rank: 2, name: '한림 갯바위', loc: '한림읍', catches: 142, score: 4.8, change: 1, hue: 195 },
+  { rank: 1, name: '애월 바다 좌대', loc: '애월읍', catches: 218, score: 4.9, change: 0, hue: 210 },
+  { rank: 3, name: '성산 선상낚시', loc: '성산읍', catches: 96, score: 4.7, change: -1, hue: 30 },
+];
+
+const TOP_FISH = [
+  { name: '광어', count: 482, color: '#5fa3cf', emoji: '🐟', change: 2 },
+  { name: '농어', count: 376, color: '#fbbf24', emoji: '🐠', change: 0 },
+  { name: '참돔', count: 284, color: '#f87171', emoji: '🐡', change: 1 },
+  { name: '감성돔', count: 215, color: '#a78bfa', emoji: '🐟', change: -1 },
+  { name: '우럭', count: 168, color: '#86efac', emoji: '🐠', change: 0 },
+  { name: '벵에돔', count: 124, color: '#fb923c', emoji: '🐟', change: 2 },
+];
+
+const BIG_FISH = [
+  { rank: 1, fish: '농어', size: 92, angler: '박민수', loc: '한림 갯바위', date: '12.16', color: '#fbbf24' },
+  { rank: 2, fish: '광어', size: 87, angler: '김지훈', loc: '모슬포', date: '12.14', color: '#5fa3cf' },
+  { rank: 3, fish: '참돔', size: 76, angler: '최영진', loc: '마라도', date: '12.11', color: '#f87171' },
+  { rank: 4, fish: '농어', size: 71, angler: '이서연', loc: '애월', date: '12.10', color: '#fbbf24' },
+  { rank: 5, fish: '감성돔', size: 58, angler: '정태호', loc: '성산', date: '12.09', color: '#a78bfa' },
+];
+
+const TOP_POINTS = [
+  { rank: 1, name: '한림 갯바위', region: '한림읍', regionColor: '#5fa3cf', catches: 342, change: 3 },
+  { rank: 2, name: '모슬포 방파제', region: '대정읍', regionColor: '#fbbf24', catches: 287, change: -1 },
+  { rank: 3, name: '애월 한담', region: '애월읍', regionColor: '#86efac', catches: 254, change: 1 },
+  { rank: 4, name: '성산 일출봉 앞', region: '성산읍', regionColor: '#f87171', catches: 198, change: 0 },
+  { rank: 5, name: '마라도 갯바위', region: '대정읍', regionColor: '#fbbf24', catches: 165, change: 2 },
+];
+
+function ChangeArrow({ n }: { n: number }) {
+  if (n === 0) return <span className="fl-ch zero">—</span>;
+  if (n > 0) return <span className="fl-ch up">↑ {n}</span>;
+  return <span className="fl-ch down">↓ {Math.abs(n)}</span>;
 }
 
-// 포인트별 조황 수 집계
-function topPoints(n = 5) {
-  const map: Record<string, number> = {};
-  DUMMY_CATCH.forEach(c => { map[c.location] = (map[c.location] ?? 0) + 1; });
-  return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, n);
-}
-
-// 좌대별 평점 정렬
-function topJwaedae(n = 5) {
-  return [...DUMMY_JWAEDAE].sort((a, b) => b.rating - a.rating).slice(0, n);
-}
-
-// 이번 주 인기 좌대 (더미: likes * rating)
-function hotJwaedae(n = 3) {
-  return [...DUMMY_JWAEDAE].sort((a, b) => b.reviewCount * b.rating - a.reviewCount * a.rating).slice(0, n);
-}
-
-const MEDALS = ["🥇", "🥈", "🥉", "4위", "5위", "6위", "7위", "8위", "9위", "10위"];
-
-export default function RankingPage() {
-  const fish = topFish(10);
-  const points = topPoints(5);
-  const jwaedae = topJwaedae(5);
-  const hot = hotJwaedae(3);
-  const totalCatch = fish.reduce((a, [, c]) => a + c, 0);
-
+function SectionHeader({ kicker, title, subtitle, accent }: {
+  kicker: string; title: string; subtitle: string; accent?: string;
+}) {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      {/* 헤더 */}
-      <div className="mb-5">
-        <h1 className="text-xl font-black text-white">🏆 조황 랭킹</h1>
-        <p className="text-xs text-slate-500 mt-0.5">이번 달 피싱로그 회원들의 실시간 조과 집계</p>
-      </div>
-
-      {/* 이번 주 HOT 좌대 */}
-      <div className="rounded-2xl border border-hook/30 bg-hook/5 p-5 mb-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg">🔥</span>
-          <h2 className="font-bold text-hook">이번 주 인기 좌대 TOP3</h2>
-        </div>
-        <div className="space-y-2">
-          {hot.map((j, i) => (
-            <Link key={j.id} href={`/jwaedae/${j.id}`}
-              className="flex items-center gap-3 p-3 rounded-xl bg-ocean-900 hover:bg-ocean-800 transition-colors">
-              <span className="text-xl shrink-0">{MEDALS[i]}</span>
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-slate-200 text-sm truncate">{j.name}</div>
-                <div className="text-xs text-slate-500">{j.region} · ★ {j.rating} · 리뷰 {j.reviewCount}개</div>
-              </div>
-              <div className="text-sm font-black text-hook shrink-0">{j.priceDay.toLocaleString()}원</div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        {/* 어종 랭킹 */}
-        <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <span>🐟</span>
-            <h2 className="font-bold text-slate-200">어종 TOP10</h2>
-            <span className="ml-auto text-xs text-slate-500">총 {totalCatch}마리</span>
-          </div>
-          <div className="space-y-2">
-            {fish.map(([name, count], i) => {
-              const pct = Math.round((count / fish[0][1]) * 100);
-              const colorClass = (FISH_COLOR as Record<string, string>)[name] ?? "bg-slate-600";
-              return (
-                <div key={name}>
-                  <div className="flex items-center justify-between text-xs mb-0.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-slate-500 w-5">{MEDALS[i]}</span>
-                      <span className="text-slate-200 font-bold">{name}</span>
-                    </div>
-                    <span className="text-slate-400 font-mono">{count}마리</span>
-                  </div>
-                  <div className="h-1.5 bg-ocean-800 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${colorClass} opacity-80`} style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 포인트 랭킹 */}
-        <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <span>📍</span>
-            <h2 className="font-bold text-slate-200">핫 포인트 TOP5</h2>
-          </div>
-          <div className="space-y-3">
-            {points.map(([loc, cnt], i) => (
-              <div key={loc} className="flex items-center gap-3">
-                <span className="text-xl shrink-0">{MEDALS[i]}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-slate-200 truncate">{loc}</div>
-                  <div className="text-xs text-slate-500">조황 보고 {cnt}건</div>
-                </div>
-                <div className="shrink-0">
-                  {i === 0 && <span className="text-xs px-2 py-0.5 bg-rose-900/40 text-rose-300 border border-rose-800 rounded-full">HOT</span>}
-                </div>
-              </div>
-            ))}
-          </div>
-          <Link href="/map" className="block mt-4 text-center text-xs text-ocean-400 hover:text-ocean-300">
-            포인트 지도 보기 →
-          </Link>
-        </div>
-      </div>
-
-      {/* 좌대 평점 TOP5 */}
-      <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">
-        <div className="flex items-center gap-2 mb-3">
-          <span>🛖</span>
-          <h2 className="font-bold text-slate-200">좌대 평점 TOP5</h2>
-        </div>
-        <div className="space-y-2">
-          {jwaedae.map((j, i) => (
-            <Link key={j.id} href={`/jwaedae/${j.id}`}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-ocean-800 transition-colors">
-              <span className="text-xl shrink-0">{MEDALS[i]}</span>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-slate-200 truncate">{j.name}</div>
-                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                  <span>{j.region}</span>
-                  <span>·</span>
-                  <span>{j.targetFish.slice(0, 2).join(", ")}</span>
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <div className="text-sm font-black text-hook">★ {j.rating}</div>
-                <div className="text-[10px] text-slate-500">{j.reviewCount}리뷰</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* 오늘의 빅 피쉬 */}
-      <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span>🏅</span>
-          <h2 className="font-bold text-slate-200">오늘의 빅 피쉬</h2>
-        </div>
-        <div className="space-y-2">
-          {DUMMY_CATCH.filter(c => c.catches.some(f => f.size)).slice(0, 5).map((c, i) => {
-            const bigFish = c.catches.filter(f => f.size).sort((a, b) => (b.size ?? 0) - (a.size ?? 0))[0];
-            return (
-              <Link key={c.id} href={`/catch/${c.id}`}
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-ocean-800 transition-colors">
-                <span className="text-lg shrink-0">{MEDALS[i]}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-slate-200">{c.userName} · {bigFish?.fish}</div>
-                  <div className="text-xs text-slate-500">{c.location} · {c.date}</div>
-                </div>
-                <div className="text-sm font-black text-teal-400 shrink-0">{bigFish?.size}cm</div>
-              </Link>
-            );
-          })}
-        </div>
+    <div className="fl-sec-head" style={{ paddingTop: 20, paddingBottom: 4 }}>
+      <div className="fl-sec-bar" style={{ background: accent ?? 'var(--hook)' }} />
+      <div className="fl-sec-text">
+        <div className="fl-sec-kicker" style={{ color: accent ?? 'var(--hook)' }}>{kicker}</div>
+        <div className="fl-sec-title">{title}</div>
+        {subtitle && <div className="fl-sec-sub">{subtitle}</div>}
       </div>
     </div>
+  );
+}
+
+function Podium() {
+  return (
+    <div className="fl-podium">
+      {TOP_JWAEDAE.map((p) => (
+        <div key={p.rank} className={`fl-pod fl-pod-${p.rank}`}>
+          <div className="fl-pod-medal">
+            {p.rank === 1 ? '🥇' : p.rank === 2 ? '🥈' : '🥉'}
+          </div>
+          <div className="fl-pod-card" style={{ '--hue': p.hue } as React.CSSProperties}>
+            <div className="fl-pod-thumb">🛖</div>
+            <div className="fl-pod-name">{p.name}</div>
+            <div className="fl-pod-loc">📍 {p.loc}</div>
+            <div className="fl-pod-stats">
+              <div className="fl-pod-stat">
+                <div className="fl-pod-n">{p.catches}</div>
+                <div className="fl-pod-l">조황</div>
+              </div>
+              <div className="fl-pod-stat">
+                <div className="fl-pod-n">{p.score}</div>
+                <div className="fl-pod-l">평점</div>
+              </div>
+            </div>
+            <div className="fl-pod-change"><ChangeArrow n={p.change} /> 지난주</div>
+          </div>
+          <div className={`fl-pod-base fl-pod-base-${p.rank}`}>
+            <span>{p.rank}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FishBar({ f, max }: { f: typeof TOP_FISH[0]; max: number }) {
+  const pct = (f.count / max) * 100;
+  return (
+    <div className="fl-fbar-row">
+      <div className="fl-fbar-rank">{f.emoji}</div>
+      <div className="fl-fbar-info">
+        <div className="fl-fbar-name">{f.name}</div>
+        <div className="fl-fbar-bar">
+          <div className="fl-fbar-fill" style={{ width: `${pct}%`, background: f.color }} />
+        </div>
+      </div>
+      <div className="fl-fbar-num">
+        <strong style={{ color: f.color }}>{f.count}</strong>
+        <span>마리</span>
+        <ChangeArrow n={f.change} />
+      </div>
+    </div>
+  );
+}
+
+function BigFishRow({ b }: { b: typeof BIG_FISH[0] }) {
+  return (
+    <div className="fl-big-row">
+      <div className="fl-big-rank">{b.rank}</div>
+      <div className="fl-big-fish-info">
+        <div className="fl-big-fish-name" style={{ color: b.color }}>{b.fish}</div>
+        <div className="fl-big-angler">{b.angler} · {b.loc} · {b.date}</div>
+      </div>
+      <div className="fl-big-size" style={{ color: b.color }}>
+        {b.size}<span>cm</span>
+      </div>
+    </div>
+  );
+}
+
+function PointRow({ p }: { p: typeof TOP_POINTS[0] }) {
+  return (
+    <div className="fl-prow">
+      <div className="fl-prow-rank">{p.rank}</div>
+      <div className="fl-prow-pin" style={{ background: p.regionColor }}>📍</div>
+      <div className="fl-prow-info">
+        <div className="fl-prow-name">{p.name}</div>
+        <div className="fl-prow-region">
+          <span
+            className="fl-prow-chip"
+            style={{
+              background: `${p.regionColor}22`,
+              color: p.regionColor,
+              borderColor: `${p.regionColor}55`,
+            }}
+          >
+            {p.region}
+          </span>
+        </div>
+      </div>
+      <div className="fl-prow-stats">
+        <div className="fl-prow-n">{p.catches}<span>건</span></div>
+        <ChangeArrow n={p.change} />
+      </div>
+    </div>
+  );
+}
+
+export default function RankingPage() {
+  const [period, setPeriod] = useState('week');
+  const maxFish = Math.max(...TOP_FISH.map(f => f.count));
+
+  return (
+    <>
+      <section className="fl-rk-hero">
+        <div className="fl-catch-hero-glow" />
+        <div className="fl-tide-hero-inner">
+          <div className="fl-catch-hero-kicker">RANKING</div>
+          <h1 className="fl-catch-hero-title">
+            제주 낚시<br /><span className="fl-hero-accent">위클리 랭킹</span>
+          </h1>
+          <div className="fl-catch-hero-meta">
+            <span>12.09 — 12.15</span>
+            <span className="fl-cond-sep" />
+            <span>2,184건 집계</span>
+          </div>
+        </div>
+        <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none">
+          <path d="M0,50 C80,30 160,70 240,50 C320,30 360,60 400,50 L400,80 L0,80 Z" />
+        </svg>
+        <svg className="fl-wave fl-wave-1" viewBox="0 0 400 80" preserveAspectRatio="none">
+          <path d="M0,60 C70,50 140,75 210,62 C280,48 340,68 400,58 L400,80 L0,80 Z" />
+        </svg>
+      </section>
+
+      <div className="fl-filters">
+        <div className="fl-sort">
+          {([['day', '일간'], ['week', '주간'], ['month', '월간']] as const).map(([k, l]) => (
+            <button key={k} className={`fl-sort-btn ${period === k ? 'on' : ''}`} onClick={() => setPeriod(k)}>
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <SectionHeader kicker="HOT JWAEDAE" title="HOT 좌대 TOP 3" subtitle="이번 주 가장 핫한 좌대" accent="#fbbf24" />
+      <Podium />
+
+      <SectionHeader kicker="FISH" title="어종별 마릿수" subtitle="가장 많이 잡힌 어종" accent="#5fa3cf" />
+      <div className="fl-fbar-list">
+        {TOP_FISH.map(f => <FishBar key={f.name} f={f} max={maxFish} />)}
+      </div>
+
+      <SectionHeader kicker="BIG FISH" title="이번 주 빅 피쉬" subtitle="가장 큰 사이즈 TOP 5" accent="#fbbf24" />
+      <div className="fl-big-list">
+        {BIG_FISH.map(b => <BigFishRow key={b.rank} b={b} />)}
+      </div>
+
+      <SectionHeader kicker="POINTS" title="포인트 랭킹" subtitle="조황이 잘 잡힌 포인트" accent="#86efac" />
+      <div className="fl-prow-list">
+        {TOP_POINTS.map(p => <PointRow key={p.rank} p={p} />)}
+      </div>
+    </>
   );
 }

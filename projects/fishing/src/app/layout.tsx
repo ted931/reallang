@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import DevNav from "@/components/dev-nav";
 import Header from "@/components/header";
+import SideNav from "@/components/side-nav";
 import BottomNav from "@/components/bottom-nav";
-import Footer from "@/components/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,13 +17,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-[Noto_Sans_KR] antialiased bg-ocean-950 text-slate-100">
+      <body className="fl-page">
         <DevNav />
-        <Header />
-        <main className="min-h-screen pb-20 md:pb-0">
+        <SideNav />
+        <main className="fl-main">
+          <Header />
           {children}
+          <div className="fl-bottom-pad" />
         </main>
-        <Footer />
         <BottomNav />
       </body>
     </html>

@@ -3,168 +3,169 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   DUMMY_TIDE, WEATHER_ICON, WEATHER_LABEL, SCORE_COLOR, SCORE_LABEL,
-  type DayTide,
 } from "@/lib/dummy-tide";
 import { DUMMY_JWAEDAE } from "@/lib/dummy-jwaedae";
 
-export default function TidePage() {
-  const [selectedDate, setSelectedDate] = useState<string>(DUMMY_TIDE[0].date);
-  const today = DUMMY_TIDE.find((d) => d.date === selectedDate) ?? DUMMY_TIDE[0];
+const TIDE_POINTS_STATIC = [
+  { t: '03:24', type: '간조', h: 12 },
+  { t: '09:42', type: '만조', h: 218 },
+  { t: '15:51', type: '간조', h: 28 },
+  { t: '22:08', type: '만조', h: 232 },
+];
 
-  const highTides = today.tides.filter((t) => t.type === "high");
-  const lowTides = today.tides.filter((t) => t.type === "low");
+const WEATHER_STATIC = [
+  { k: 'temp',  l: '기온',       v: '12°',         s: '체감 9°',   icon: '🌡️' },
+  { k: 'wind',  l: '바람',       v: '북동 3m/s',   s: '약함',     icon: '💨' },
+  { k: 'wave',  l: '파고',       v: '0.5m',        s: '잔잔',     icon: '🌊' },
+  { k: 'cloud', l: '날씨',       v: '맑음',        s: '강수 0%',  icon: '☀️' },
+  { k: 'sun',   l: '일출/일몰',  v: '07:34',       s: '17:24',    icon: '🌅' },
+  { k: 'visi',  l: '시야',       v: '10km',        s: '매우 좋음', icon: '👁️' },
+];
 
-  // 좌대 예약 추천 (같은 지역 아무 거나)
-  const recommendedJwaedae = DUMMY_JWAEDAE.slice(0, 3);
-
-  function scoreStars(score: number) {
-    return Array.from({ length: 5 }, (_, i) =>
-      i < score ? "★" : "☆"
-    ).join("");
+function TideWaveSVG() {
+  const W = 600, H = 160;
+  const pts: string[] = [];
+  for (let x = 0; x <= W; x += 4) {
+    const t = (x / W) * 4 * Math.PI - 0.3;
+    const y = H / 2 + Math.sin(t) * 50 + Math.cos(t * 0.5) * 8;
+    pts.push(`${x},${y}`);
   }
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="fl-tide-wave-svg">
+      <defs>
+        <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(95,163,207,0.4)" />
+          <stop offset="100%" stopColor="rgba(30,101,149,0.05)" />
+        </linearGradient>
+      </defs>
+      <path d={`M0,${H} L${pts.join(' L')} L${W},${H} Z`} fill="url(#tideGrad)" />
+      <path d={`M0,${H / 2} L${pts.join(' L')}`} stroke="var(--hook)" strokeWidth="2.5" fill="none" />
+      {TIDE_POINTS_STATIC.map((p, i) => {
+        const x = (i + 0.5) * (W / TIDE_POINTS_STATIC.length);
+        const y = p.type === '만조' ? H / 2 - 50 : H / 2 + 50;
+        return (
+          <g key={i}>
+            <circle cx={x} cy={y} r="6" fill="var(--hook)" stroke="#fff" strokeWidth="2" />
+            <text x={x} y={y - 14} textAnchor="middle" fill="var(--text-strong)" fontSize="13" fontWeight="800">{p.t}</text>
+            <text x={x} y={y + 22} textAnchor="middle" fill="var(--text-dim)" fontSize="11">{p.type} · {p.h}cm</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function ScoreFish({ score }: { score: number }) {
+  return (
+    <div className="fl-score-fish">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className={`fl-score-fish-i ${i < score ? 'on' : ''}`}>🐟</span>
+      ))}
+    </div>
+  );
+}
+
+function SectionHeader({ kicker, title, subtitle, accent }: {
+  kicker: string; title: string; subtitle: string; accent?: string;
+}) {
+  return (
+    <div className="fl-sec-head" style={{ paddingTop: 20, paddingBottom: 4 }}>
+      <div className="fl-sec-bar" style={{ background: accent ?? 'var(--hook)' }} />
+      <div className="fl-sec-text">
+        <div className="fl-sec-kicker" style={{ color: accent ?? 'var(--hook)' }}>{kicker}</div>
+        <div className="fl-sec-title">{title}</div>
+        {subtitle && <div className="fl-sec-sub">{subtitle}</div>}
+      </div>
+    </div>
+  );
+}
+
+export default function TidePage() {
+  const [sel, setSel] = useState(0);
+  const cur = DUMMY_TIDE[sel];
+
+  const recommendedJwaedae = DUMMY_JWAEDAE.slice(0, 4);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      {/* 헤더 */}
-      <div className="mb-5">
-        <h1 className="text-xl font-black text-white">🌊 물때 캘린더</h1>
-        <p className="text-xs text-slate-500 mt-0.5">날짜를 선택해 출조 컨디션을 확인하세요</p>
-      </div>
+    <>
+      <section className="fl-tide-hero">
+        <div className="fl-catch-hero-glow" />
+        <div className="fl-tide-hero-inner">
+          <div className="fl-catch-hero-kicker">TIDE CALENDAR</div>
+          <h1 className="fl-catch-hero-title">
+            {cur.date}<br />
+            <span className="fl-hero-accent">{cur.tideLabel} {cur.moonPhase}</span>
+          </h1>
+          <div className="fl-tide-score-row">
+            <ScoreFish score={cur.fishingScore} />
+            <div className="fl-tide-score-l">출조 점수 <strong>{cur.fishingScore}.0</strong> / 5</div>
+          </div>
+        </div>
+        <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none">
+          <path d="M0,50 C80,30 160,70 240,50 C320,30 360,60 400,50 L400,80 L0,80 Z" />
+        </svg>
+        <svg className="fl-wave fl-wave-1" viewBox="0 0 400 80" preserveAspectRatio="none">
+          <path d="M0,60 C70,50 140,75 210,62 C280,48 340,68 400,58 L400,80 L0,80 Z" />
+        </svg>
+      </section>
 
-      {/* 날짜 스크롤 */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-5 -mx-4 px-4">
-        {DUMMY_TIDE.map((d) => {
-          const dt = new Date(d.date);
-          const weekDay = ["일", "월", "화", "수", "목", "금", "토"][dt.getDay()];
-          const isSelected = d.date === selectedDate;
-          const isToday = d.date === "2026-05-11";
+      <div className="fl-tide-dates">
+        {DUMMY_TIDE.map((t, i) => {
+          const dt = new Date(t.date);
+          const dow = ['일', '월', '화', '수', '목', '금', '토'][dt.getDay()];
+          const isToday = t.date === '2026-05-11';
           return (
-            <button key={d.date} onClick={() => setSelectedDate(d.date)}
-              className={`shrink-0 flex flex-col items-center gap-0.5 w-14 py-2 rounded-2xl border transition-all ${
-                isSelected
-                  ? "bg-hook border-hook text-ocean-950"
-                  : d.fishingScore >= 4
-                  ? "bg-teal-900/30 border-teal-800 text-teal-300 hover:border-teal-600"
-                  : "bg-ocean-900 border-ocean-800 text-slate-400 hover:border-ocean-600"
-              }`}>
-              <span className={`text-[10px] font-bold ${isSelected ? "text-ocean-950" : weekDay === "일" ? "text-rose-400" : weekDay === "토" ? "text-blue-400" : ""}`}>
-                {weekDay}
-              </span>
-              <span className="text-sm font-black">{dt.getDate()}</span>
-              <span className="text-base">{WEATHER_ICON[d.weather]}</span>
-              <span className={`text-[9px] font-bold ${isSelected ? "text-ocean-950" : SCORE_COLOR[d.fishingScore]}`}>
-                {scoreStars(d.fishingScore)}
-              </span>
-              {isToday && !isSelected && (
-                <span className="text-[8px] bg-hook/20 text-hook px-1 rounded">오늘</span>
-              )}
+            <button
+              key={i}
+              className={`fl-tide-date ${sel === i ? 'on' : ''} ${t.fishingScore === 5 ? 'gold' : ''} ${isToday ? 'today' : ''}`}
+              onClick={() => setSel(i)}
+            >
+              <div className="fl-tide-date-dow">{dow}</div>
+              <div className="fl-tide-date-d">{dt.getDate()}</div>
+              <div className="fl-tide-date-mul">{t.tideLabel}</div>
+              <div className={`fl-tide-date-score s-${t.fishingScore}`} />
             </button>
           );
         })}
       </div>
 
-      {/* 선택된 날짜 상세 */}
-      <div className="space-y-4">
-        {/* 종합 컨디션 */}
-        <div className={`rounded-2xl border p-5 ${today.fishingScore >= 4 ? "border-teal-800 bg-teal-900/10" : today.fishingScore <= 2 ? "border-rose-900 bg-rose-900/10" : "border-ocean-800 bg-ocean-900"}`}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <div className="text-lg font-black text-white">{today.date}</div>
-              <div className="text-sm text-slate-400">{today.tideLabel} · 음력 {today.lunarDay}일 {today.moonPhase}</div>
-            </div>
-            <div className="text-right">
-              <div className={`text-2xl font-black ${SCORE_COLOR[today.fishingScore]}`}>
-                {SCORE_LABEL[today.fishingScore]}
-              </div>
-              <div className={`text-sm ${SCORE_COLOR[today.fishingScore]}`}>{scoreStars(today.fishingScore)}</div>
-            </div>
-          </div>
-          <div className={`rounded-xl p-3 text-sm leading-relaxed ${today.fishingScore >= 4 ? "bg-teal-900/30 text-teal-200" : today.fishingScore <= 2 ? "bg-rose-900/30 text-rose-300" : "bg-ocean-800/60 text-slate-300"}`}>
-            💡 {today.fishingTip}
-          </div>
-        </div>
-
-        {/* 기상 정보 */}
-        <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-          <h2 className="font-bold text-slate-200 mb-3">기상 정보</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { icon: WEATHER_ICON[today.weather], label: "날씨", value: WEATHER_LABEL[today.weather] },
-              { icon: "💨", label: "바람", value: `${today.windSpeed}m/s` },
-              { icon: "🌊", label: "파고", value: `${today.waveHeight}m` },
-              { icon: "🌅", label: "일출/몰", value: `${today.sunrise}/${today.sunset}` },
-            ].map((item) => (
-              <div key={item.label} className="bg-ocean-800/60 rounded-xl p-3 text-center">
-                <div className="text-2xl mb-1">{item.icon}</div>
-                <div className="text-[10px] text-slate-500">{item.label}</div>
-                <div className="text-sm font-bold text-slate-200">{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 물때 표 */}
-        <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-          <h2 className="font-bold text-slate-200 mb-3">조석 예보</h2>
-          <div className="space-y-2">
-            {today.tides.filter(t => t.time).sort((a, b) => a.time.localeCompare(b.time)).map((t, i) => {
-              const maxH = 340;
-              const barW = Math.round((t.height / maxH) * 100);
-              return (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-12 text-xs font-mono text-slate-400 shrink-0">{t.time}</div>
-                  <div className="flex-1 bg-ocean-800 rounded-full h-2 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all ${t.type === "high" ? "bg-teal-500" : "bg-ocean-600"}`}
-                      style={{ width: `${barW}%` }}
-                    />
-                  </div>
-                  <div className="w-20 text-right">
-                    <span className={`text-xs font-bold ${t.type === "high" ? "text-teal-400" : "text-slate-500"}`}>
-                      {t.type === "high" ? "만조" : "간조"}
-                    </span>
-                    <span className="text-xs text-slate-400 ml-1">{t.height}cm</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 추천 어종 */}
-        {today.recommendFish.length > 0 && (
-          <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-            <h2 className="font-bold text-slate-200 mb-3">오늘의 추천 어종</h2>
-            <div className="flex flex-wrap gap-2">
-              {today.recommendFish.map(f => (
-                <span key={f} className="px-4 py-2 bg-hook/10 text-hook border border-hook/30 rounded-full font-bold text-sm">{f}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 오늘 예약 가능한 좌대 */}
-        {today.fishingScore >= 3 && (
-          <div className="rounded-2xl border border-teal-800/50 bg-teal-900/10 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-teal-300">이 날 예약 가능한 좌대</h2>
-              <Link href="/jwaedae" className="text-xs text-ocean-400 hover:text-ocean-300">전체보기 →</Link>
-            </div>
-            <div className="space-y-2">
-              {recommendedJwaedae.map(j => (
-                <Link key={j.id} href={`/jwaedae/${j.id}`}
-                  className="flex items-center justify-between p-3 bg-ocean-900 rounded-xl hover:bg-ocean-800 transition-colors">
-                  <div>
-                    <div className="text-sm font-bold text-slate-200">{j.name}</div>
-                    <div className="text-xs text-slate-500">{j.region} · {j.targetFish.slice(0, 2).join(", ")}</div>
-                  </div>
-                  <div className="text-sm font-black text-hook shrink-0">{j.priceDay.toLocaleString()}원</div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+      <SectionHeader kicker="TIDE GRAPH" title="조석 예보" subtitle={`${cur.date} 만조·간조 그래프`} accent="#5fa3cf" />
+      <div className="fl-tide-graph">
+        <TideWaveSVG />
       </div>
-    </div>
+
+      <SectionHeader kicker="WEATHER" title="기상 정보" subtitle="출조 컨디션 한눈에 확인" accent="#5fa3cf" />
+      <div className="fl-tide-weather">
+        {WEATHER_STATIC.map(w => (
+          <div key={w.k} className="fl-tide-wx">
+            <div className="fl-tide-wx-icon">{w.icon}</div>
+            <div className="fl-tide-wx-l">{w.l}</div>
+            <div className="fl-tide-wx-v">{w.v}</div>
+            <div className="fl-tide-wx-s">{w.s}</div>
+          </div>
+        ))}
+      </div>
+
+      <SectionHeader kicker="JWAEDAE" title="이 날 좌대 추천" subtitle="물때와 잘 맞는 좌대" accent="#fbbf24" />
+      <div className="fl-carousel">
+        {recommendedJwaedae.map(s => (
+          <Link key={s.id} href={`/jwaedae/${s.id}`} className="fl-catch fl-tide-rec">
+            <div className="fl-catch-img" style={{ '--hue': 210 } as React.CSSProperties}>
+              <div className="fl-catch-img-fish" style={{ fontSize: 48, display: 'grid', placeItems: 'center' }}>🛖</div>
+              <div className="fl-hot-badge">🔥 추천</div>
+              <div className="fl-catch-size">{s.availableSeats}<span>석 남음</span></div>
+            </div>
+            <div className="fl-catch-body">
+              <div className="fl-catch-fish">{s.name}</div>
+              <div className="fl-catch-meta">📍 {s.region}</div>
+              <div className="fl-catch-foot" style={{ paddingTop: 8 }}>
+                <ScoreFish score={s.rating} />
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div style={{ height: 32 }} />
+    </>
   );
 }

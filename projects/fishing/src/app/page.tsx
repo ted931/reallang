@@ -1,224 +1,241 @@
+"use client";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import CatchCard from "@/components/catch-card";
-import JwaedaeCard from "@/components/jwaedae-card";
-import GatheringCard from "@/components/gathering-card";
 import { DUMMY_CATCHES } from "@/lib/dummy-catch";
 import { DUMMY_JWAEDAE } from "@/lib/dummy-jwaedae";
 import { DUMMY_GATHERINGS } from "@/lib/dummy-gatherings";
-import { DUMMY_POSTS } from "@/lib/dummy-posts";
-import { DUMMY_POINTS } from "@/lib/dummy-points";
-import { SPOT_TYPE_ICON } from "@/lib/constants";
 
-const HOT_CATCHES = DUMMY_CATCHES.sort((a, b) => b.likeCount - a.likeCount).slice(0, 4);
-const AVAILABLE_JWAEDAE = DUMMY_JWAEDAE.filter(j => j.availableSeats > 0).slice(0, 4);
-const UPCOMING_GATHERINGS = DUMMY_GATHERINGS.slice(0, 3);
-const RECENT_POSTS = DUMMY_POSTS.slice(0, 6);
-const TOP_POINTS = [...DUMMY_POINTS].sort((a, b) => b.recentCatchCount - a.recentCatchCount).slice(0, 3);
+function useCountUp(target: number, duration = 1200) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    let raf: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setVal(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return val;
+}
+
+const IcoFlame = () => <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-1 .5-2 1-2.5C8 9 7 11 7 13a5 5 0 0 0 10 0c0-5-5-9-5-11Z"/></svg>;
+const IcoArrow = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>;
+const IcoPin = ({s=10}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>;
+const IcoSun = ({s=14}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>;
+const IcoMoon = ({s=14}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>;
+const IcoWaves = ({s=14}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2c1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2c1.3 0 1.9.5 2.5 1"/></svg>;
+const IcoWind = ({s=14}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/></svg>;
+const IcoUsers = ({s=18}:{s?:number}) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+
+function Hero() {
+  const stars = Array.from({length:14},(_,i)=>({left:`${(i*73)%100}%`,top:`${(i*41)%60}%`,delay:`${(i%5)*0.4}s`}));
+  return (
+    <section className="fl-hero">
+      <div className="fl-hero-glow"/>
+      <div className="fl-hero-stars">{stars.map((s,i)=><span key={i} style={{left:s.left,top:s.top,animationDelay:s.delay}}/>)}</div>
+      <div className="fl-hero-content">
+        <div className="fl-hero-greet">안녕하세요, 낚시인님 🎣</div>
+        <h1 className="fl-hero-title">오늘은 바다가<br/><span className="fl-hero-accent">출조하기 좋은 날</span>이에요</h1>
+        <div className="fl-tide-card">
+          <div className="fl-tide-row">
+            {[
+              {label:<><IcoWaves/>만조</>,val:"14:32"},
+              {label:<><IcoWaves/>간조</>,val:"08:15"},
+              {label:<><IcoWind/>바람</>,val:<>3<span className="fl-unit">m/s</span></>},
+              {label:<><IcoSun/>일출</>,val:"06:21"},
+            ].map((item,i,arr)=>(
+              <><div key={i} className="fl-tide-item"><div className="fl-tide-label">{item.label}</div><div className="fl-tide-value">{item.val}</div></div>{i<arr.length-1&&<div className="fl-tide-divider"/>}</>
+            ))}
+          </div>
+        </div>
+      </div>
+      <svg className="fl-wave fl-wave-3" viewBox="0 0 400 80" preserveAspectRatio="none"><path d="M0,40 C60,20 120,60 200,40 C280,20 340,60 400,40 L400,80 L0,80 Z"/></svg>
+      <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none"><path d="M0,50 C80,30 160,70 240,50 C320,30 360,60 400,50 L400,80 L0,80 Z"/></svg>
+      <svg className="fl-wave fl-wave-1" viewBox="0 0 400 80" preserveAspectRatio="none"><path d="M0,60 C70,50 140,75 210,62 C280,48 340,68 400,58 L400,80 L0,80 Z"/></svg>
+    </section>
+  );
+}
+
+function StatsBar() {
+  const tiles = [
+    {icon:"🐟",label:"오늘 조황",value:142,suffix:"건",accent:"#fbbf24"},
+    {icon:"🎣",label:"활동 낚시꾼",value:1284,suffix:"명",accent:"#5fa3cf"},
+    {icon:"🛖",label:"좌대 예약",value:38,suffix:"석",accent:"#86efac"},
+    {icon:"🤝",label:"진행 모임",value:12,suffix:"개",accent:"#f0abfc"},
+  ];
+  return (
+    <div className="fl-stats">
+      {tiles.map(t=>{
+        const n = useCountUp(t.value);
+        return (
+          <div key={t.label} className="fl-stat">
+            <div className="fl-stat-icon" style={{color:t.accent,fontSize:18}}>{t.icon}</div>
+            <div className="fl-stat-num">{n.toLocaleString()}<span className="fl-stat-suf">{t.suffix}</span></div>
+            <div className="fl-stat-label">{t.label}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+const HUE: Record<string,number> = {"갈치":215,"참돔":350,"감성돔":220,"방어":30,"부시리":190,"벵에돔":150,"볼락":260,"농어":210,"광어":195};
+
+function HotCatchCarousel() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [idx,setIdx] = useState(0);
+  const hot = DUMMY_CATCHES.slice(0,5);
+  useEffect(()=>{
+    const el=ref.current; if(!el)return;
+    const fn=()=>setIdx(Math.round(el.scrollLeft/244));
+    el.addEventListener("scroll",fn,{passive:true});
+    return ()=>el.removeEventListener("scroll",fn);
+  },[]);
+  return (
+    <div>
+      <div className="fl-sec-head">
+        <div className="fl-sec-bar" style={{background:"#f59e0b"}}/>
+        <div className="fl-sec-text">
+          <div className="fl-sec-kicker" style={{color:"#f59e0b"}}>HOT</div>
+          <div className="fl-sec-title">실시간 조황</div>
+          <div className="fl-sec-sub">지금 막 올라온 한 마리</div>
+        </div>
+        <Link href="/catch" className="fl-sec-more">더보기 <IcoArrow/></Link>
+      </div>
+      <div className="fl-carousel" ref={ref}>
+        {hot.map((c,i)=>{
+          const fish=c.catches[0]?.fishName??"물고기";
+          const hue=HUE[fish]??210;
+          return (
+            <Link key={c.id} href={`/catch/${c.id}`} className="fl-catch" style={{"--hue":hue} as React.CSSProperties}>
+              <div className="fl-catch-img">
+                {i===0&&<div className="fl-hot-badge"><IcoFlame/> HOT</div>}
+                <div className="fl-catch-img-fish">
+                  <svg viewBox="0 0 100 60" width="80%" height="60%" style={{opacity:0.18}}>
+                    <path d="M10 30 Q 30 10, 60 30 T 90 30 L 95 22 L 95 38 Z" fill="white"/>
+                    <circle cx="55" cy="28" r="2" fill="rgba(0,0,0,0.6)"/>
+                  </svg>
+                </div>
+                <div className="fl-catch-size">📏 {c.catches[0]?.size??""}</div>
+              </div>
+              <div className="fl-catch-body">
+                <div className="fl-catch-fish">{fish}</div>
+                <div className="fl-catch-meta"><IcoPin/> {c.location.slice(0,12)}</div>
+                <div className="fl-catch-foot">
+                  <div className="fl-avatar">{c.authorName[0]}</div>
+                  <div className="fl-catch-angler">{c.authorName}</div>
+                  <div className="fl-catch-time">🕐 {c.region}</div>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+        <div style={{flex:"0 0 4px"}}/>
+      </div>
+      <div className="fl-dots">{hot.map((_,i)=><span key={i} className={i===idx?"on":""}/>)}</div>
+    </div>
+  );
+}
+
+function SeatSection() {
+  const seats = DUMMY_JWAEDAE.slice(0,4);
+  return (
+    <div>
+      <div className="fl-sec-head">
+        <div className="fl-sec-bar" style={{background:"#5fa3cf"}}/>
+        <div className="fl-sec-text">
+          <div className="fl-sec-kicker" style={{color:"#5fa3cf"}}>좌대 예약</div>
+          <div className="fl-sec-title">오늘 입실 가능한 좌대</div>
+          <div className="fl-sec-sub">잔여석 실시간</div>
+        </div>
+        <Link href="/jwaedae" className="fl-sec-more">더보기 <IcoArrow/></Link>
+      </div>
+      <div className="fl-seat-list">
+        {seats.map(s=>{
+          const urgent=s.availableSeats<=2;
+          const pct=((s.capacity-s.availableSeats)/s.capacity)*100;
+          return (
+            <article key={s.id} className={`fl-seat${urgent?" urgent":""}`}>
+              {urgent&&<div className="fl-seat-pulse"/>}
+              <div className="fl-seat-top">
+                <div className="fl-seat-icon">
+                  <svg viewBox="0 0 40 40" width="40" height="40">
+                    <defs><linearGradient id={`sg${s.id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#5fa3cf"/><stop offset="100%" stopColor="#1e6595"/></linearGradient></defs>
+                    <rect width="40" height="40" rx="10" fill={`url(#sg${s.id})`}/>
+                    <path d="M8 22 Q 15 18 22 22 T 36 22" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" fill="none"/>
+                  </svg>
+                </div>
+                <div className="fl-seat-name">
+                  <div className="fl-seat-title">{s.name}</div>
+                  <div className="fl-seat-loc"><IcoPin/> {s.location.slice(0,14)}</div>
+                </div>
+                <div className={`fl-rate fl-rate-${s.catchRate}`}><em>조황 {s.catchRate}</em></div>
+              </div>
+              <div className="fl-seat-bar-wrap">
+                <div className="fl-seat-bar-head">
+                  <div className="fl-seat-left">잔여 <strong className={urgent?"urgent":""}>{s.availableSeats}</strong><span>/{s.capacity}석</span></div>
+                  {urgent&&<div className="fl-urgent-tag"><IcoFlame/> 마감임박</div>}
+                </div>
+                <div className="fl-seat-bar">
+                  <div className="fl-seat-bar-fill" style={{width:`${pct}%`,background:urgent?"linear-gradient(90deg,#f59e0b,#ef4444)":"linear-gradient(90deg,#3a82b3,#1e6595)"}}/>
+                </div>
+              </div>
+              <div className="fl-price-row">
+                <div className="fl-price"><div className="fl-price-h"><IcoSun/> 주간</div><div className="fl-price-v">{(s.priceDay/10000).toFixed(0)}<span>만원</span></div></div>
+                <div className="fl-price"><div className="fl-price-h"><IcoMoon/> 야간</div><div className="fl-price-v">{(s.priceNight/10000).toFixed(0)}<span>만원</span></div></div>
+                <Link href={`/jwaedae/${s.id}`} className="fl-book-btn">예약</Link>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function GatheringSection() {
+  const parties = DUMMY_GATHERINGS.slice(0,3);
+  return (
+    <div>
+      <div className="fl-sec-head">
+        <div className="fl-sec-bar" style={{background:"#86efac"}}/>
+        <div className="fl-sec-text">
+          <div className="fl-sec-kicker" style={{color:"#86efac"}}>MEETUP</div>
+          <div className="fl-sec-title">이번 주 낚시 모임</div>
+        </div>
+        <Link href="/gathering" className="fl-sec-more">더보기 <IcoArrow/></Link>
+      </div>
+      <div className="fl-party-list">
+        {parties.map(p=>{
+          const dday=Math.max(0,Math.ceil((new Date(p.date).getTime()-Date.now())/86400000));
+          return (
+            <Link key={p.id} href={`/gathering/${p.id}`} className="fl-party">
+              <div className="fl-dday">D-{dday}</div>
+              <div className="fl-party-body">
+                <div className="fl-party-title">{p.title}</div>
+                <div className="fl-party-meta"><IcoUsers s={11}/> {p.currentMembers}/{p.maxMembers}명 · {p.hostName}</div>
+              </div>
+              <div className="fl-party-cta"><IcoArrow/></div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
-    <div>
-      {/* 히어로 */}
-      <section className="relative overflow-hidden" style={{ background: "linear-gradient(160deg, #0a1628 0%, #0d2137 40%, #112842 70%, #163856 100%)" }}>
-        {/* 바다 물결 배경 */}
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "repeating-linear-gradient(180deg, transparent, transparent 40px, #1e6595 40px, #1e6595 41px)" }} />
-
-        <div className="relative max-w-5xl mx-auto px-4 py-12 md:py-16">
-          {/* 물때 + 날씨 띠 */}
-          <div className="inline-flex items-center gap-3 bg-ocean-800/60 border border-ocean-700 rounded-full px-4 py-1.5 text-sm mb-6">
-            <span className="text-ocean-300">오늘 물때</span>
-            <span className="font-black text-hook">8물</span>
-            <span className="text-ocean-700">|</span>
-            <span className="text-slate-400">서풍 3~5m/s</span>
-            <span className="text-ocean-700">|</span>
-            <span className="text-slate-400">파고 0.5m</span>
-            <span className="text-ocean-700">|</span>
-            <span className="text-slate-400">수온 19°C</span>
-          </div>
-
-          <h1 className="text-3xl md:text-4xl font-black text-slate-100 mb-3 leading-tight">
-            오늘 어디서<br />
-            <span className="text-ocean-400">뭐가 잡혔나</span> 🎣
-          </h1>
-          <p className="text-slate-400 text-lg mb-8">제주 낚시 조황 · 좌대 · 포인트 · 모임</p>
-
-          {/* 빠른 검색 */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            {["서귀포", "성산", "한림", "애월", "모슬포"].map((region) => (
-              <Link key={region} href={`/catch?region=${region}`}>
-                <span className="px-4 py-2 bg-ocean-800/60 border border-ocean-700 hover:border-ocean-500 rounded-full text-sm text-slate-300 hover:text-slate-100 transition-colors">
-                  {region}
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {["감성돔", "참돔", "방어", "벵에돔", "볼락", "갈치"].map((fish) => (
-              <Link key={fish} href={`/catch?fish=${fish}`}>
-                <span className="px-3 py-1 text-xs bg-ocean-900/60 border border-ocean-800 hover:border-ocean-600 rounded-full text-ocean-300 hover:text-ocean-200 transition-colors">
-                  🐟 {fish}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 통계 바 */}
-      <section className="bg-ocean-900 border-b border-ocean-800">
-        <div className="max-w-5xl mx-auto px-2 py-3 flex items-center justify-between text-center">
-          {[
-            { value: "38건", label: "오늘 조황" },
-            { value: "127개", label: "활성 포인트" },
-            { value: "24개", label: "진행중 모임" },
-            { value: "8,420명", label: "등록 낚시꾼" },
-          ].map(({ value, label }) => (
-            <div key={label} className="flex-1">
-              <div className="text-hook font-black text-base sm:text-lg">{value}</div>
-              <div className="text-slate-500 text-[10px] sm:text-xs">{label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 빠른 메뉴 */}
-      <section className="bg-ocean-900 border-b border-ocean-800">
-        <div className="max-w-5xl mx-auto px-4 py-4 grid grid-cols-5 sm:grid-cols-10 gap-2">
-          {[
-            { href: "/tide", icon: "🌊", label: "물때" },
-            { href: "/ranking", icon: "🏆", label: "랭킹" },
-            { href: "/market", icon: "🛒", label: "중고" },
-            { href: "/coupon", icon: "🎫", label: "쿠폰" },
-            { href: "/logbook", icon: "📓", label: "일지" },
-            { href: "/carshare", icon: "🚗", label: "카풀" },
-            { href: "/stay", icon: "🏠", label: "숙소" },
-            { href: "/mypage", icon: "📋", label: "내예약" },
-            { href: "/catch/upload", icon: "📸", label: "사진등록" },
-            { href: "/map", icon: "📍", label: "지도" },
-          ].map(m => (
-            <a key={m.href} href={m.href} className="flex flex-col items-center gap-1 py-2 rounded-xl hover:bg-ocean-800 transition-colors">
-              <span className="text-xl">{m.icon}</span>
-              <span className="text-[10px] text-slate-400">{m.label}</span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-12">
-        {/* HOT 조황 */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-black text-slate-100">🔥 오늘의 HOT 조황</h2>
-              <p className="text-xs text-slate-500">좋아요 많은 최신 조황 리포트</p>
-            </div>
-            <Link href="/catch" className="text-sm text-ocean-400 hover:text-ocean-300">전체보기 →</Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {HOT_CATCHES.map((report) => (
-              <CatchCard key={report.id} report={report} />
-            ))}
-          </div>
-        </section>
-
-        {/* 추천 포인트 */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-black text-slate-100">🗺️ 이번 주 인기 포인트</h2>
-              <p className="text-xs text-slate-500">최근 7일 조황 건수 기준</p>
-            </div>
-            <Link href="/map" className="text-sm text-ocean-400 hover:text-ocean-300">지도보기 →</Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {TOP_POINTS.map((point, i) => (
-              <Link key={point.id} href="/map">
-                <div className="rounded-2xl border border-ocean-800 bg-ocean-900 hover:border-ocean-600 hover:-translate-y-0.5 transition-all p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{SPOT_TYPE_ICON[point.spotType]}</span>
-                    <div>
-                      <div className="font-bold text-slate-100 text-sm">{point.name}</div>
-                      <div className="text-xs text-ocean-400">{point.region}</div>
-                    </div>
-                    {i === 0 && <span className="ml-auto text-xs bg-hook/20 text-hook px-2 py-0.5 rounded-full border border-hook/30">1위</span>}
-                  </div>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {point.targetFish.slice(0, 3).map((f) => (
-                      <span key={f} className="text-[10px] bg-ocean-800 text-ocean-300 px-2 py-0.5 rounded-full">{f}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">최근 7일 조황 <span className="text-teal-sea font-bold">{point.recentCatchCount}건</span></span>
-                    <span className="text-hook">★ {point.rating}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* 좌대 예약 */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-black text-slate-100">🛖 좌대 예약하기</h2>
-              <p className="text-xs text-slate-500">자리 있는 좌대 모음</p>
-            </div>
-            <Link href="/jwaedae" className="text-sm text-ocean-400 hover:text-ocean-300">전체보기 →</Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {AVAILABLE_JWAEDAE.map((item) => (
-              <JwaedaeCard key={item.id} item={item} />
-            ))}
-          </div>
-        </section>
-
-        {/* 커뮤니티 + 모임 (2열 레이아웃) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* 최신 커뮤니티 */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-black text-slate-100">💬 최신 커뮤니티</h2>
-              <Link href="/community" className="text-sm text-ocean-400 hover:text-ocean-300">전체보기 →</Link>
-            </div>
-            <div className="space-y-2">
-              {RECENT_POSTS.map((post) => {
-                const catColor: Record<string, string> = {
-                  "조황": "bg-teal-900/60 text-teal-300 border-teal-800",
-                  "자유": "bg-slate-800 text-slate-400 border-slate-700",
-                  "질문": "bg-blue-900/60 text-blue-300 border-blue-800",
-                  "장터": "bg-orange-900/60 text-orange-300 border-orange-800",
-                  "후기": "bg-purple-900/60 text-purple-300 border-purple-800",
-                };
-                return (
-                  <Link key={post.id} href={`/community/${post.id}`}>
-                    <div className="flex items-start gap-3 p-3 rounded-xl hover:bg-ocean-900 transition-colors">
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md border shrink-0 mt-0.5 ${catColor[post.category] ?? ""}`}>{post.category}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-slate-200 line-clamp-1">{post.title}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{post.authorName} · ♥{post.likeCount} · 💬{post.commentCount}</p>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* 다가오는 모임 */}
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-black text-slate-100">🤝 다가오는 모임</h2>
-              <Link href="/gathering" className="text-sm text-ocean-400 hover:text-ocean-300">전체보기 →</Link>
-            </div>
-            <div className="space-y-3">
-              {UPCOMING_GATHERINGS.map((item) => (
-                <GatheringCard key={item.id} item={item} />
-              ))}
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
+    <>
+      <Hero/>
+      <StatsBar/>
+      <div className="fl-section"><HotCatchCarousel/></div>
+      <div className="fl-section"><SeatSection/></div>
+      <div className="fl-section"><GatheringSection/></div>
+    </>
   );
 }

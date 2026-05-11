@@ -1,126 +1,179 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { DUMMY_RESERVATIONS, ESCROW_STATUS_LABEL, type EscrowStatus } from "@/lib/dummy-reservations";
+import {
+  DUMMY_RESERVATIONS,
+  ESCROW_STATUS_LABEL,
+  type EscrowStatus,
+  type Reservation,
+} from "@/lib/dummy-reservations";
 
-const TABS = ["전체", "보관중", "출조확정", "완료", "취소/환불"] as const;
+const TABS = [
+  { k: "reserve", label: "예약 내역", n: DUMMY_RESERVATIONS.length },
+  { k: "escrow", label: "에스크로", n: DUMMY_RESERVATIONS.filter((r) => r.escrowStatus === "holding").length },
+  { k: "logbook", label: "내 일지", n: 18 },
+  { k: "review", label: "리뷰", n: 6 },
+] as const;
+type TabKey = typeof TABS[number]["k"];
 
-const statusMap: Record<typeof TABS[number], EscrowStatus[] | null> = {
-  "전체": null,
-  "보관중": ["holding"],
-  "출조확정": ["confirmed"],
-  "완료": ["completed"],
-  "취소/환불": ["cancelled", "refunded"],
+const STATE_META: Record<EscrowStatus, { label: string; color: string; icon: string }> = {
+  holding:   { label: "에스크로 보관 중", color: "#fbbf24", icon: "🔒" },
+  confirmed: { label: "출조 확정",         color: "#5fa3cf", icon: "🎣" },
+  completed: { label: "정산 완료",         color: "#86efac", icon: "✓" },
+  cancelled: { label: "취소됨",            color: "#f87171", icon: "✕" },
+  refunded:  { label: "환불 완료",         color: "#f87171", icon: "↩" },
+};
+
+const PHASE_MAP: Record<EscrowStatus, number> = {
+  holding: 1, confirmed: 2, completed: 3, cancelled: 0, refunded: 0,
 };
 
 export default function MyPage() {
-  const [tab, setTab] = useState<typeof TABS[number]>("전체");
+  const [tab, setTab] = useState<TabKey>("reserve");
 
-  const filtered = DUMMY_RESERVATIONS.filter((r) => {
-    const allowed = statusMap[tab];
-    return allowed === null || allowed.includes(r.escrowStatus);
-  });
+  const escrowItems = DUMMY_RESERVATIONS.filter((r) => r.escrowStatus === "holding");
+  const displayed =
+    tab === "reserve" ? DUMMY_RESERVATIONS
+    : tab === "escrow" ? escrowItems
+    : [];
+
+  const totalEscrow = escrowItems.reduce((a, r) => a + r.totalAmount, 0);
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h1 className="text-xl font-black text-white">내 예약 · 에스크로</h1>
-        <p className="text-xs text-slate-500 mt-0.5">결제금은 출조 완료 후 업체에 정산됩니다</p>
-      </div>
+    <>
+      {/* 프로필 히어로 */}
+      <section className="fl-mp-hero">
+        <div className="fl-mp-prof">
+          <div className="fl-avatar fl-mp-avatar">T</div>
+          <div>
+            <div className="fl-mp-name">태드 <span>Lv.12</span></div>
+            <div className="fl-mp-stats">조획 47마리 · 출조 18회 · 리뷰 6</div>
+          </div>
+          <button className="fl-mp-edit" aria-label="프로필 편집">→</button>
+        </div>
+        <div className="fl-mp-summary">
+          <div>
+            <div className="fl-mp-sn">{escrowItems.length}</div>
+            <div className="fl-mp-sl">에스크로 보관</div>
+          </div>
+          <div className="fl-mp-sep" />
+          <div>
+            <div className="fl-mp-sn">
+              {totalEscrow >= 10000
+                ? `${Math.round(totalEscrow / 1000)}`
+                : totalEscrow.toLocaleString()}
+              <span>{totalEscrow >= 10000 ? "K" : "원"}</span>
+            </div>
+            <div className="fl-mp-sl">보관 금액</div>
+          </div>
+          <div className="fl-mp-sep" />
+          <div>
+            <div className="fl-mp-sn">{DUMMY_RESERVATIONS.filter((r) => r.escrowStatus !== "completed" && r.escrowStatus !== "cancelled" && r.escrowStatus !== "refunded").length}</div>
+            <div className="fl-mp-sl">예정 출조</div>
+          </div>
+        </div>
+      </section>
 
       {/* 탭 */}
-      <div className="flex gap-1.5 mb-5 overflow-x-auto pb-1">
+      <div className="fl-tabs">
         {TABS.map((t) => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${tab === t ? "bg-hook text-ocean-950" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
-            {t}
+          <button
+            key={t.k}
+            className={`fl-tab ${tab === t.k ? "on" : ""}`}
+            onClick={() => setTab(t.k)}
+          >
+            {t.label} <span className="fl-tab-n">{t.n}</span>
+            {tab === t.k && <span className="fl-tab-underline" />}
           </button>
         ))}
       </div>
 
-      {/* 예약 카드 목록 */}
-      {filtered.length === 0 ? (
-        <div className="text-center py-16 text-slate-500">예약 내역이 없습니다</div>
-      ) : (
-        <div className="space-y-4">
-          {filtered.map((r) => {
-            const status = ESCROW_STATUS_LABEL[r.escrowStatus];
-            const total = r.totalAmount;
-            const fee = Math.round(total * 0.06);
-            return (
-              <div key={r.id} className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
-                {/* 상단 */}
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="font-bold text-slate-200 text-sm">{r.jwaedaeName}</div>
-                    <div className="text-xs text-slate-500">{r.region} · {r.date} {r.time} · {r.people}명</div>
-                  </div>
-                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${status.color}`}>
-                    {status.label}
-                  </span>
-                </div>
-
-                {/* 상태 설명 */}
-                <div className="text-xs text-slate-400 bg-ocean-800/60 rounded-xl px-3 py-2 mb-3">
-                  {status.desc}
-                </div>
-
-                {/* 금액 */}
-                <div className="flex justify-between text-sm mb-3">
-                  <span className="text-slate-400">결제 금액</span>
-                  <span className="font-bold text-hook">{total.toLocaleString()}원</span>
-                </div>
-
-                {/* 에스크로 타임라인 미니 */}
-                <div className="flex items-center gap-1 text-[10px] text-slate-600 mb-3">
-                  <span className={r.escrowStatus !== "cancelled" ? "text-teal-400" : ""}>결제</span>
-                  <span>›</span>
-                  <span className={["confirmed", "completed"].includes(r.escrowStatus) ? "text-teal-400" : ""}>업체확인</span>
-                  <span>›</span>
-                  <span className={r.escrowStatus === "completed" ? "text-teal-400" : ""}>출조</span>
-                  <span>›</span>
-                  <span className={r.escrowStatus === "completed" ? "text-teal-400" : ""}>정산 {r.escrowReleaseDate}</span>
-                </div>
-
-                {/* 조과 어종 */}
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {r.targetFish.map((f) => (
-                    <span key={f} className="text-[10px] px-2 py-0.5 bg-ocean-800 rounded-full text-slate-400">{f}</span>
-                  ))}
-                </div>
-
-                {/* 버튼 */}
-                <div className="flex gap-2">
-                  <a href={`tel:${r.operatorPhone}`}
-                    className="flex-1 py-2 text-center text-xs font-bold border border-ocean-700 hover:border-ocean-500 text-slate-400 rounded-xl transition-colors">
-                    📞 업체 연락
-                  </a>
-                  {r.escrowStatus === "holding" && (
-                    <button className="flex-1 py-2 text-xs font-bold border border-rose-800 hover:border-rose-600 text-rose-400 rounded-xl transition-colors">
-                      취소 요청
-                    </button>
-                  )}
-                  {r.escrowStatus === "completed" && (
-                    <Link href={`/catch/new?jwaedaeId=${r.jwaedaeId}`}
-                      className="flex-1 py-2 text-center text-xs font-bold bg-hook/10 hover:bg-hook/20 text-hook border border-hook/30 rounded-xl transition-colors">
-                      🎣 조황 등록
-                    </Link>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* 하단 안내 */}
-      <div className="mt-8 rounded-xl border border-ocean-800 bg-ocean-900/40 p-4 text-xs text-slate-500 space-y-1">
-        <div className="font-bold text-slate-400 mb-2">에스크로 안내</div>
-        <div>• 결제금은 출조 완료 확인 후 D+2 업체 정산</div>
-        <div>• 기상 불량(풍랑주의보) 시 100% 자동 환불</div>
-        <div>• 취소 환불은 취소 정책에 따라 처리</div>
-        <div>• 문의: fishinglog@jejupass.com</div>
+      {/* 예약 목록 */}
+      <div className="fl-mp-list">
+        {displayed.length > 0 ? (
+          displayed.map((r) => <ReserveCard key={r.id} r={r} />)
+        ) : (
+          <div className="fl-empty">
+            <div className="fl-empty-title">표시할 항목이 없어요</div>
+            <div className="fl-empty-sub">새로운 활동을 시작해보세요</div>
+          </div>
+        )}
       </div>
+    </>
+  );
+}
+
+function ReserveCard({ r }: { r: Reservation }) {
+  const m = STATE_META[r.escrowStatus];
+  const phase = PHASE_MAP[r.escrowStatus];
+  const status = ESCROW_STATUS_LABEL[r.escrowStatus];
+
+  return (
+    <div className="fl-mp-res">
+      <div className="fl-mp-res-top">
+        <div
+          className="fl-mp-state-badge"
+          style={{
+            background: `${m.color}22`,
+            color: m.color,
+            borderColor: `${m.color}55`,
+          }}
+        >
+          <span>{m.icon}</span> {m.label}
+        </div>
+        <div className="fl-mp-res-id">{r.id}</div>
+      </div>
+
+      <div className="fl-mp-res-name">{r.jwaedaeName}</div>
+      <div className="fl-mp-res-meta">
+        <span>📅 {r.date} {r.time} · {r.people}명</span>
+        <span>📍 {r.region}</span>
+      </div>
+
+      <MiniTimeline phase={phase} />
+
+      <div className="fl-mp-res-foot">
+        <div>
+          <div className="fl-mp-price">{r.totalAmount.toLocaleString()}<span>원</span></div>
+          <div className="fl-mp-method">{r.escrowStatus === "completed" ? "정산 완료" : "에스크로 보관"}</div>
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <a
+            href={`tel:${r.operatorPhone}`}
+            className="fl-mp-btn"
+          >
+            📞 업체
+          </a>
+          {r.escrowStatus === "completed" && (
+            <Link
+              href={`/catch/new?jwaedaeId=${r.jwaedaeId}`}
+              className="fl-mp-btn"
+              style={{ background: "rgba(245,158,11,0.1)", borderColor: "rgba(245,158,11,0.3)", color: "var(--hook-300)" }}
+            >
+              🎣 조황 등록
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MiniTimeline({ phase }: { phase: number }) {
+  const labels = ["결제", "보관", "출조", "정산"];
+  return (
+    <div className="fl-mini-tl">
+      {labels.map((l, i) => (
+        <span key={i} style={{ display: "contents" }}>
+          <div className={`fl-mini-step ${i <= phase ? "on" : ""}`}>
+            <div className="fl-mini-dot">{i < phase ? "✓" : ""}</div>
+            <div className="fl-mini-l">{l}</div>
+          </div>
+          {i < labels.length - 1 && (
+            <div className={`fl-mini-line ${i < phase ? "on" : ""}`} />
+          )}
+        </span>
+      ))}
     </div>
   );
 }
