@@ -76,6 +76,7 @@ html, body {
   font-family: 'Noto Sans KR', -apple-system, system-ui, sans-serif;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ═══════════════════════════════════════
@@ -613,7 +614,7 @@ html, body {
 /* ═══════════════════════════════════════
    좌대 목록 페이지 (fl-jw-*)
 ═══════════════════════════════════════ */
-.fl-jw-hero {
+.fl-jw-hero { /* v2 */
   position: relative; padding: 36px 20px 60px;
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(95,163,207,0.22), transparent 60%),
@@ -642,7 +643,7 @@ html, body {
 .fl-jw-hero-l { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 3px; }
 
 .fl-gt-hero {
-  position: relative; padding: 8px 20px 60px;
+  position: relative; padding: 36px 20px 60px;
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(134,239,172,0.15), transparent 60%),
     linear-gradient(180deg, #0a1628 0%, #0e2040 60%, #1a3456 100%);
@@ -1854,7 +1855,7 @@ html, body {
 .fl-rc-orig { font-size: 11px; color: var(--text-dim); text-decoration: line-through; font-variant-numeric: tabular-nums; }
 .fl-rc-sale { font-size: 20px; font-weight: 900; color: var(--text-strong); letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
 .fl-rc-day { font-size: 11px; color: var(--text-dim); font-weight: 600; margin-left: 2px; }
-.fl-rc-cta { padding: 10px 16px; background: var(--hook); color: var(--ocean-950); border: none; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+.fl-rc-cta { padding: 10px 16px; background: var(--hook); color: var(--ocean-950); border: none; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
 .fl-rc-cta:hover { transform: scale(1.03); box-shadow: 0 6px 14px rgba(245,158,11,0.3); }
 .fl-rc-cta.done { background: #22c55e; color: #fff; }
 

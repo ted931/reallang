@@ -36,32 +36,23 @@ export default function DevNav() {
   const pathname = usePathname();
   const [search, setSearch] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    try { setIsInIframe(window.self !== window.top); } catch { setIsInIframe(true); }
+  }, []);
 
   useEffect(() => {
     setSearch(window.location.search);
   }, []);
 
-  useEffect(() => {
-    const main = document.querySelector("main");
-    if (!main) return;
-    if (isMobile) {
-      main.style.maxWidth = "375px";
-      main.style.margin = "0 auto";
-      main.style.boxShadow = "0 0 0 9999px rgba(0,0,0,0.5)";
-      main.style.position = "relative";
-    } else {
-      main.style.maxWidth = "";
-      main.style.margin = "";
-      main.style.boxShadow = "";
-      main.style.position = "";
-    }
-  }, [isMobile]);
-
   const currentUrl = pathname + search;
   const activeUserIdx = USER_STEPS.findIndex((s) => currentUrl === s.href);
   const activeBizIdx = BIZ_STEPS.findIndex((s) => currentUrl === s.href);
 
-  return (
+  if (isInIframe) return null;
+
+  const navContent = (
     <nav className="sticky top-0 z-[9999] bg-gray-900 border-b border-gray-800 overflow-x-auto">
       <div className="flex items-center px-2 py-1.5 min-w-max">
 
@@ -126,4 +117,45 @@ export default function DevNav() {
       </div>
     </nav>
   );
+
+  if (isMobile) {
+    return (
+      <>
+        {navContent}
+        {/* Mobile iframe preview overlay */}
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
+          zIndex: 9998, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', gap: 12,
+        }}>
+          <div style={{ color: '#9ca3af', fontSize: 12, fontWeight: 700 }}>
+            📱 MOBILE PREVIEW — 375px · {pathname}
+          </div>
+          <div style={{
+            position: 'relative', width: 375, height: 667,
+            borderRadius: 36, overflow: 'hidden',
+            boxShadow: '0 0 0 12px #1f2937, 0 0 0 14px #374151, 0 40px 80px rgba(0,0,0,0.8)',
+            background: '#0a1628',
+          }}>
+            <iframe
+              src={pathname + search}
+              style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+              title="Mobile Preview"
+            />
+          </div>
+          <button
+            onClick={() => setIsMobile(false)}
+            style={{
+              padding: '8px 20px', background: '#f59e0b', color: '#0a1628',
+              border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: 'pointer',
+            }}
+          >
+            ✕ 닫기
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  return navContent;
 }
