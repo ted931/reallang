@@ -66,6 +66,8 @@
   --line: var(--tint-06); --line-2: var(--tint-10);
   --r-card: 18px; --r-sm: 12px;
   --catch-overlay: rgba(0,0,0,0.55);
+  /* 커뮤니티 카테고리 뱃지 — 다크에서 밝은 파스텔 색 유지 */
+  --cat-teal:#5eead4; --cat-blue:#93c5fd; --cat-orange:#fdba74; --cat-purple:#d8b4fe;
 }
 
 html, body {
