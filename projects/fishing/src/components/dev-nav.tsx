@@ -27,6 +27,8 @@ const USER_STEPS = [
   { href: "/community", label: "커뮤니티", step: 21 },
   { href: "/gathering", label: "모임", step: 22 },
   { href: "/map", label: "포인트지도", step: 23 },
+  { href: "/market/sell", label: "판매등록", step: 24 },
+  { href: "/community/write", label: "글쓰기", step: 25 },
 ];
 
 const BIZ_STEPS = [

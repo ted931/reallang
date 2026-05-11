@@ -446,3 +446,72 @@
 - useState, step 로직, DUMMY 데이터 import 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
+
+---
+
+## 19. 피싱로그 낚시 금지구역 지도
+
+```
+/Users/ted/reallang/projects/fishing/src/app/map/MapClient.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client", inline SVG 지도 (Leaflet 없음)
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 금지구역 rose-500/orange-500, 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 금지구역 토글 버튼 — 켜졌을 때 pulse 애니메이션 or glow 효과로 "활성" 강조
+2. 금지구역 타입 범례 — 해양보호구역/계절금지 색상 알약 크기가 작음, 아이콘(🚫/📅) 추가
+3. 선택된 금지구역 상세 패널 — 슬라이드인 트랜지션 추가 (현재 즉시 표시)
+4. 계절별 포획금지 테이블 — 현재 일자 기준으로 "지금 해당" 어종 뱃지 강조 (Today 표시)
+5. 포인트 목록 스크롤 영역 — 스크롤바 커스텀 or 페이드아웃 그라데이션으로 마무리
+
+유지할 것:
+- PROHIBITED_ZONES 데이터, toSVG 함수, useState 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 20. 피싱로그 판매 등록 (중고 마켓)
+
+```
+/Users/ted/reallang/projects/fishing/src/app/market/sell/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 사진 업로드 그리드 — 첫 번째 사진에 "대표" 뱃지 외에, 드래그로 순서 변경 힌트 텍스트 추가
+2. 카테고리 4×2 그리드 — 선택 시 아이콘 크게 + 외곽 glow 효과
+3. 상품 상태 라디오 — S/A/B/C 등급을 색상으로 차별화 (S=teal, A=blue, B=amber, C=rose)
+4. 가격 입력 — 판매가 입력 후 원가 대비 절감액을 즉시 "00원 저렴" 문구로 표시
+5. 하단 CTA 스티키 바 — 스크롤 올라갈 때 약간 투명도+blur 효과 강화
+
+유지할 것:
+- convertToWebP, handleFiles, canSubmit 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 21. 피싱로그 커뮤니티 글쓰기
+
+```
+/Users/ted/reallang/projects/fishing/src/app/community/write/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 카테고리별 고유 색상, 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 카테고리 선택 — 선택 시 해당 카테고리 색상으로 상단 progress bar 색상도 동적으로 변경
+2. 어종 태그 칩 (조황 선택 시) — 선택된 어종 목록이 input 하단에 "#갈치 #참돔" 형태로 미리보기
+3. 내용 textarea — 카테고리별 contextual placeholder 외에, 글자수 채워질수록 progress arc 표시
+4. 사진 업로드 — 파일 드래그앤드롭 지원 + 드래그 중 border 색상 변경
+5. 제출 버튼 — 조건 충족 시 버튼이 subtle하게 pulse하며 "등록 준비 완료" 느낌 강조
+
+유지할 것:
+- convertToWebP, handleFiles, canSubmit, toggleFish 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
