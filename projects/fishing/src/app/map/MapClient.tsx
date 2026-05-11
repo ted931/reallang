@@ -64,8 +64,8 @@ const PROHIBITED_ZONES = [
 ];
 
 const ZONE_TYPE_COLOR: Record<string, { fill: string; stroke: string; badge: string }> = {
-  "해양보호구역": { fill: "rgba(239,68,68,0.18)", stroke: "#ef4444", badge: "bg-rose-900/60 text-rose-300 border-rose-700" },
-  "계절금지": { fill: "rgba(251,146,60,0.18)", stroke: "#f97316", badge: "bg-orange-900/60 text-orange-300 border-orange-700" },
+  "해양보호구역": { fill: "rgba(239,68,68,0.18)", stroke: "#ef4444", badge: "bg-rose-100 text-rose-700 border-rose-300" },
+  "계절금지": { fill: "rgba(251,146,60,0.18)", stroke: "#f97316", badge: "bg-orange-100 text-orange-700 border-orange-300" },
 };
 
 const SEASONAL_BANS = [
@@ -84,15 +84,15 @@ export default function MapClient() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-black text-slate-100 mb-1">🗺️ 낚시 포인트 지도</h1>
-        <p className="text-slate-400 text-sm">제주 전역 낚시 포인트 {DUMMY_POINTS.length}개</p>
+        <h1 className="text-2xl font-black mb-1" style={{ color: "var(--text-strong)" }}>🗺️ 낚시 포인트 지도</h1>
+        <p className="text-sm" style={{ color: "var(--text-dim)" }}>제주 전역 낚시 포인트 {DUMMY_POINTS.length}개</p>
       </div>
 
       {/* 범례 + 금지구역 토글 */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
         <div className="flex flex-wrap gap-2">
           {SPOT_TYPES.map((type) => (
-            <span key={type} className="flex items-center gap-1.5 text-xs text-slate-400 bg-ocean-900 border border-ocean-800 px-3 py-1 rounded-full">
+            <span key={type} className="flex items-center gap-1.5 text-xs bg-ocean-900 border border-ocean-800 px-3 py-1 rounded-full" style={{ color: "var(--text-dim)" }}>
               <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: MARKER_COLORS[type] }} />
               {SPOT_TYPE_ICON[type]} {type}
             </span>
@@ -101,8 +101,9 @@ export default function MapClient() {
         {/* 금지구역 토글 */}
         <button
           onClick={() => { setShowProhibited(v => !v); setSelectedZone(null); }}
-          className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-bold transition-colors ${showProhibited ? "bg-rose-900/40 border-rose-600 text-rose-300" : "bg-ocean-900 border-ocean-700 text-slate-400 hover:text-slate-200"}`}>
-          <span className={`w-2.5 h-2.5 rounded-full ${showProhibited ? "bg-rose-400" : "bg-slate-600"}`} />
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-bold transition-colors ${showProhibited ? "bg-rose-50 border-rose-400 text-rose-600" : "bg-ocean-900 border-ocean-800 hover:border-ocean-700"}`}
+          style={showProhibited ? {} : { color: "var(--text-dim)" }}>
+          <span className={`w-2.5 h-2.5 rounded-full ${showProhibited ? "bg-rose-500" : "bg-ocean-700"}`} />
           낚시 금지구역 보기
         </button>
       </div>
@@ -116,7 +117,7 @@ export default function MapClient() {
               {type}
             </span>
           ))}
-          <span className="text-xs text-slate-500 self-center">· 구역 클릭 시 상세 확인</span>
+          <span className="text-xs self-center" style={{ color: "var(--text-dim)" }}>· 구역 클릭 시 상세 확인</span>
         </div>
       )}
 
@@ -193,13 +194,13 @@ export default function MapClient() {
               })}
             </svg>
           </div>
-          <div className="px-4 py-2 border-t border-ocean-800 text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+          <div className="px-4 py-2 border-t border-ocean-800 text-xs flex items-center gap-2 flex-wrap" style={{ color: "var(--text-dim)" }}>
             <span className="w-3 h-3 rounded-full bg-hook inline-block" />
             <span>최근 7일 조황 10건 이상 포인트</span>
             {showProhibited && (
               <>
                 <span className="text-ocean-700">|</span>
-                <span className="text-rose-400">점선 영역 = 낚시 금지구역</span>
+                <span className="text-rose-500">점선 영역 = 낚시 금지구역</span>
               </>
             )}
           </div>
@@ -209,62 +210,62 @@ export default function MapClient() {
         <div className="space-y-3">
           {/* 선택된 금지구역 상세 */}
           {showProhibited && activeZone && (
-            <div className="rounded-xl border border-rose-700/50 bg-rose-900/20 p-4">
+            <div className="rounded-xl border border-rose-300 bg-rose-50 p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full border inline-block mb-1 ${ZONE_TYPE_COLOR[activeZone.type].badge}`}>
                     {activeZone.type}
                   </div>
-                  <h3 className="text-sm font-bold text-rose-300">{activeZone.name}</h3>
+                  <h3 className="text-sm font-bold text-rose-700">{activeZone.name}</h3>
                 </div>
-                <button onClick={() => setSelectedZone(null)} className="text-slate-500 hover:text-slate-300 text-xs">✕</button>
+                <button onClick={() => setSelectedZone(null)} className="text-xs" style={{ color: "var(--text-dim)" }}>✕</button>
               </div>
-              <p className="text-xs text-slate-400">{activeZone.detail}</p>
-              <p className="text-[10px] text-slate-600 mt-2">※ 해양수산부 고시 기준 — 위반 시 과태료 부과</p>
+              <p className="text-xs" style={{ color: "var(--text)" }}>{activeZone.detail}</p>
+              <p className="text-[10px] mt-2" style={{ color: "var(--text-dim)" }}>※ 해양수산부 고시 기준 — 위반 시 과태료 부과</p>
             </div>
           )}
 
           {/* 계절별 포획 금지 */}
           {showProhibited && (
-            <div className="rounded-xl border border-orange-800/50 bg-ocean-900 p-4">
-              <h3 className="text-sm font-bold text-orange-300 mb-3">📅 계절별 포획금지 어종</h3>
+            <div className="rounded-xl border border-orange-300 bg-orange-50 p-4">
+              <h3 className="text-sm font-bold text-orange-700 mb-3">📅 계절별 포획금지 어종</h3>
               <div className="space-y-2">
                 {SEASONAL_BANS.map(b => (
                   <div key={b.fish} className="flex items-center gap-2 text-xs">
                     <span>{b.emoji}</span>
-                    <span className="font-bold text-slate-200 w-14">{b.fish}</span>
-                    <span className="text-orange-300 font-mono">{b.period}</span>
-                    <span className="text-slate-500">({b.reason})</span>
+                    <span className="font-bold w-14" style={{ color: "var(--text-strong)" }}>{b.fish}</span>
+                    <span className="text-orange-600 font-mono">{b.period}</span>
+                    <span style={{ color: "var(--text-dim)" }}>({b.reason})</span>
                   </div>
                 ))}
               </div>
-              <p className="text-[10px] text-slate-600 mt-3">수산자원관리법 제14조 기준</p>
+              <p className="text-[10px] mt-3" style={{ color: "var(--text-dim)" }}>수산자원관리법 제14조 기준</p>
             </div>
           )}
 
           {/* 포인트 목록 */}
           <div className="space-y-3 max-h-[400px] lg:max-h-none overflow-y-auto">
-            <h2 className="text-sm font-bold text-slate-300 sticky top-0 bg-ocean-950 py-1">포인트 목록 (조황순)</h2>
+            <h2 className="text-sm font-bold sticky top-0 py-1" style={{ color: "var(--text-strong)", background: "var(--ocean-950)" }}>포인트 목록 (조황순)</h2>
             {[...DUMMY_POINTS].sort((a, b) => b.recentCatchCount - a.recentCatchCount).map((point, i) => (
               <div key={point.id} className="rounded-xl border border-ocean-800 bg-ocean-900 p-3 hover:border-ocean-600 transition-colors cursor-pointer">
                 <div className="flex items-start gap-2 mb-2">
                   <span className="text-lg">{SPOT_TYPE_ICON[point.spotType]}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1">
-                      <span className="text-sm font-semibold text-slate-100">{point.name}</span>
+                      <span className="text-sm font-semibold" style={{ color: "var(--text-strong)" }}>{point.name}</span>
                       {i < 3 && <span className="text-[10px] bg-hook/20 text-hook px-1 rounded">{i + 1}위</span>}
                     </div>
                     <div className="text-xs text-ocean-400">{point.region} · {point.difficulty}</div>
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-teal-400 font-bold text-xs">+{point.recentCatchCount}</div>
-                    <div className="text-[10px] text-slate-600">7일 조황</div>
+                    <div className="text-[10px]" style={{ color: "var(--text-dim)" }}>7일 조황</div>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1 mb-2">
                   {point.targetFish.slice(0, 3).map((f) => <FishBadge key={f} name={f} />)}
                 </div>
-                <p className="text-xs text-slate-500 line-clamp-1">{point.description}</p>
+                <p className="text-xs line-clamp-1" style={{ color: "var(--text-dim)" }}>{point.description}</p>
               </div>
             ))}
           </div>
