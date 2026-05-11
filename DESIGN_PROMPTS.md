@@ -239,3 +239,210 @@
 - DUMMY_POINTS 데이터, toSVG 좌표 변환 함수 건드리지 말 것
 - DevNav 건드리지 말 것
 ```
+
+---
+
+## 11. 피싱로그 에스크로 결제 플로우
+
+```
+아래 3개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/jwaedae/[id]/checkout/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/jwaedae/[id]/checkout/complete/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/mypage/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. checkout — 스텝 인디케이터(예약정보→결제방법→에스크로확인→완료)가 작음, 더 명확하게
+2. 결제 방법 선택 카드 — 선택됐을 때 체크마크 + 컬러 강조가 약함, 더 직관적으로
+3. 에스크로 설명 섹션 — 숫자 3단계(1️⃣2️⃣3️⃣) 레이아웃이 단조로움, 타임라인 형태로 시각화
+4. complete 페이지 — 완료 애니메이션 없음, 체크마크 서클 페이드인 or 컨페티 느낌 추가
+5. mypage 에스크로 탭 — 상태 뱃지별 색상 구분이 잘 되어 있으나, 타임라인 미니 바 더 눈에 띄게
+
+유지할 것:
+- useState, step 로직, DUMMY_RESERVATIONS import 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 12. 피싱로그 카풀 + 숙소
+
+```
+아래 4개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/carshare/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/carshare/[id]/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/stay/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/stay/[id]/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[카풀]
+1. 카풀 카드 — 출발지 → 목적지 경로 표시가 텍스트만 있음, 화살표 or 루트 라인 시각화
+2. 좌석 현황 — 아이콘(👤🪑) 나열이 단조로움, 좌석을 차 평면도 느낌으로 시각화
+3. 마감 카드 — 흐릿하게만 처리됨, "마감" 오버레이 + 유사한 카풀 추천 링크 추가
+[숙소]
+4. 숙소 카드 — 이미지 플레이스홀더가 큰 이모지 하나, CSS 패턴 배경 + 유형 아이콘 조합으로
+5. 포인트 거리 — "도보 5분" 텍스트만 있음, 작은 지도 핀 + 거리 바 시각화 제안
+6. 예약 패널 — 체크인/아웃 날짜 선택 레이아웃이 답답함, 달력 UI 힌트 or 더 넓은 입력 개선
+
+유지할 것:
+- useState, 더미 데이터 import, 동승 신청/예약 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 13. 피싱로그 물때 캘린더
+
+```
+/Users/ted/reallang/projects/fishing/src/app/tide/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), teal-500, 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 날짜 스크롤 칩 — 선택 날짜 슬라이드 애니메이션, 출조 점수 5점 날은 금색 shimmer 효과
+2. 조석 예보 바 차트 — 현재 가로 프로그레스 바인데 만조/간조 곡선 SVG 웨이브로 시각화
+3. 기상 정보 그리드 — 아이콘이 이모지인데, 통일된 인라인 SVG 아이콘으로 교체 제안
+4. 출조 점수 1~5 — 별점만 있는데 물고기 아이콘(🐟×5) or 게이지 바로 대체
+5. 좌대 예약 카드 — 가로 리스트 안에 있는데 슬라이드 캐러셀로 개선 (스크롤 가능)
+
+유지할 것:
+- DUMMY_TIDE, useState(selectedDate) 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 14. 피싱로그 조황 랭킹
+
+```
+/Users/ted/reallang/projects/fishing/src/app/ranking/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4 (서버 컴포넌트)
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. HOT 좌대 TOP3 — 1위에만 금빛 그라데이션 카드, 시상대(podium) 느낌 레이아웃
+2. 어종 랭킹 바 — 현재 단순 가로 바인데 어종 이모지 + 마릿수 애니메이션 카운터 느낌
+3. 빅 피쉬 리스트 — 낚시꾼 이름 + 크기가 밋밋함, cm 수치를 크고 bold하게 + 해당 어종 색상 포인트
+4. 포인트 랭킹 — 텍스트만 있는데 핀 아이콘 + 지역 구분 색칩 추가
+5. 전체 — 재방문 유도를 위해 "지난주 랭킹과 비교" 화살표(↑↓) 표시 제안
+
+유지할 것:
+- topFish, topPoints, topJwaedae 집계 함수 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 15. 피싱로그 중고 마켓
+
+```
+아래 2개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/market/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/market/[id]/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 상품 카드 이미지 플레이스홀더 — 이모지만 있음, 카테고리별 색상 배경 + 아이콘 조합
+2. 상태 배지(미사용/상태양호 등) — 색상이 있으나 좌상단 작음, 카드 상단 풀 width 스트립으로 강조
+3. 할인율 — -XX% 텍스트만 있는데 빨간 뱃지 스티커 느낌으로 시각화
+4. 판매완료 카드 — 흑백+불투명 처리 외에 "SOLD" 도장 찍힌 느낌 오버레이 추가
+5. 상세 페이지 — 판매자 연락 CTA가 작음, sticky 하단 바 + 가격 다시 표시
+
+유지할 것:
+- useState, 더미 데이터 import, 필터 로직 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 16. 피싱로그 낚시 일지 + 쿠폰 허브
+
+```
+아래 2개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/logbook/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/coupon/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[낚시 일지]
+1. 일지 카드 — 기분 이모지가 우상단에 작게 있음, 카드 왼쪽 컬러 세로 스트립으로 기분 표현
+2. 통계 탭 — 어종 랭킹 바가 단순, 물고기 이모지 앞에 붙이고 애니메이션 fill
+3. 캘린더 — "캘린더 뷰" 텍스트만 있음, 실제 7×5 그리드 달력 UI로 교체 (출조일 하이라이트)
+[쿠폰]
+4. 쿠폰 카드 — 왼쪽 배지(할인율)가 정사각형인데 티켓 형태(점선 세로 구분선) 디자인으로
+5. 마감 임박 쿠폰 — 빨간 테두리만 있음, D-day 카운트다운 숫자 큰 글씨로 강조
+
+유지할 것:
+- useState, 더미 데이터 import, 탭 로직, download 상태 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 17. 피싱로그 사진 업로드 (WebP 변환)
+
+```
+/Users/ted/reallang/projects/fishing/src/app/catch/upload/page.tsx 를 읽고 디자인을 개선해줘.
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 주색 ocean-500, 어센트 hook (#f59e0b), 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+1. 드래그앤드롭 영역 — 드래그 중일 때 border + 배경이 변하는 시각 피드백 추가
+2. 변환 중 로딩 — ⚙️ 아이콘 animate-pulse만 있음, 변환 진행률 바 or 파일명 표시 추가
+3. 업로드된 사진 그리드 — 절감률이 오버레이에 있는데 카드 아래 명확한 수치 바로 표시
+4. 어종/지역 선택 칩 — 선택 상태 강조가 약함, 선택 시 체크 아이콘 추가
+5. 제출 버튼 — disabled 상태일 때 이유를 tooltip or 작은 안내 텍스트로 더 친절하게
+
+유지할 것:
+- convertToWebP 함수, FileReader, canvas 로직 절대 건드리지 말 것
+- DevNav 건드리지 말 것
+```
+
+---
+
+## 18. 피싱로그 사장님 섹션 (업체 등록 + 대시보드)
+
+```
+아래 3개 파일을 읽고 디자인을 개선해줘.
+/Users/ted/reallang/projects/fishing/src/app/biz/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/biz/register/page.tsx
+/Users/ted/reallang/projects/fishing/src/app/biz/dashboard/page.tsx
+
+스택: Next.js App Router, Tailwind CSS v4, "use client"
+색상: 사장님 섹션은 amber-500 계열 유지, 배경 ocean-950
+폰트: Noto Sans KR
+
+개선 요청:
+[랜딩]
+1. 혜택 카드 — 3개 카드가 동일한 스타일, 각 혜택(에스크로/마케팅/통계)별 아이콘 + 색상 차별화
+2. 리뷰 슬라이더 — 현재 정적 카드 3개, 좌우 버튼 슬라이드 or 자동 스크롤 캐러셀로
+[업체 등록]
+3. 6단계 스텝바 — 현재 숫자만, 각 단계 라벨(업체유형/기본정보/어종 등) 표시 추가
+4. 어종 선택 — 칩 나열인데 선택 시 어종 이미지 or 이모지 크게 보여주는 피드백 추가
+[대시보드]
+5. 월별 바 차트 — CSS 높이 바인데 hover 시 툴팁(예약건수+금액) 표시 추가
+6. 예약 목록 — 에스크로 상태 뱃지가 있으나 행 전체 배경색으로도 구분하면 더 직관적
+
+유지할 것:
+- useState, step 로직, DUMMY 데이터 import 건드리지 말 것
+- DevNav 건드리지 말 것
+```
