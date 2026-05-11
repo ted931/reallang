@@ -73,7 +73,7 @@ export default function LogbookPage() {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-black text-white">📓 낚시 일지</h1>
+          <h1 className="text-xl font-black text-ocean-50">📓 낚시 일지</h1>
           <p className="text-xs text-slate-500 mt-0.5">나만의 조과 기록을 쌓아보세요</p>
         </div>
         <Link href="/catch/upload"
@@ -101,7 +101,7 @@ export default function LogbookPage() {
               <div key={log.id} className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
                 {/* 날짜 + 기분 */}
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-sm font-black text-white">{log.date}</div>
+                  <div className="text-sm font-black text-ocean-50">{log.date}</div>
                   <span className="text-xl">{log.mood}</span>
                 </div>
 

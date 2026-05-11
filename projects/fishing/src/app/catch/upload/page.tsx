@@ -85,7 +85,7 @@ export default function CatchUploadPage() {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
         <div className="text-6xl mb-4">🎣</div>
-        <h1 className="text-2xl font-black text-white mb-2">조황 등록 완료!</h1>
+        <h1 className="text-2xl font-black text-ocean-50 mb-2">조황 등록 완료!</h1>
         <p className="text-slate-400 text-sm mb-6">
           {photos.length}장의 사진이 WebP로 변환되어 저장됐습니다.<br />
           평균 {Math.round(photos.reduce((a, p) => a + p.savings, 0) / (photos.length || 1))}% 용량 절감!
@@ -103,7 +103,7 @@ export default function CatchUploadPage() {
     <div className="max-w-xl mx-auto px-4 py-6 pb-32">
       <Link href="/catch" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 조황 목록</Link>
 
-      <h1 className="text-xl font-black text-white mb-1">🎣 조황 사진 등록</h1>
+      <h1 className="text-xl font-black text-ocean-50 mb-1">🎣 조황 사진 등록</h1>
       <p className="text-xs text-slate-500 mb-5">사진은 자동으로 WebP 변환 후 저장됩니다 (용량 절감)</p>
 
       {/* 사진 업로드 영역 */}

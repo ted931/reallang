@@ -78,7 +78,7 @@ export default function MarketSellPage() {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
         <div className="text-6xl mb-4">🛒</div>
-        <h1 className="text-2xl font-black text-white mb-2">등록 완료!</h1>
+        <h1 className="text-2xl font-black text-ocean-50 mb-2">등록 완료!</h1>
         <p className="text-slate-400 text-sm mb-6">판매글이 마켓에 등록됐습니다</p>
         <div className="flex gap-3 justify-center">
           <Link href="/market" className="px-6 py-3 bg-hook text-ocean-950 font-black rounded-2xl">마켓 보러가기</Link>
@@ -92,7 +92,7 @@ export default function MarketSellPage() {
   return (
     <div className="max-w-xl mx-auto px-4 py-6 pb-32">
       <Link href="/market" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 마켓 목록</Link>
-      <h1 className="text-xl font-black text-white mb-5">📝 판매 등록</h1>
+      <h1 className="text-xl font-black text-ocean-50 mb-5">📝 판매 등록</h1>
 
       {/* 사진 */}
       <div className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 mb-4">

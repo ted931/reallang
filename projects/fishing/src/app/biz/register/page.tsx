@@ -13,7 +13,7 @@ export default function BizRegisterPage() {
       <Link href="/biz" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 사장님 전용 홈으로</Link>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-black text-white mb-2">업체 등록</h1>
+        <h1 className="text-2xl font-black text-ocean-50 mb-2">업체 등록</h1>
         <p className="text-slate-400 text-sm">기본 정보를 입력하면 피싱로그 팀이 1~2일 내 검토 후 승인합니다.</p>
       </div>
 

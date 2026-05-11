@@ -39,7 +39,7 @@ export default function BizDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl font-black text-white">서귀포 황금좌대</h1>
+            <h1 className="text-xl font-black text-ocean-50">서귀포 황금좌대</h1>
             <span className="text-xs bg-hook/20 text-hook border border-hook/30 px-2 py-0.5 rounded-full font-bold">⭐ 프리미엄</span>
           </div>
           <p className="text-sm text-slate-400">사장님 안녕하세요, 황금수산 대표님 👋</p>

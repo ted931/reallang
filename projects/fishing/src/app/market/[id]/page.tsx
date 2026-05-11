@@ -34,7 +34,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
           <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${cond.color}`}>{cond.label}</span>
           <span className="text-xs text-slate-500">{MARKET_CATEGORY_LABEL[m.category]}</span>
         </div>
-        <h1 className="text-xl font-black text-white mb-2">{m.title}</h1>
+        <h1 className="text-xl font-black text-ocean-50 mb-2">{m.title}</h1>
         <div className="flex items-baseline gap-2">
           <span className="text-2xl font-black text-hook">{m.price.toLocaleString()}원</span>
           <span className="text-sm text-slate-600 line-through">{m.originalPrice.toLocaleString()}원</span>

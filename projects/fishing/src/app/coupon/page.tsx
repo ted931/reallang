@@ -49,7 +49,7 @@ export default function CouponPage() {
     <div className="max-w-xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="mb-5">
-        <h1 className="text-xl font-black text-white">🎫 쿠폰 허브</h1>
+        <h1 className="text-xl font-black text-ocean-50">🎫 쿠폰 허브</h1>
         <p className="text-xs text-slate-500 mt-0.5">좌대 할인 쿠폰을 다운받고 예약할 때 사용하세요</p>
       </div>
 

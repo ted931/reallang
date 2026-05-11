@@ -19,7 +19,7 @@ export default function CarSharePage() {
     <div className="max-w-2xl mx-auto px-4 py-6">
       {/* 헤더 */}
       <div className="mb-5">
-        <h1 className="text-xl font-black text-white">🚗 낚시 카풀</h1>
+        <h1 className="text-xl font-black text-ocean-50">🚗 낚시 카풀</h1>
         <p className="text-xs text-slate-500 mt-0.5">같은 포인트로 가는 낚시인과 이동비를 나눠요</p>
       </div>
 

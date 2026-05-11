@@ -11,7 +11,7 @@ export default function StaySharePage() {
       <Link href="/stay" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 숙소 목록</Link>
 
       <div className="mb-5">
-        <h1 className="text-xl font-black text-white">🤝 방 쉐어</h1>
+        <h1 className="text-xl font-black text-ocean-50">🤝 방 쉐어</h1>
         <p className="text-xs text-slate-500 mt-0.5">남는 방을 낚시 동행과 나눠 쓰세요</p>
       </div>
 
