@@ -89,6 +89,26 @@ export interface FishingGathering {
   createdAt: string;
 }
 
+export type ClubLevel = "입문" | "중급" | "고급" | "전체";
+
+export interface FishingClub {
+  id: string;
+  name: string;
+  region: string;
+  specialty: string;
+  memberCount: number;
+  maxMembers: number;
+  meetingFrequency: string;
+  level: ClubLevel;
+  fishTypes: string[];
+  activities: string[];
+  description: string;
+  monthlyFee: number;
+  nextOuting: string;
+  openRecruiting: boolean;
+  createdAt: string;
+}
+
 export interface Post {
   id: string;
   category: PostCategory;

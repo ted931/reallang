@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DUMMY_CATCHES } from "@/lib/dummy-catch";
 import { DUMMY_JWAEDAE } from "@/lib/dummy-jwaedae";
 import { DUMMY_GATHERINGS } from "@/lib/dummy-gatherings";
@@ -198,26 +199,26 @@ function SeatSection() {
 }
 
 function GatheringSection() {
-  const parties = DUMMY_GATHERINGS.slice(0,3);
+  const clubs = DUMMY_GATHERINGS.slice(0,3);
   return (
     <div>
       <div className="fl-sec-head">
         <div className="fl-sec-bar" style={{background:"#86efac"}}/>
         <div className="fl-sec-text">
-          <div className="fl-sec-kicker" style={{color:"#86efac"}}>MEETUP</div>
-          <div className="fl-sec-title">이번 주 낚시 모임</div>
+          <div className="fl-sec-kicker" style={{color:"#86efac"}}>CLUB</div>
+          <div className="fl-sec-title">낚시 동아리</div>
         </div>
         <Link href="/gathering" className="fl-sec-more">더보기 <IcoArrow/></Link>
       </div>
       <div className="fl-party-list">
-        {parties.map(p=>{
-          const dday=Math.max(0,Math.ceil((new Date(p.date).getTime()-Date.now())/86400000));
+        {clubs.map(c=>{
+          const dday=Math.max(0,Math.ceil((new Date(c.nextOuting).getTime()-Date.now())/86400000));
           return (
-            <Link key={p.id} href={`/gathering/${p.id}`} className="fl-party">
+            <Link key={c.id} href={`/gathering/${c.id}`} className="fl-party">
               <div className="fl-dday">D-{dday}</div>
               <div className="fl-party-body">
-                <div className="fl-party-title">{p.title}</div>
-                <div className="fl-party-meta"><IcoUsers s={11}/> {p.currentMembers}/{p.maxMembers}명 · {p.hostName}</div>
+                <div className="fl-party-title">{c.name}</div>
+                <div className="fl-party-meta"><IcoUsers s={11}/> {c.memberCount}/{c.maxMembers}명 · {c.meetingFrequency}</div>
               </div>
               <div className="fl-party-cta"><IcoArrow/></div>
             </Link>
@@ -225,6 +226,111 @@ function GatheringSection() {
         })}
       </div>
     </div>
+  );
+}
+
+function CameraFAB() {
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [modal, setModal] = useState(false);
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [fishName, setFishName] = useState("");
+  const [fishSize, setFishSize] = useState("");
+  const [stamped, setStamped] = useState<string | null>(null);
+
+  function handleCapture(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setImgSrc(url);
+    setStamped(null);
+    setModal(true);
+  }
+
+  function applyStamp() {
+    const canvas = canvasRef.current;
+    if (!canvas || !imgSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      // 배경 스트립
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")}`;
+      const timeStr = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+      const lines = [
+        `📍 제주도  🕒 ${dateStr} ${timeStr}`,
+        fishName ? `🐟 ${fishName}${fishSize ? `  📏 ${fishSize}cm` : ""}` : null,
+        "🎣 피싱로그 — fishing.realang.store",
+      ].filter(Boolean) as string[];
+      const stripH = 36 * lines.length + 24;
+      ctx.fillStyle = "rgba(8,15,30,0.82)";
+      ctx.fillRect(0, img.height - stripH, img.width, stripH);
+      ctx.font = `bold ${Math.round(img.width / 28)}px 'Noto Sans KR', sans-serif`;
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "left";
+      lines.forEach((line, i) => {
+        ctx.fillText(line, 20, img.height - stripH + 32 + i * 36);
+      });
+      setStamped(canvas.toDataURL("image/jpeg", 0.92));
+    };
+    img.src = imgSrc;
+  }
+
+  function handleRegister() {
+    setModal(false);
+    router.push("/catch/upload");
+  }
+
+  return (
+    <>
+      <button
+        onClick={() => inputRef.current?.click()}
+        style={{
+          position: "fixed", bottom: 90, right: 20, zIndex: 50,
+          width: 56, height: 56, borderRadius: "50%",
+          background: "linear-gradient(135deg, var(--hook), #ef4444)",
+          color: "#fff", border: "none", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 4px 16px rgba(245,158,11,0.4)",
+          fontSize: 24,
+        }}
+        title="📸 조황 촬영"
+      >📸</button>
+      <input ref={inputRef} type="file" accept="image/*" capture="environment"
+        onChange={handleCapture} style={{ display: "none" }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
+
+      {modal && imgSrc && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ background: "var(--ocean-900)", borderRadius: 20, width: "100%", maxWidth: 420, padding: 20, border: "1px solid var(--line-2)" }}>
+            <div style={{ fontWeight: 800, fontSize: 16, color: "var(--text-strong)", marginBottom: 12 }}>📸 조황 사진 등록</div>
+            <img src={stamped ?? imgSrc} alt="capture" style={{ width: "100%", borderRadius: 12, marginBottom: 12, maxHeight: 280, objectFit: "cover" }} />
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+              <input value={fishName} onChange={e => setFishName(e.target.value)} placeholder="어종 (예: 갈치)"
+                style={{ flex: 1, height: 40, background: "var(--ocean-800)", border: "1px solid var(--line)", borderRadius: 10, padding: "0 12px", color: "var(--text-strong)", fontSize: 13 }} />
+              <input value={fishSize} onChange={e => setFishSize(e.target.value)} placeholder="길이 cm"
+                style={{ width: 90, height: 40, background: "var(--ocean-800)", border: "1px solid var(--line)", borderRadius: 10, padding: "0 12px", color: "var(--text-strong)", fontSize: 13 }} />
+            </div>
+            <button onClick={applyStamp}
+              style={{ width: "100%", height: 42, background: "var(--ocean-800)", border: "1px solid var(--line-2)", borderRadius: 10, color: "var(--text-dim)", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: 8 }}>
+              🗓 날짜·어종 스탬프 찍기
+            </button>
+            <button onClick={handleRegister}
+              style={{ width: "100%", height: 46, background: "var(--hook)", border: "none", borderRadius: 12, color: "var(--ocean-950)", fontWeight: 900, fontSize: 15, cursor: "pointer", marginBottom: 8 }}>
+              🎣 조황 등록하기
+            </button>
+            <button onClick={() => setModal(false)}
+              style={{ width: "100%", height: 38, background: "transparent", border: "1px solid var(--line)", borderRadius: 10, color: "var(--text-mute)", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -236,6 +342,7 @@ export default function HomePage() {
       <div className="fl-section"><HotCatchCarousel/></div>
       <div className="fl-section"><SeatSection/></div>
       <div className="fl-section"><GatheringSection/></div>
+      <CameraFAB/>
     </>
   );
 }

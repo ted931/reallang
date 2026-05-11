@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { DUMMY_CATCHES } from "@/lib/dummy-catch";
+import { useRef } from "react";
 
 // derive a display-friendly region list from dummy data
 const REGIONS = ['전체', '서귀포', '성산', '모슬포', '한림', '애월', '구좌', '제주시', '우도'];
@@ -168,6 +169,11 @@ export default function CatchPage() {
             <span>🐟 총 {CATCH_FEED.length}건</span>
             <span className="fl-cond-sep" />
             <span>🔥 대물 {CATCH_FEED.filter(c => c.size >= 50).length}건</span>
+          </div>
+          <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
+            <Link href="/catch/upload" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--hook)", color: "var(--ocean-950)", fontWeight: 800, fontSize: 13, padding: "9px 18px", borderRadius: 10, textDecoration: "none" }}>
+              📸 조황 올리기
+            </Link>
           </div>
         </div>
         <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none">
