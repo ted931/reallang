@@ -148,43 +148,135 @@ function JejuMap({ region }: { region: string }) {
 }
 
 // ─── 스케줄 카드 ────────────────────────────────────────────
+type SlotItem = { time: string; activity: string; tip: string; best?: boolean };
+
 function ScheduleCard({ targetFish, date }: { targetFish: string; date: string }) {
-  const schedule = FISH_SCHEDULE[targetFish] ?? FISH_SCHEDULE['기본'];
+  const initial = (FISH_SCHEDULE[targetFish] ?? FISH_SCHEDULE['기본']).map(s => ({ ...s }));
+  const [slots, setSlots] = useState<SlotItem[]>(initial);
+  const [editIdx, setEditIdx] = useState<number | null>(null);
+  const [editVal, setEditVal] = useState<SlotItem>({ time: '', activity: '', tip: '' });
+
   const d = new Date(date);
   const dateLabel = `${d.getMonth() + 1}/${d.getDate()}(${['일','월','화','수','목','금','토'][d.getDay()]})`;
 
+  function startEdit(i: number) {
+    setEditIdx(i);
+    setEditVal({ ...slots[i] });
+  }
+  function saveEdit() {
+    if (editIdx === null) return;
+    setSlots(s => s.map((sl, i) => i === editIdx ? { ...editVal } : sl));
+    setEditIdx(null);
+  }
+  function deleteSlot(i: number) {
+    setSlots(s => s.filter((_, idx) => idx !== i));
+    setEditIdx(null);
+  }
+  function addSlot() {
+    setSlots(s => [...s, { time: '00:00', activity: '새 일정', tip: '메모를 입력하세요' }]);
+    setEditIdx(slots.length);
+    setEditVal({ time: '00:00', activity: '새 일정', tip: '메모를 입력하세요' });
+  }
+  function toggleBest(i: number) {
+    setSlots(s => s.map((sl, idx) => idx === i ? { ...sl, best: !sl.best } : sl));
+  }
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', boxSizing: 'border-box',
+    padding: '7px 10px', fontSize: 13,
+    background: 'var(--ocean-800)', border: '1px solid var(--ocean-700)',
+    borderRadius: 8, color: 'var(--text-strong)', fontFamily: 'inherit',
+    outline: 'none',
+  };
+
   return (
     <div>
-      <div style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 10 }}>
-        📅 {dateLabel} 예상 스케줄
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>📅 {dateLabel} 예상 스케줄</div>
+        <button onClick={addSlot} style={{
+          fontSize: 11, fontWeight: 800, padding: '4px 10px',
+          background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)',
+          borderRadius: 8, color: 'var(--hook-300)', cursor: 'pointer', fontFamily: 'inherit',
+        }}>+ 항목 추가</button>
       </div>
+
       <div style={{ position: 'relative', paddingLeft: 16 }}>
-        {/* 세로선 */}
         <div style={{ position: 'absolute', left: 6, top: 8, bottom: 8, width: 1, background: 'var(--line-2)' }} />
-        {schedule.map((slot, i) => (
-          <div key={i} style={{ display: 'flex', gap: 12, marginBottom: i < schedule.length - 1 ? 12 : 0, position: 'relative' }}>
-            {/* 타임라인 점 */}
+        {slots.map((slot, i) => (
+          <div key={i} style={{ display: 'flex', gap: 12, marginBottom: i < slots.length - 1 ? 10 : 0, position: 'relative' }}>
             <div style={{
               position: 'absolute', left: -10, top: 6,
               width: 9, height: 9, borderRadius: '50%',
               background: slot.best ? 'var(--hook)' : 'var(--ocean-600)',
               border: slot.best ? '2px solid var(--hook-300)' : '2px solid var(--ocean-700)',
-              flexShrink: 0,
             }} />
-            <div style={{
-              flex: 1, padding: '8px 12px',
-              background: slot.best ? 'rgba(233,78,59,0.06)' : 'var(--tint-04)',
-              border: `1px solid ${slot.best ? 'rgba(233,78,59,0.2)' : 'var(--line)'}`,
-              borderRadius: 10,
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: slot.best ? 'var(--hook-300)' : 'var(--text-strong)' }}>
-                  {slot.time} {slot.best && <span style={{ fontSize: 10 }}>⭐</span>}
-                </span>
+
+            {editIdx === i ? (
+              /* 편집 모드 */
+              <div style={{
+                flex: 1, padding: '10px 12px',
+                background: 'var(--tint-06)', border: '1px solid var(--hook)',
+                borderRadius: 10, display: 'flex', flexDirection: 'column', gap: 6,
+              }}>
+                <input style={{ ...inputStyle, width: 90 }} value={editVal.time}
+                  onChange={e => setEditVal(v => ({ ...v, time: e.target.value }))}
+                  placeholder="HH:MM" />
+                <input style={inputStyle} value={editVal.activity}
+                  onChange={e => setEditVal(v => ({ ...v, activity: e.target.value }))}
+                  placeholder="활동 내용" />
+                <input style={inputStyle} value={editVal.tip}
+                  onChange={e => setEditVal(v => ({ ...v, tip: e.target.value }))}
+                  placeholder="메모/팁" />
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button onClick={saveEdit} style={{
+                    flex: 1, padding: '7px', fontSize: 12, fontWeight: 800,
+                    background: 'var(--hook)', color: 'white', border: 'none',
+                    borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
+                  }}>저장</button>
+                  <button onClick={() => setEditIdx(null)} style={{
+                    flex: 1, padding: '7px', fontSize: 12, fontWeight: 700,
+                    background: 'var(--tint-08)', color: 'var(--text-dim)', border: '1px solid var(--line)',
+                    borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
+                  }}>취소</button>
+                  <button onClick={() => deleteSlot(i)} style={{
+                    padding: '7px 10px', fontSize: 12, fontWeight: 700,
+                    background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)',
+                    borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
+                  }}>삭제</button>
+                </div>
               </div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-strong)', marginBottom: 2 }}>{slot.activity}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>{slot.tip}</div>
-            </div>
+            ) : (
+              /* 뷰 모드 */
+              <div style={{
+                flex: 1, padding: '8px 12px',
+                background: slot.best ? 'rgba(233,78,59,0.06)' : 'var(--tint-04)',
+                border: `1px solid ${slot.best ? 'rgba(233,78,59,0.2)' : 'var(--line)'}`,
+                borderRadius: 10,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: slot.best ? 'var(--hook-300)' : 'var(--text-strong)' }}>
+                    {slot.time} {slot.best && '⭐'}
+                  </span>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    <button onClick={() => toggleBest(i)} style={{
+                      fontSize: 10, padding: '2px 6px',
+                      background: slot.best ? 'rgba(233,78,59,0.15)' : 'var(--tint-06)',
+                      border: `1px solid ${slot.best ? 'rgba(233,78,59,0.3)' : 'var(--line)'}`,
+                      borderRadius: 6, color: slot.best ? 'var(--hook-300)' : 'var(--text-mute)',
+                      cursor: 'pointer', fontFamily: 'inherit',
+                    }}>⭐</button>
+                    <button onClick={() => startEdit(i)} style={{
+                      fontSize: 10, padding: '2px 6px',
+                      background: 'var(--tint-06)', border: '1px solid var(--line)',
+                      borderRadius: 6, color: 'var(--text-dim)',
+                      cursor: 'pointer', fontFamily: 'inherit',
+                    }}>수정</button>
+                  </div>
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-strong)', marginBottom: 2 }}>{slot.activity}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>{slot.tip}</div>
+              </div>
+            )}
           </div>
         ))}
       </div>
