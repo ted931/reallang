@@ -119,6 +119,7 @@ html, body {
     width: 240px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     padding: 24px 16px;
     background: linear-gradient(180deg, var(--ocean-900), var(--ocean-950));
     border-right: 1px solid var(--line-2);
