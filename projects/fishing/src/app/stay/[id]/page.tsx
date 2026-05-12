@@ -1,9 +1,11 @@
 "use client";
 import { use, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DUMMY_STAY, STAY_TYPE_LABEL } from "@/lib/dummy-stay";
 
 export default function StayDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const router = useRouter();
   const { id } = use(params);
   const s = DUMMY_STAY.find((x) => x.id === id);
   const [checkIn, setCheckIn] = useState("2026-05-23");
@@ -128,7 +130,9 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
               <span style={{ color: "var(--text-mute)" }}>{s.pricePerNight.toLocaleString()}원 × {nights}박</span>
               <span className="font-black text-hook">{total.toLocaleString()}원</span>
             </div>
-            <button className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
+            <button
+              onClick={() => router.push(`/stay/${id}/checkout?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)}
+              className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
               🏠 {nights}박 예약
             </button>
           </div>
@@ -160,7 +164,9 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             </div>
           </div>
-          <button className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
+          <button
+            onClick={() => router.push(`/stay/${id}/checkout?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)}
+            className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
             🏠 {nights}박 예약 — {total.toLocaleString()}원
           </button>
         </div>

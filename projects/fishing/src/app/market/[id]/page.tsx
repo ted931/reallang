@@ -7,6 +7,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
   const { id } = use(params);
   const m = DUMMY_MARKET.find(x => x.id === id);
   const [contacted, setContacted] = useState(false);
+  const [liked, setLiked] = useState(false);
 
   if (!m) return <div className="p-8 text-center text-slate-400">상품을 찾을 수 없습니다.</div>;
 
@@ -109,8 +110,10 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
                 <span className="font-bold text-slate-200">{m.views} / {m.likes}</span>
               </div>
             </div>
-            <button className="w-full py-3 mb-3 border border-ocean-700 hover:border-ocean-500 text-slate-400 rounded-2xl font-bold transition-colors text-sm">
-              ♥ 찜하기 ({m.likes})
+            <button
+              onClick={() => setLiked(v => !v)}
+              className={`w-full py-3 mb-3 border rounded-2xl font-bold transition-colors text-sm ${liked ? "border-rose-500 text-rose-400 bg-rose-500/10" : "border-ocean-700 hover:border-ocean-500 text-slate-400"}`}>
+              {liked ? "♥" : "♡"} 찜하기 ({m.likes + (liked ? 1 : 0)})
             </button>
             {contacted ? (
               <div className="w-full py-3 bg-teal-900/40 border border-teal-700 text-teal-300 font-black text-center rounded-2xl text-sm">
@@ -131,8 +134,10 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
       {/* 모바일 하단 CTA */}
       <div className="lg:hidden fixed bottom-20 left-0 right-0 z-40 bg-ocean-950/95 border-t border-ocean-800 px-4 py-3 backdrop-blur-sm">
         <div className="max-w-xl mx-auto flex gap-3">
-          <button className="flex-1 py-3 border border-ocean-700 hover:border-ocean-500 text-slate-400 rounded-2xl font-bold transition-colors text-sm">
-            ♥ 찜하기 ({m.likes})
+          <button
+            onClick={() => setLiked(v => !v)}
+            className={`flex-1 py-3 border rounded-2xl font-bold transition-colors text-sm ${liked ? "border-rose-500 text-rose-400 bg-rose-500/10" : "border-ocean-700 hover:border-ocean-500 text-slate-400"}`}>
+            {liked ? "♥" : "♡"} 찜하기 ({m.likes + (liked ? 1 : 0)})
           </button>
           {contacted ? (
             <div className="flex-[2] py-3 bg-teal-900/40 border border-teal-700 text-teal-300 font-black text-center rounded-2xl text-sm">

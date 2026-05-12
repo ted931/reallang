@@ -111,12 +111,18 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
                 <span className="font-bold text-hook">★ {item.rating} <span className="text-slate-500 font-normal">({item.reviewCount})</span></span>
               </div>
             </div>
-            <button
-              className={`w-full py-3.5 rounded-xl font-bold text-base transition-colors ${item.availableSeats === 0 ? "cursor-not-allowed" : "bg-hook hover:bg-hook-light"}`}
-              style={item.availableSeats === 0 ? { background: "var(--ocean-800)", color: "var(--text-dim)" } : { color: "var(--ocean-950)" }}
-              disabled={item.availableSeats === 0}>
-              {item.availableSeats === 0 ? "예약 마감" : "예약하기"}
-            </button>
+            {item.availableSeats === 0 ? (
+              <button
+                className="w-full py-3.5 rounded-xl font-bold text-base cursor-not-allowed"
+                style={{ background: "var(--ocean-800)", color: "var(--text-dim)" }}
+                disabled>
+                예약 마감
+              </button>
+            ) : (
+              <Link href={`/jwaedae/${id}/checkout`} className="block w-full py-3.5 rounded-xl font-bold text-base text-center transition-colors bg-hook hover:bg-hook-light" style={{ color: "var(--ocean-950)" }}>
+                예약하기
+              </Link>
+            )}
             <p className="text-center text-xs mt-2" style={{ color: "var(--text-mute)" }}>📞 {item.operatorPhone}</p>
           </div>
         </div>
@@ -124,11 +130,17 @@ export default async function JwaedaeDetailPage({ params }: { params: Promise<{ 
 
       {/* CTA (모바일 전용) */}
       <div className="sticky bottom-24 md:bottom-4 lg:hidden">
-        <button className={`w-full py-4 rounded-2xl font-bold text-lg transition-colors shadow-lg ${item.availableSeats === 0 ? "cursor-not-allowed" : "bg-hook hover:bg-hook-light"}`}
-          style={item.availableSeats === 0 ? { background: "var(--ocean-800)", color: "var(--text-dim)" } : { color: "var(--ocean-950)" }}
-          disabled={item.availableSeats === 0}>
-          {item.availableSeats === 0 ? "예약 마감" : `예약하기 — ${item.priceDay.toLocaleString()}원/인`}
-        </button>
+        {item.availableSeats === 0 ? (
+          <button className="w-full py-4 rounded-2xl font-bold text-lg shadow-lg cursor-not-allowed"
+            style={{ background: "var(--ocean-800)", color: "var(--text-dim)" }}
+            disabled>
+            예약 마감
+          </button>
+        ) : (
+          <Link href={`/jwaedae/${id}/checkout`} className="block w-full py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg bg-hook hover:bg-hook-light" style={{ color: "var(--ocean-950)" }}>
+            {`예약하기 — ${item.priceDay.toLocaleString()}원/인`}
+          </Link>
+        )}
         <p className="text-center text-xs mt-2" style={{ color: "var(--text-mute)" }}>전화 예약: {item.operatorPhone}</p>
       </div>
     </div>

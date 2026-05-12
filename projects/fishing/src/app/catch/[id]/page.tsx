@@ -32,6 +32,8 @@ export default function CatchDetailPage({ params }: { params: Promise<{ id: stri
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [commentLikes, setCommentLikes] = useState<Record<number, boolean>>({});
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(CD_COMMENTS);
 
   const heroGradient = `linear-gradient(160deg, ${data.color}cc 0%, ${data.color}88 60%, #0a1628 100%)`;
 
@@ -221,10 +223,10 @@ export default function CatchDetailPage({ params }: { params: Promise<{ id: stri
       {/* Comments */}
       <div style={{ padding: '0 20px 8px' }}>
         <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--ocean-400)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>COMMENTS</div>
-        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 10 }}>댓글 {CD_COMMENTS.length}개</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: 'var(--text-strong)', marginBottom: 10 }}>댓글 {comments.length}개</div>
       </div>
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {CD_COMMENTS.map((c) => (
+        {comments.map((c) => (
           <div key={c.id} style={{
             display: 'flex', gap: 10, padding: 12,
             background: 'var(--ocean-900)', border: '1px solid var(--ocean-800)', borderRadius: 12,
@@ -255,8 +257,23 @@ export default function CatchDetailPage({ params }: { params: Promise<{ id: stri
         <input
           className="fl-cmd-input"
           placeholder="댓글을 입력하세요..."
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter" && comment.trim()) {
+              setComments(prev => [...prev, { id: Date.now(), author: "나", avatar: "😊", time: "방금", body: comment.trim(), likes: 0 }]);
+              setComment("");
+            }
+          }}
         />
-        <button className="fl-cmd-send">등록</button>
+        <button
+          className="fl-cmd-send"
+          onClick={() => {
+            if (!comment.trim()) return;
+            setComments(prev => [...prev, { id: Date.now(), author: "나", avatar: "😊", time: "방금", body: comment.trim(), likes: 0 }]);
+            setComment("");
+          }}
+        >등록</button>
       </div>
     </div>
   );
