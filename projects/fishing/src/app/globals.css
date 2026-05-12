@@ -102,9 +102,7 @@ html, body {
 
 @media (min-width: 1024px) {
   .fl-page {
-    background:
-      radial-gradient(60% 80% at 0% 0%, rgba(30,101,149,0.18), transparent 60%),
-      var(--ocean-950);
+    background: var(--ocean-950);
   }
   .fl-main {
     margin-left: 240px;
@@ -120,7 +118,7 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding: 24px 16px;
+    padding: 10px 16px 24px;
     background: linear-gradient(180deg, var(--ocean-900), var(--ocean-950));
     border-right: 1px solid var(--line-2);
     z-index: 20;
