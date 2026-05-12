@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { NewsItem } from "@/app/api/news/route";
 
 const CAT_LABELS: Record<string, string> = {
@@ -218,13 +219,10 @@ export default function NewsPage() {
                 const catColor = CAT_COLORS[item.cat] ?? "#5fa3cf";
                 const isLink = item.url && item.url !== "#";
                 return (
-                  <article
+                  <Link
                     key={item.id}
+                    href={`/news/${item.id}`}
                     className="fl-news-card"
-                    role={isLink ? undefined : "article"}
-                    onClick={() => {
-                      if (isLink) window.open(item.url, "_blank", "noopener,noreferrer");
-                    }}
                   >
                     {/* 썸네일 */}
                     <div
@@ -254,7 +252,7 @@ export default function NewsPage() {
                         <p className="fl-news-summary">{item.summary}</p>
                       )}
                     </div>
-                  </article>
+                  </Link>
                 );
               })
             )}

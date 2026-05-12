@@ -76,7 +76,7 @@ export default function LogbookPage() {
           <h1 className="text-xl font-black text-ocean-50">📓 낚시 일지</h1>
           <p className="text-xs text-slate-500 mt-0.5">나만의 조과 기록을 쌓아보세요</p>
         </div>
-        <Link href="/catch/upload"
+        <Link href="/logbook/write"
           className="shrink-0 px-4 py-2 bg-hook hover:bg-hook-light text-ocean-950 text-xs font-black rounded-xl transition-colors">
           + 오늘 기록
         </Link>
@@ -199,7 +199,7 @@ export default function LogbookPage() {
                   <div className="text-sm font-bold text-slate-200">{r.jwaedaeName}</div>
                   <div className="text-xs text-slate-500">{r.date} · {r.targetFish.join(", ")}</div>
                 </div>
-                <Link href="/catch/upload"
+                <Link href="/logbook/write"
                   className="text-xs px-2.5 py-1 bg-hook/10 text-hook border border-hook/20 rounded-xl font-bold shrink-0">
                   조과 등록
                 </Link>

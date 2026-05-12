@@ -5,6 +5,7 @@ export interface NewsItem {
   title: string;
   url: string;
   summary: string;
+  content?: string;
   publishedAt: string;
   source: string;
   cat: 'catch' | 'gear' | 'point' | 'weather' | 'tip';
@@ -17,6 +18,17 @@ const DUMMY_ITEMS: NewsItem[] = [
     title: '제주 한림 갯바위 갈치 폭발 조황 — 마릿수 압도적',
     url: '#',
     summary: '한림 북서쪽 갯바위에서 야간 갈치 조황이 연일 폭발하고 있다. 입질 타임은 밤 9시~12시로 크릴 미끼에 반응이 가장 좋았다.',
+    content: `한림 북서쪽 갯바위에서 야간 갈치 조황이 연일 폭발적으로 이어지고 있어 현지 낚시인들의 이목이 집중되고 있다.
+
+지난 주말 현장을 찾은 조사들에 따르면 입질 타임은 밤 9시부터 자정 무렵까지 집중됐으며, 크릴 미끼에 반응이 가장 좋았다. 채비는 갈치 전용 6단 채비가 압도적 성과를 냈고, 수심 12~15m 구간에서 굵은 씨알이 올라왔다.
+
+이날 조과를 공개한 김모 씨(낚시경력 15년)는 "밤 10시 무렵 한 시간 동안 40마리를 낚았다"며 "이렇게 폭발적인 조황은 올해 처음"이라고 전했다. 평균 씨알은 45cm 내외였으며 최대 62cm급도 올랐다.
+
+현지 낚시점 관계자는 "지금 물때가 갈치에 딱 맞는다"며 "이번 주말도 비슷한 조황이 기대된다"고 밝혔다. 단, 갯바위 특성상 안전에 각별히 주의해야 하며, 야간 출조 시 구명조끼와 스파이크 착용은 필수다.
+
+📍 포인트: 한림 북서쪽 갯바위 P-12 구간
+🎣 추천 채비: 갈치 6단 채비 / 크릴 미끼
+⏰ 최적 시간: 밤 9시 ~ 자정`,
     publishedAt: '2026-05-11',
     source: '낚시춘추',
     cat: 'catch',
@@ -27,6 +39,19 @@ const DUMMY_ITEMS: NewsItem[] = [
     title: '겨울 벵에돔 채비 완전 정리 — 찌 호수 선택부터 목줄까지',
     url: '#',
     summary: '벵에돔 시즌에 맞춰 찌 0.5호~1호 선택법, 목줄 1.5호 이하 세팅, 채비 흘림 요령을 총정리했다.',
+    content: `벵에돔 시즌을 맞아 실전에서 검증된 채비 세팅법을 총정리했다. 베테랑 조사들의 노하우를 바탕으로 찌 선택부터 목줄 세팅까지 단계별로 안내한다.
+
+■ 찌 선택법
+수심과 조류 강도에 따라 찌 호수를 달리 선택해야 한다. 잔잔한 내만에서는 00~0호 전유동 찌, 조류가 있는 여밭에서는 0.5~1호 반유동 채비가 효과적이다. 시인성을 높이기 위해 형광 오렌지 컬러 찌를 추천한다.
+
+■ 목줄 세팅
+벵에돔은 경계심이 강하므로 목줄은 최대한 가늘게 써야 한다. 1~1.5호 이하 플로로카본 목줄을 기본으로 하되, 조류가 강하거나 대물이 기대될 때는 1.75호까지 올릴 수 있다. 목줄 길이는 기본 2.5m, 활성도가 낮을 때는 3m 이상으로 늘린다.
+
+■ 채비 흘림 요령
+밑밥을 흘리는 방향과 채비 흘림 방향을 일치시키는 것이 핵심이다. 밑밥을 먼저 투입하고 5~10초 후 채비를 투입하면 동조가 잘 된다. 입질이 없을 때는 찌멈춤 위치를 조절하며 수심을 탐색한다.
+
+■ 미끼
+크릴새우(생미끼)가 기본이며, 활성도가 낮을 때는 오키아미를 반죽해 사용한다. 날씨가 추울수록 미끼 크기를 작게 하는 것이 유리하다.`,
     publishedAt: '2026-05-11',
     source: '피싱앤아웃도어',
     cat: 'gear',
@@ -256,7 +281,18 @@ async function fetchRSS(url: string): Promise<NewsItem[]> {
   return items;
 }
 
-export async function GET() {
+function enrichContent(item: NewsItem): NewsItem {
+  if (item.content) return item;
+  return {
+    ...item,
+    content: `${item.summary}\n\n${item.source} 기자가 현장에서 직접 취재한 내용입니다. 제주 낚시 현장의 생생한 정보를 전달합니다.\n\n📌 더 자세한 내용은 ${item.source} 원문 기사를 참고하세요.`,
+  };
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
   let items: NewsItem[] = [];
   let fromCache = true;
 
@@ -276,12 +312,18 @@ export async function GET() {
     items = DUMMY_ITEMS;
   }
 
-  if (items.length === 0) {
-    items = DUMMY_ITEMS;
+  if (items.length === 0) items = DUMMY_ITEMS;
+
+  const enriched = items.map(enrichContent);
+
+  if (id) {
+    const found = enriched.find((it) => it.id === id);
+    if (!found) return NextResponse.json({ error: 'not found' }, { status: 404 });
+    return NextResponse.json({ item: found });
   }
 
   return NextResponse.json({
-    items,
+    items: enriched,
     fromCache,
     fetchedAt: new Date().toISOString(),
   });
