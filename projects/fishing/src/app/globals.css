@@ -1910,3 +1910,49 @@ html, body {
 .fl-ss-done-actions { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin: 0 auto; }
 .fl-ss-done-btn { display: block; padding: 14px; background: var(--ocean-900); border: 1px solid var(--ocean-800); color: var(--text-strong); text-align: center; text-decoration: none; border-radius: 12px; font-size: 14px; font-weight: 800; }
 .fl-ss-done-btn.primary { background: var(--hook); color: var(--ocean-950); border: none; }
+
+/* ═══════════════════════════════════════
+   블로그 초안 (fl-blog-*)
+═══════════════════════════════════════ */
+.fl-blog-hero { padding: 28px 20px 16px; }
+@media (min-width: 1024px) { .fl-blog-hero { padding: 32px 0 16px; } }
+.fl-blog-tmpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 20px 20px; }
+@media (min-width: 1024px) { .fl-blog-tmpl-grid { padding: 0 0 20px; grid-template-columns: repeat(4, 1fr); } }
+.fl-blog-tmpl-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 12px; background: var(--ocean-900); border: 2px solid var(--ocean-800); border-radius: 14px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.fl-blog-tmpl-card:hover { border-color: var(--ocean-600); }
+.fl-blog-tmpl-card.active { border-color: var(--hook); background: rgba(245,158,11,0.08); }
+.fl-blog-tmpl-icon { font-size: 28px; line-height: 1; }
+.fl-blog-tmpl-title { font-size: 13px; font-weight: 800; color: var(--text-strong); }
+.fl-blog-tmpl-desc { font-size: 11px; color: var(--text-dim); }
+.fl-blog-form { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+@media (min-width: 1024px) { .fl-blog-form { padding: 0 0 20px; } }
+.fl-blog-preview { padding: 0 20px 40px; }
+@media (min-width: 1024px) { .fl-blog-preview { padding: 0 0 40px; } }
+.fl-blog-preview-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.fl-blog-preview-tab { padding: 6px 14px; border: 1px solid var(--ocean-700); border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--text-dim); background: transparent; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.fl-blog-preview-tab.on { background: var(--hook); color: var(--ocean-950); border-color: var(--hook); }
+.fl-blog-preview-content { background: var(--ocean-900); border: 1px solid var(--ocean-800); border-radius: 12px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-all; max-height: 500px; overflow-y: auto; font-family: inherit; }
+.fl-blog-copy-btn { margin-top: 10px; width: 100%; padding: 12px; background: var(--hook); color: var(--ocean-950); border: none; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.fl-blog-copy-btn:hover { opacity: 0.9; }
+.fl-blog-copy-btn.done { background: #22c55e; color: #fff; }
+
+/* ═══════════════════════════════════════
+   뉴스 페이지 (fl-news-*)
+═══════════════════════════════════════ */
+.fl-news-hero { padding: 28px 20px 16px; }
+.fl-news-list { display: flex; flex-direction: column; gap: 1px; padding: 0 20px 24px; }
+.fl-news-card { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--ocean-800); text-decoration: none; color: inherit; cursor: pointer; transition: all 0.15s; }
+.fl-news-card:hover .fl-news-card-title { color: var(--ocean-300); }
+.fl-news-thumb { width: 64px; height: 64px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.fl-news-body { flex: 1; min-width: 0; }
+.fl-news-cat { font-size: 10px; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 3px; }
+.fl-news-card-title { font-size: 14px; font-weight: 700; color: var(--text-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; margin-bottom: 4px; transition: color 0.15s; }
+.fl-news-meta { font-size: 11px; color: var(--text-dim); margin-bottom: 3px; }
+.fl-news-summary { font-size: 12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fl-news-skeleton { height: 92px; background: var(--ocean-900); border-radius: 8px; margin-bottom: 1px; animation: fl-pulse 1.5s ease-in-out infinite; }
+@keyframes fl-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+@media (min-width: 1024px) {
+  .fl-news-hero { padding: 32px 0 16px; }
+  .fl-news-list { padding: 0 0 24px; }
+  .fl-news-list-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
+}
