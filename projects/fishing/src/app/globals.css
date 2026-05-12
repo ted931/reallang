@@ -84,6 +84,7 @@ html, body {
 ═══════════════════════════════════════ */
 .fl-page {
   min-height: 100vh;
+  padding-top: 38px;
   background: var(--ocean-950);
   color: var(--text);
   display: flex;
