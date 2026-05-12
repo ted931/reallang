@@ -17,11 +17,9 @@ export default function FishDetailPage({ params }: { params: Promise<{ id: strin
 
   if (!fish) {
     return (
-      <div className="fl-page">
-        <main className="fl-main" style={{ padding: '40px 20px', textAlign: 'center' }}>
-          <p style={{ color: 'var(--text-mute)', fontSize: 16 }}>어종 정보를 찾을 수 없습니다.</p>
-          <Link href="/fish-guide" style={{ color: 'var(--ocean-300)', fontSize: 14 }}>← 도감으로 돌아가기</Link>
-        </main>
+      <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-mute)', fontSize: 16 }}>어종 정보를 찾을 수 없습니다.</p>
+        <Link href="/fish-guide" style={{ color: 'var(--ocean-300)', fontSize: 14 }}>← 도감으로 돌아가기</Link>
       </div>
     );
   }
@@ -29,9 +27,7 @@ export default function FishDetailPage({ params }: { params: Promise<{ id: strin
   const heroGradient = `linear-gradient(160deg, ${fish.color}bb 0%, ${fish.color}66 50%, #0a1628 100%)`;
 
   return (
-    <div className="fl-page">
-      <main className="fl-main">
-        <div style={{ maxWidth: 720, width: '100%', margin: '0 auto', paddingBottom: 80 }}>
+    <div style={{ maxWidth: 720, width: '100%', margin: '0 auto', paddingBottom: 80 }}>
 
           {/* Back */}
           <div style={{ padding: '16px 20px 0' }}>
@@ -328,8 +324,6 @@ export default function FishDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </section>
 
-        </div>
-      </main>
     </div>
   );
 }

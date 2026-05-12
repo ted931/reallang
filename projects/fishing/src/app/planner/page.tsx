@@ -5,6 +5,60 @@ import Link from "next/link";
 // ─── 데이터 상수 ────────────────────────────────────────────
 const REGIONS = ['한림', '애월', '서귀포', '성산', '모슬포', '구좌', '표선', '협재'];
 
+// 지도 좌표 (SVG 280×140 기준, 제주도 간략화)
+const REGION_COORDS: Record<string, { x: number; y: number }> = {
+  '협재': { x: 42, y: 46 },
+  '한림': { x: 54, y: 68 },
+  '애월': { x: 88, y: 36 },
+  '서귀포': { x: 140, y: 116 },
+  '모슬포': { x: 72, y: 112 },
+  '표선': { x: 200, y: 110 },
+  '구좌': { x: 226, y: 54 },
+  '성산': { x: 242, y: 76 },
+};
+
+// 시간별 스케줄 템플릿
+const FISH_SCHEDULE: Record<string, { time: string; activity: string; tip: string; best?: boolean }[]> = {
+  '갈치': [
+    { time: '17:00', activity: '현지 출발 + 미끼 준비', tip: '꽁치 토막 냉동 준비' },
+    { time: '18:30', activity: '포인트 도착·채비 세팅', tip: '발광체 연결 필수' },
+    { time: '20:00', activity: '🎣 입질 시작', tip: '야간 갈치 입질 피크', best: true },
+    { time: '23:00', activity: '최성기 — 릴링 집중', tip: '빠른 릴링으로 어탐', best: true },
+    { time: '01:00', activity: '마무리·귀항', tip: '조과 정리 및 세척' },
+  ],
+  '감성돔': [
+    { time: '04:00', activity: '새벽 기상·출발', tip: '밑밥 배합 미리 준비' },
+    { time: '05:30', activity: '갯바위 진입·포인트 세팅', tip: '일출 전 자리 선점 중요' },
+    { time: '06:00', activity: '🎣 피크 시간 시작', tip: '새벽빛 찌낚시 집중', best: true },
+    { time: '09:00', activity: '오전 조황 마무리', tip: '밀물 끝나면 이동 고려' },
+    { time: '11:00', activity: '철수·귀항', tip: '조과 사진·일지 기록' },
+  ],
+  '참돔': [
+    { time: '05:00', activity: '선착장 집결·승선', tip: '생미끼(새우) 확인' },
+    { time: '06:30', activity: '포인트 이동 (선상)', tip: '여밭 수심 25~35m 공략' },
+    { time: '07:30', activity: '🎣 오전 조황 시작', tip: '물때 6~8물 최적', best: true },
+    { time: '12:00', activity: '점심 + 오후 조황', tip: '미끼 교체 주기적으로', best: true },
+    { time: '15:00', activity: '귀항', tip: '드래그 풀고 이동' },
+  ],
+  '방어': [
+    { time: '05:30', activity: '선착장 집결', tip: '지그 200g 챙기기' },
+    { time: '07:00', activity: '외해 포인트 이동', tip: '뱃멀미약 미리 복용' },
+    { time: '08:00', activity: '🎣 슬로우 지깅 시작', tip: '집어등 주변 공략', best: true },
+    { time: '11:00', activity: '최성기 조황', tip: '빠른 저킹으로 유인', best: true },
+    { time: '14:00', activity: '귀항', tip: '방어 혈 빼기 즉시 실시' },
+  ],
+  '기본': [
+    { time: '05:00', activity: '기상 및 준비', tip: '채비·미끼 전날 준비 권장' },
+    { time: '06:30', activity: '포인트 도착·세팅', tip: '현지 낚시점 조황 확인' },
+    { time: '07:30', activity: '🎣 낚시 시작', tip: '물때 맞춰 최적 시간 공략', best: true },
+    { time: '12:00', activity: '점심 + 재개', tip: '조류 변화 체크' },
+    { time: '16:00', activity: '마무리·귀환', tip: '조과 기록 및 일지 작성' },
+  ],
+};
+
+// 제주도 간략 SVG 경로
+const JEJU_PATH = "M 30 70 C 35 45 55 30 80 30 C 105 30 120 20 145 20 C 170 20 195 22 215 35 C 235 48 255 58 258 72 C 261 86 245 105 220 112 C 195 119 165 124 140 124 C 115 124 90 120 70 112 C 50 104 25 95 30 70 Z";
+
 const FISH_LIST = ['갈치', '감성돔', '참돔', '벵에돔', '볼락', '방어', '광어', '한치', '참치', '농어'];
 
 const RECOMMENDATIONS: Record<string, { point: string; depth: string; tackle: string; bait: string; tip: string }> = {
@@ -45,6 +99,98 @@ function todayStr() {
 }
 
 // ─── 서브 컴포넌트 ────────────────────────────────────────────
+
+// ─── 제주 지도 컴포넌트 ────────────────────────────────────────────
+function JejuMap({ region }: { region: string }) {
+  const coord = REGION_COORDS[region];
+  return (
+    <div style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', background: 'linear-gradient(160deg, #0a1e3d, #0e3060)', padding: 16 }}>
+      <svg viewBox="0 0 288 148" width="100%" style={{ display: 'block' }}>
+        {/* 바다 배경 */}
+        <rect width="288" height="148" fill="transparent" />
+        {/* 제주도 */}
+        <path d={JEJU_PATH} fill="rgba(30,80,140,0.6)" stroke="rgba(95,163,207,0.5)" strokeWidth="1.5" />
+        {/* 제주도 위에 텍스트 */}
+        <text x="144" y="78" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="11" fontWeight="700">제주도</text>
+
+        {/* 모든 지역 dot */}
+        {Object.entries(REGION_COORDS).map(([name, pos]) => (
+          <g key={name}>
+            <circle cx={pos.x} cy={pos.y} r={name === region ? 7 : 3.5}
+              fill={name === region ? '#e94e3b' : 'rgba(95,163,207,0.5)'}
+              stroke={name === region ? '#fb7755' : 'rgba(95,163,207,0.3)'}
+              strokeWidth={name === region ? 2 : 1}
+            />
+            {name === region && (
+              <circle cx={pos.x} cy={pos.y} r={12} fill="rgba(233,78,59,0.2)" />
+            )}
+            <text x={pos.x + (pos.x > 144 ? -14 : 10)} y={pos.y + 4}
+              fill={name === region ? '#fb7755' : 'rgba(255,255,255,0.45)'}
+              fontSize={name === region ? '9' : '8'} fontWeight={name === region ? '800' : '500'}
+            >{name}</text>
+          </g>
+        ))}
+
+        {/* 활성 핀 펄스 */}
+        {coord && (
+          <>
+            <line x1={coord.x} y1={coord.y - 8} x2={coord.x} y2={coord.y - 20} stroke="#fb7755" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.6" />
+            <rect x={coord.x - 18} y={coord.y - 34} width="36" height="14" rx="7" fill="rgba(233,78,59,0.9)" />
+            <text x={coord.x} y={coord.y - 24} textAnchor="middle" fill="white" fontSize="8" fontWeight="800">{region}</text>
+          </>
+        )}
+      </svg>
+      <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: -4 }}>
+        📍 선택 지역: <span style={{ color: '#fb7755', fontWeight: 700 }}>{region}</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── 스케줄 카드 ────────────────────────────────────────────
+function ScheduleCard({ targetFish, date }: { targetFish: string; date: string }) {
+  const schedule = FISH_SCHEDULE[targetFish] ?? FISH_SCHEDULE['기본'];
+  const d = new Date(date);
+  const dateLabel = `${d.getMonth() + 1}/${d.getDate()}(${['일','월','화','수','목','금','토'][d.getDay()]})`;
+
+  return (
+    <div>
+      <div style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 10 }}>
+        📅 {dateLabel} 예상 스케줄
+      </div>
+      <div style={{ position: 'relative', paddingLeft: 16 }}>
+        {/* 세로선 */}
+        <div style={{ position: 'absolute', left: 6, top: 8, bottom: 8, width: 1, background: 'var(--line-2)' }} />
+        {schedule.map((slot, i) => (
+          <div key={i} style={{ display: 'flex', gap: 12, marginBottom: i < schedule.length - 1 ? 12 : 0, position: 'relative' }}>
+            {/* 타임라인 점 */}
+            <div style={{
+              position: 'absolute', left: -10, top: 6,
+              width: 9, height: 9, borderRadius: '50%',
+              background: slot.best ? 'var(--hook)' : 'var(--ocean-600)',
+              border: slot.best ? '2px solid var(--hook-300)' : '2px solid var(--ocean-700)',
+              flexShrink: 0,
+            }} />
+            <div style={{
+              flex: 1, padding: '8px 12px',
+              background: slot.best ? 'rgba(233,78,59,0.06)' : 'var(--tint-04)',
+              border: `1px solid ${slot.best ? 'rgba(233,78,59,0.2)' : 'var(--line)'}`,
+              borderRadius: 10,
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+                <span style={{ fontSize: 12, fontWeight: 800, color: slot.best ? 'var(--hook-300)' : 'var(--text-strong)' }}>
+                  {slot.time} {slot.best && <span style={{ fontSize: 10 }}>⭐</span>}
+                </span>
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-strong)', marginBottom: 2 }}>{slot.activity}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>{slot.tip}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ProgressBar({ step }: { step: 1 | 2 | 3 }) {
   const steps = [
@@ -129,6 +275,13 @@ function ResultCard({ date, region, targetFish, people, onReset }: {
         <div style={{ fontSize: 12, color: 'var(--text-dim)', marginTop: 4 }}>
           {date} · {people}명
         </div>
+      </div>
+
+      {/* 제주 지도 */}
+      <div style={cardStyle}>
+        <span style={labelStyle}>포인트 위치</span>
+        <JejuMap region={region} />
+        <div style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: 'var(--hook-300)' }}>📍 {rec.point}</div>
       </div>
 
       {/* 날씨 예보 카드 */}
@@ -229,6 +382,12 @@ function ResultCard({ date, region, targetFish, people, onReset }: {
         <div style={{ textAlign: 'right', marginTop: 4, fontSize: 11, color: 'var(--text-mute)' }}>
           1인당 약 {perPerson.toLocaleString()}원
         </div>
+      </div>
+
+      {/* 시간별 스케줄 */}
+      <div style={cardStyle}>
+        <span style={labelStyle}>시간별 출조 스케줄</span>
+        <ScheduleCard targetFish={targetFish} date={date} />
       </div>
 
       {/* 바로가기 버튼 */}

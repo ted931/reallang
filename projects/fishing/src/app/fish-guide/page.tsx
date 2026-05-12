@@ -117,8 +117,7 @@ export default function FishGuidePage() {
   }, [search, typeTab, diffTab]);
 
   return (
-    <div className="fl-page">
-      <main className="fl-main">
+    <>
 
         {/* Hero */}
         <div className="fl-hero">
@@ -231,7 +230,6 @@ export default function FishGuidePage() {
             .fg-grid { grid-template-columns: repeat(4, 1fr) !important; }
           }
         `}</style>
-      </main>
-    </div>
+    </>
   );
 }
