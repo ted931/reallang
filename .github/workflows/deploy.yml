@@ -15,13 +15,17 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 2222
+          known_hosts: |
+            [13.125.33.79]:2222 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2vHGsc0jAtRObCphwiI4dd4OrnPcN2R0B6VohomB+T74ekzPpA4zm0Ed/x12fthLYZPQuIrgOtnSkxLpIpMf/bw5YxzAyTiQqrImy5rCVxcQ/HZmNiLAzVtvl49s/R3EBp8zEZXxuooeMSQ6zqmjrWsK4ReOS1ekJtRL8NEKNHbRioZMpdxuXBRLmLw4l+wNeSYzjyQkD8WSuV373Jij01Tus18pVjGL8QaT2J+POgeulcNDdQfRRkvSiutIqK0axC9fInUfDooZGNKydh9zOfUCI7aGHgXsoM2YgO2SXgWQBzKqkGMT9ZS++yA1NxDSjJy0aK6BBT7KeNGMUlaS7A8J3rgtdC9BbjaebEQn16g2+ZF1C7P9jzXf4KcX6qY8g1sAF286cCPQ9msfIL87D2mEQ82I7dPFM+5vgcAm9NUls1BzaY/i3udaX6BGx679LRe+fXcfOQVCCJ93wwVhY1qi2GPXwZ7MxgYWavx8cqhmF+H/IOSKfuPVr4g02+Wk=
+            [13.125.33.79]:2222 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHhEMJlA8ZRi7c7Vt74iGSgq5edihqNsEsxsf14PzFdAqueqHzc4iqM73wR0fWBW0K8dERKBFxbdjZ4rr4zsYto=
+            [13.125.33.79]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICRCFg7d8CqXWcE9LJNPcJt3Ia7qCU715NBsL+qODy8x
           script: |
+            set -e
             cd /home/ubuntu/reallang
             git pull origin main
-            npm install --silent
-            
+
             CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^projects/" | cut -d/ -f2 | sort -u)
-            
+
             for proj in $CHANGED; do
               case $proj in
                 # 통합 서비스
@@ -50,9 +54,9 @@ jobs:
                 common) pm2 restart all ;;
               esac
             done
-            
+
             if [ -z "$CHANGED" ]; then
               pm2 restart all
             fi
-            
+
             pm2 save
