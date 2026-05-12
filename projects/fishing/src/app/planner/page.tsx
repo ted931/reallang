@@ -101,8 +101,11 @@ function todayStr() {
 // ─── 서브 컴포넌트 ────────────────────────────────────────────
 
 // ─── 제주 지도 컴포넌트 ────────────────────────────────────────────
-function JejuMap({ region }: { region: string }) {
+function JejuMap({ region, onRegionChange }: { region: string; onRegionChange?: (r: string) => void }) {
   const coord = REGION_COORDS[region];
+  const [hovered, setHovered] = useState<string | null>(null);
+  const interactive = !!onRegionChange;
+
   return (
     <div style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', background: 'linear-gradient(160deg, #0a1e3d, #0e3060)', padding: 16 }}>
       <svg viewBox="0 0 288 148" width="100%" style={{ display: 'block' }}>
@@ -114,34 +117,51 @@ function JejuMap({ region }: { region: string }) {
         <text x="144" y="78" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="11" fontWeight="700">제주도</text>
 
         {/* 모든 지역 dot */}
-        {Object.entries(REGION_COORDS).map(([name, pos]) => (
-          <g key={name}>
-            <circle cx={pos.x} cy={pos.y} r={name === region ? 7 : 3.5}
-              fill={name === region ? '#e94e3b' : 'rgba(95,163,207,0.5)'}
-              stroke={name === region ? '#fb7755' : 'rgba(95,163,207,0.3)'}
-              strokeWidth={name === region ? 2 : 1}
-            />
-            {name === region && (
-              <circle cx={pos.x} cy={pos.y} r={12} fill="rgba(233,78,59,0.2)" />
-            )}
-            <text x={pos.x + (pos.x > 144 ? -14 : 10)} y={pos.y + 4}
-              fill={name === region ? '#fb7755' : 'rgba(255,255,255,0.45)'}
-              fontSize={name === region ? '9' : '8'} fontWeight={name === region ? '800' : '500'}
-            >{name}</text>
-          </g>
-        ))}
+        {Object.entries(REGION_COORDS).map(([name, pos]) => {
+          const isActive = name === region;
+          const isHovered = name === hovered;
+          return (
+            <g key={name}
+              style={{ cursor: interactive ? 'pointer' : 'default' }}
+              onClick={() => onRegionChange?.(name)}
+              onMouseEnter={() => interactive && setHovered(name)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {/* 클릭 영역 확장용 투명 원 */}
+              <circle cx={pos.x} cy={pos.y} r={14} fill="transparent" />
+              {/* 호버/활성 글로우 */}
+              {(isActive || isHovered) && (
+                <circle cx={pos.x} cy={pos.y} r={isActive ? 12 : 10}
+                  fill={isActive ? 'rgba(233,78,59,0.2)' : 'rgba(95,163,207,0.2)'}
+                />
+              )}
+              <circle cx={pos.x} cy={pos.y} r={isActive ? 7 : isHovered ? 6 : 3.5}
+                fill={isActive ? '#e94e3b' : isHovered ? 'rgba(95,163,207,0.9)' : 'rgba(95,163,207,0.5)'}
+                stroke={isActive ? '#fb7755' : isHovered ? '#5fa3cf' : 'rgba(95,163,207,0.3)'}
+                strokeWidth={isActive ? 2 : isHovered ? 1.5 : 1}
+                style={{ transition: 'r 0.15s' }}
+              />
+              <text x={pos.x + (pos.x > 144 ? -14 : 10)} y={pos.y + 4}
+                fill={isActive ? '#fb7755' : isHovered ? '#5fa3cf' : 'rgba(255,255,255,0.45)'}
+                fontSize={isActive ? '9' : '8'} fontWeight={isActive || isHovered ? '800' : '500'}
+                style={{ pointerEvents: 'none' }}
+              >{name}</text>
+            </g>
+          );
+        })}
 
-        {/* 활성 핀 펄스 */}
+        {/* 활성 핀 */}
         {coord && (
           <>
             <line x1={coord.x} y1={coord.y - 8} x2={coord.x} y2={coord.y - 20} stroke="#fb7755" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.6" />
             <rect x={coord.x - 18} y={coord.y - 34} width="36" height="14" rx="7" fill="rgba(233,78,59,0.9)" />
-            <text x={coord.x} y={coord.y - 24} textAnchor="middle" fill="white" fontSize="8" fontWeight="800">{region}</text>
+            <text x={coord.x} y={coord.y - 24} textAnchor="middle" fill="white" fontSize="8" fontWeight="800" style={{ pointerEvents: 'none' }}>{region}</text>
           </>
         )}
       </svg>
       <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: -4 }}>
         📍 선택 지역: <span style={{ color: '#fb7755', fontWeight: 700 }}>{region}</span>
+        {interactive && <span style={{ color: 'rgba(255,255,255,0.3)', marginLeft: 6 }}>· 지도 클릭으로 변경</span>}
       </div>
     </div>
   );
@@ -331,8 +351,8 @@ function ProgressBar({ step }: { step: 1 | 2 | 3 }) {
   );
 }
 
-function ResultCard({ date, region, targetFish, people, onReset }: {
-  date: string; region: string; targetFish: string; people: number; onReset: () => void;
+function ResultCard({ date, region, targetFish, people, onReset, onRegionChange }: {
+  date: string; region: string; targetFish: string; people: number; onReset: () => void; onRegionChange: (r: string) => void;
 }) {
   const weather = getWeatherForecast(date);
   const tide = getTideInfo(date);
@@ -372,7 +392,7 @@ function ResultCard({ date, region, targetFish, people, onReset }: {
       {/* 제주 지도 */}
       <div style={cardStyle}>
         <span style={labelStyle}>포인트 위치</span>
-        <JejuMap region={region} />
+        <JejuMap region={region} onRegionChange={onRegionChange} />
         <div style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: 'var(--hook-300)' }}>📍 {rec.point}</div>
       </div>
 
@@ -565,6 +585,7 @@ export default function PlannerPage() {
           targetFish={targetFish}
           people={people}
           onReset={handleReset}
+          onRegionChange={setRegion}
         />
       </div>
     );
