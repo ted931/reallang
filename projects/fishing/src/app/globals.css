@@ -169,9 +169,7 @@ html, body {
   .fl-side-avatar { width: 36px; height: 36px; font-size: 14px; }
   .fl-side-name { font-size: 13px; font-weight: 700; color: var(--text-strong); }
   .fl-side-lvl { font-size: 11px; color: var(--text-dim); }
-  .fl-header { padding: 28px 0 12px; background: transparent; }
-  .fl-header .fl-logo { display: none; }
-  .fl-header-actions { margin-left: auto; }
+  .fl-header { display: none; }
 }
 
 /* ═══════════════════════════════════════
