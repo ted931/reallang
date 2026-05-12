@@ -24,8 +24,12 @@ const USER_STEPS = [
   { href: "/community/write", label: "글쓰기", step: 17 },
   { href: "/gathering", label: "동아리", step: 18 },
   { href: "/map", label: "포인트지도", step: 19 },
-  { href: "/news", label: "뉴스", step: 20 },
-  { href: "/blog", label: "블로그초안", step: 21 },
+  { href: "/planner", label: "출조플래너", step: 20 },
+  { href: "/fish-guide", label: "어종도감", step: 21 },
+  { href: "/challenges", label: "챌린지", step: 22 },
+  { href: "/cost", label: "비용계산기", step: 23 },
+  { href: "/news", label: "뉴스", step: 24 },
+  { href: "/blog", label: "블로그초안", step: 25 },
 ];
 
 const BIZ_STEPS = [

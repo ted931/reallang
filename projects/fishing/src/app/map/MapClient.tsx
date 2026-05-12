@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { DUMMY_POINTS } from "@/lib/dummy-points";
 import { SPOT_TYPE_ICON, SPOT_TYPES } from "@/lib/constants";
 import FishBadge from "@/components/fish-badge";
@@ -68,6 +68,15 @@ const ZONE_TYPE_COLOR: Record<string, { fill: string; stroke: string; badge: str
   "계절금지": { fill: "rgba(251,146,60,0.18)", stroke: "#f97316", badge: "bg-orange-100 text-orange-700 border-orange-300" },
 };
 
+const RECENT_CATCHES = [
+  { id: 1, x: 110, y: 130, fish: '갈치', size: 62, user: '갈치킬러', time: '1시간 전', color: '#f59e0b' },
+  { id: 2, x: 290, y: 205, fish: '참돔', size: 55, user: '참돔헌터', time: '3시간 전', color: '#e87461' },
+  { id: 3, x: 340, y: 120, fish: '감성돔', size: 45, user: '감성왕', time: '5시간 전', color: '#6b7a8d' },
+  { id: 4, x: 160, y: 85, fish: '볼락', size: 28, user: '볼락마니아', time: '방금', color: '#8b6f47' },
+  { id: 5, x: 420, y: 150, fish: '벵에돔', size: 38, user: '벵돔장인', time: '2시간 전', color: '#4a5568' },
+  { id: 6, x: 85, y: 170, fish: '방어', size: 85, user: '방어사냥꾼', time: '어제', color: '#2d6a9f' },
+];
+
 const SEASONAL_BANS = [
   { fish: "참돔", period: "4월~6월", reason: "산란기", emoji: "🐟" },
   { fish: "방어", period: "12월~2월", reason: "산란기", emoji: "🐠" },
@@ -78,8 +87,11 @@ const SEASONAL_BANS = [
 export default function MapClient() {
   const [showProhibited, setShowProhibited] = useState(false);
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
+  const [hoveredPin, setHoveredPin] = useState<number | null>(null);
+  const svgContainerRef = useRef<HTMLDivElement>(null);
 
   const activeZone = PROHIBITED_ZONES.find(z => z.id === selectedZone);
+  const hoveredCatch = RECENT_CATCHES.find(c => c.id === hoveredPin);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -124,7 +136,29 @@ export default function MapClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* SVG 지도 */}
         <div className="lg:col-span-2 rounded-2xl border border-ocean-800 bg-ocean-900 overflow-hidden">
-          <div className="p-2">
+          <div className="p-2 relative" ref={svgContainerRef}>
+            {/* 조황 히트맵 툴팁 */}
+            {hoveredCatch && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: `calc(${(hoveredCatch.x / 600) * 100}% - 60px)`,
+                  top: `calc(${(hoveredCatch.y / 300) * 100}% - 90px)`,
+                  zIndex: 10,
+                  pointerEvents: "none",
+                }}
+                className="bg-ocean-950 border border-ocean-700 rounded-xl px-3 py-2 shadow-xl min-w-[120px]"
+              >
+                <div className="text-xs font-black mb-1" style={{ color: "var(--text-strong)" }}>
+                  🐟 {hoveredCatch.fish} <span style={{ color: hoveredCatch.color }}>{hoveredCatch.size}cm</span>
+                </div>
+                <div className="text-[10px]" style={{ color: "var(--text-dim)" }}>
+                  <span>{hoveredCatch.user}</span>
+                  <span className="mx-1">·</span>
+                  <span>{hoveredCatch.time}</span>
+                </div>
+              </div>
+            )}
             <svg viewBox="0 0 600 300" className="w-full" style={{ background: "linear-gradient(180deg, #0a1628 0%, #0d2137 100%)" }}>
               {/* 제주도 윤곽 */}
               <ellipse cx="300" cy="150" rx="270" ry="120" fill="#112842" stroke="#1a4d70" strokeWidth="1" />
@@ -192,11 +226,36 @@ export default function MapClient() {
                   </g>
                 );
               })}
+
+              {/* 최근 조황 히트맵 핀 */}
+              <defs>
+                <style>{`
+                  @keyframes catchRipple {
+                    0% { r: 10; opacity: 0.6; }
+                    100% { r: 25; opacity: 0; }
+                  }
+                  .catch-ripple { animation: catchRipple 1.8s ease-out infinite; }
+                `}</style>
+              </defs>
+              {RECENT_CATCHES.map((c) => (
+                <g
+                  key={c.id}
+                  style={{ cursor: "pointer" }}
+                  onMouseEnter={() => setHoveredPin(c.id)}
+                  onMouseLeave={() => setHoveredPin(null)}
+                >
+                  <circle cx={c.x} cy={c.y} r="10" fill={c.color} className="catch-ripple" style={{ animationDelay: `${c.id * 0.3}s` }} />
+                  <circle cx={c.x} cy={c.y} r="8" fill={c.color} stroke="white" strokeWidth="1.2" opacity="0.95" />
+                  <text x={c.x} y={c.y - 12} textAnchor="middle" fontSize="10" fontFamily="sans-serif">🐟</text>
+                </g>
+              ))}
             </svg>
           </div>
           <div className="px-4 py-2 border-t border-ocean-800 text-xs flex items-center gap-2 flex-wrap" style={{ color: "var(--text-dim)" }}>
             <span className="w-3 h-3 rounded-full bg-hook inline-block" />
             <span>최근 7일 조황 10건 이상 포인트</span>
+            <span className="text-ocean-700">|</span>
+            <span>🐟 = 최근 조황 핀 (호버 시 상세)</span>
             {showProhibited && (
               <>
                 <span className="text-ocean-700">|</span>
