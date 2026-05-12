@@ -44,6 +44,8 @@ jobs:
                 creative-sandbox) npm run build:sandbox && pm2 restart sandbox ;;
                 dashboard) npm run build:dashboard && pm2 restart dashboard ;;
                 cs-chatbot) npm run build:chatbot && pm2 restart chatbot ;;
+                # 피싱로그
+                fishing) npm run build:fishing && pm2 restart fishing ;;
                 # 공통 모듈 변경 시 전체 재빌드
                 common) pm2 restart all ;;
               esac
