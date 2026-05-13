@@ -363,7 +363,7 @@ export default function BlogPage() {
               const color = CAT_COLOR[post.cat] ?? "#5fa3cf";
               const catLabel = CATS.find(c => c.k === post.cat)?.l ?? post.cat;
               return (
-                <div key={post.id} className="bl-card">
+                <Link key={post.id} href={`/blog/${post.id}`} className="bl-card" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                   <div className="bl-card-top">
                     <span className="bl-cat-tag" style={{ background: `${color}18`, color }}>
                       {catLabel}
@@ -380,7 +380,7 @@ export default function BlogPage() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
