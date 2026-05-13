@@ -90,9 +90,13 @@ export default function SideNav() {
   return (
     <aside className="fl-side-nav">
       <Link href="/" className="fl-side-brand">
-        <div className="fl-logo-mark">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z"/><path d="M2 12c2.5 1 4 2.5 4 2.5L2 17"/><path d="M2 12c2.5-1 4-2.5 4-2.5L2 7"/></svg>
-        </div>
+        <svg width="44" height="44" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <g transform="rotate(-8 30 30)">
+            <circle cx="30" cy="30" r="26" fill="#dc2626"/>
+            <circle cx="30" cy="30" r="23" fill="none" stroke="#fff" strokeWidth="2"/>
+            <text x="30" y="37" textAnchor="middle" fontFamily="'Noto Sans KR',system-ui" fontWeight="900" fontSize="20" letterSpacing="-1" fill="#fff">퐁당</text>
+          </g>
+        </svg>
         <div>
           <div className="fl-logo-1">퐁당</div>
           <div className="fl-logo-2">제주 · 애월</div>
