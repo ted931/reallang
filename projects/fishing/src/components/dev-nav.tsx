@@ -30,6 +30,8 @@ const USER_STEPS = [
   { href: "/challenges", label: "챌린지", step: 23 },
   { href: "/news", label: "뉴스", step: 24 },
   { href: "/mypage", label: "마이페이지", step: 25 },
+  { href: "/eoshin", label: "어신AI", step: 26 },
+  { href: "/seongsang", label: "선상파티", step: 27 },
 ];
 
 const BIZ_STEPS = [
