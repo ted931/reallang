@@ -23,7 +23,7 @@ export const DUMMY_COUPONS: Coupon[] = [
     id: "cp1", jwaedaeId: "jw1", jwaedaeName: "서귀포 황금좌대", region: "서귀포",
     type: "percent", value: 20, minAmount: 50000, maxDiscount: 20000,
     title: "신규 회원 20% 할인",
-    description: "피싱로그 가입 후 첫 예약 20% 할인. 서귀포 황금좌대 한정.",
+    description: "퐁당 가입 후 첫 예약 20% 할인. 서귀포 황금좌대 한정.",
     validUntil: "2026-06-30", remainCount: 47, totalCount: 100,
     targetFish: ["갈치", "참돔"],
     condition: "신규 가입 후 7일 이내 사용",
@@ -67,11 +67,11 @@ export const DUMMY_COUPONS: Coupon[] = [
   {
     id: "cp6", jwaedaeId: "jw10", jwaedaeName: "애월 석양 좌대", region: "애월",
     type: "percent", value: 10, minAmount: 30000, maxDiscount: 10000,
-    title: "피싱로그 앱 전용 10%",
-    description: "피싱로그를 통해 예약하면 상시 10% 할인. 애월 석양 좌대.",
+    title: "퐁당 앱 전용 10%",
+    description: "퐁당를 통해 예약하면 상시 10% 할인. 애월 석양 좌대.",
     validUntil: "2026-12-31", remainCount: 999, totalCount: 999,
     targetFish: ["볼락", "벵에돔"],
-    condition: "피싱로그 앱 예약 시 자동 적용",
+    condition: "퐁당 앱 예약 시 자동 적용",
   },
   {
     id: "cp7", jwaedaeId: "jw5", jwaedaeName: "구좌 동복 좌대", region: "구좌",

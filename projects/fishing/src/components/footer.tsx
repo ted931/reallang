@@ -5,11 +5,11 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🎣</span>
-            <span className="font-black text-slate-100">피싱로그</span>
+            <span className="font-black text-slate-100">퐁당</span>
             <span className="text-slate-500 text-sm">— 제주 낚시 커뮤니티</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-slate-500">
-            <span>© 2026 피싱로그</span>
+            <span>© 2026 퐁당</span>
             <span>·</span>
             <a href="/biz" className="text-hook hover:text-hook-light font-bold transition-colors">🏪 사장님 업체 등록</a>
           </div>

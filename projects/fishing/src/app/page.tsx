@@ -264,7 +264,7 @@ function CameraFAB() {
       const lines = [
         `📍 제주도  🕒 ${dateStr} ${timeStr}`,
         fishName ? `🐟 ${fishName}${fishSize ? `  📏 ${fishSize}cm` : ""}` : null,
-        "🎣 피싱로그 — fishing.realang.store",
+        "🎣 퐁당 — fishing.realang.store",
       ].filter(Boolean) as string[];
       const stripH = 36 * lines.length + 24;
       ctx.fillStyle = "rgba(8,15,30,0.82)";

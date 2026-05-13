@@ -46,7 +46,7 @@ export const DUMMY_RESERVATIONS: Reservation[] = [
 ];
 
 export const ESCROW_STATUS_LABEL: Record<EscrowStatus, { label: string; color: string; desc: string }> = {
-  holding:   { label: "에스크로 보관중", color: "text-hook bg-hook/10 border-hook/30", desc: "결제금이 피싱로그에서 안전하게 보관 중입니다." },
+  holding:   { label: "에스크로 보관중", color: "text-hook bg-hook/10 border-hook/30", desc: "결제금이 퐁당에서 안전하게 보관 중입니다." },
   confirmed: { label: "출조 확정", color: "text-teal-300 bg-teal-900/40 border-teal-800", desc: "업체가 예약을 확정했습니다. 출조 후 자동 정산됩니다." },
   completed: { label: "정산 완료", color: "text-slate-400 bg-slate-800 border-slate-700", desc: "출조 완료 후 업체에 정산되었습니다." },
   cancelled: { label: "취소됨", color: "text-rose-400 bg-rose-900/40 border-rose-800", desc: "예약이 취소되었습니다." },

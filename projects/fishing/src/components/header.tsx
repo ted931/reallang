@@ -12,7 +12,7 @@ export default function Header() {
           </svg>
         </div>
         <div className="fl-logo-text">
-          <div className="fl-logo-1">피싱로그</div>
+          <div className="fl-logo-1">퐁당</div>
           <div className="fl-logo-2">제주 · 애월</div>
         </div>
       </div>

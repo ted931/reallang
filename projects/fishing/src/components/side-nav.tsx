@@ -88,7 +88,7 @@ export default function SideNav() {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z"/><path d="M2 12c2.5 1 4 2.5 4 2.5L2 17"/><path d="M2 12c2.5-1 4-2.5 4-2.5L2 7"/></svg>
         </div>
         <div>
-          <div className="fl-logo-1">피싱로그</div>
+          <div className="fl-logo-1">퐁당</div>
           <div className="fl-logo-2">제주 · 애월</div>
         </div>
       </Link>

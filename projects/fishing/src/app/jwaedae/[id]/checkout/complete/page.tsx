@@ -58,7 +58,7 @@ export default function CheckoutCompletePage({ params }: { params: Promise<{ id:
       <div className="rounded-2xl border border-ocean-800 bg-ocean-900/50 p-5 mb-4 space-y-2 text-xs text-slate-400">
         <div className="flex gap-2"><span>📱</span><span>업체 확인 후 SMS/카카오 알림을 보내드립니다.</span></div>
         <div className="flex gap-2"><span>🌊</span><span>기상 불량 시 전액 환불됩니다. (기상청 풍랑주의보 기준)</span></div>
-        <div className="flex gap-2"><span>🔒</span><span>결제금은 피싱로그가 안전하게 보관 후 출조 완료 확인 시 업체에 정산됩니다.</span></div>
+        <div className="flex gap-2"><span>🔒</span><span>결제금은 퐁당가 안전하게 보관 후 출조 완료 확인 시 업체에 정산됩니다.</span></div>
       </div>
 
       {/* 버튼 */}
@@ -71,7 +71,7 @@ export default function CheckoutCompletePage({ params }: { params: Promise<{ id:
         </Link>
       </div>
 
-      <p className="text-center text-xs text-slate-600 mt-4">SSL 암호화 · 에스크로 안전결제 · 피싱로그 보호</p>
+      <p className="text-center text-xs text-slate-600 mt-4">SSL 암호화 · 에스크로 안전결제 · 퐁당 보호</p>
     </div>
   );
 }

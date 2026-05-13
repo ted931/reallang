@@ -6,8 +6,8 @@ import BottomNav from "@/components/bottom-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "피싱로그 — 제주 낚시 커뮤니티", template: "%s | 피싱로그" },
-  description: "제주 낚시 조황, 좌대 예약, 포인트 지도, 낚시 모임 매칭. 방파제·갯바위·선상·좌대낚시 정보를 한 곳에서.",
+  title: { default: "퐁당 — 제주 낚시 커뮤니티", template: "%s | 퐁당" },
+  description: "퐁당 — 제주 낚시에 퐁당 빠져보세요. 조황 피드, 좌대·배편 예약, 어신 AI 예측, 합동출조 매칭, 채비 주문까지.",
   keywords: ["낚시", "조황", "좌대낚시", "갯바위", "방파제낚시", "제주낚시", "포인트", "루어낚시", "감성돔", "참돔", "방어"],
 };
 

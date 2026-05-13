@@ -82,7 +82,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ id: str
             <div className="font-bold text-slate-400 mb-1">거래 안내</div>
             <div>• 직거래 또는 안전결제를 이용하세요</div>
             <div>• 상품 상태는 사진으로 반드시 확인하세요</div>
-            <div>• 사기 거래 발생 시 피싱로그로 신고해 주세요</div>
+            <div>• 사기 거래 발생 시 퐁당로 신고해 주세요</div>
           </div>
         </div>
 

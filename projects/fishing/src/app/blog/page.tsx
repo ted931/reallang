@@ -78,7 +78,7 @@ function generateText(template: TemplateKey, f: Record<string, string>): string 
     case "catch":
       return `📍 ${f.place || "장소"} 조황 후기
 
-안녕하세요, 피싱로그입니다 🎣
+안녕하세요, 퐁당입니다 🎣
 
 ${f.date || "날짜"}에 ${f.place || "장소"}에서 낚시를 다녀왔습니다.
 
@@ -99,12 +99,12 @@ ${f.tip || "-"}
 📝 후기
 ${f.memo || "-"}
 
-#낚시 #제주낚시 #${f.place || "제주"} #${f.species || "낚시"} #조황 #피싱로그`;
+#낚시 #제주낚시 #${f.place || "제주"} #${f.species || "낚시"} #조황 #퐁당`;
 
     case "point":
       return `📍 ${f.name || "포인트명"} 포인트 소개
 
-안녕하세요, 피싱로그입니다 🎣
+안녕하세요, 퐁당입니다 🎣
 
 오늘은 ${f.region || ""}의 명소 <${f.name || "포인트"}>를 소개합니다.
 
@@ -125,12 +125,12 @@ ${f.caution || "-"}
 ⭐ 총평
 ${f.summary || "-"}
 
-#낚시 #제주낚시 #${f.region || "제주"} #${f.name || "포인트"} #포인트소개 #피싱로그`;
+#낚시 #제주낚시 #${f.region || "제주"} #${f.name || "포인트"} #포인트소개 #퐁당`;
 
     case "gear":
       return `🎣 ${f.fishType || "낚시"} 채비/장비 팁
 
-안녕하세요, 피싱로그입니다 🎣
+안녕하세요, 퐁당입니다 🎣
 
 ${f.target || "대상어"} 낚시를 위한 채비와 장비를 소개합니다.
 
@@ -147,12 +147,12 @@ ${(f.tips || "-").split("\n").map((l, i) => `${i + 1}. ${l}`).join("\n")}
 ⚠️ 주의사항
 ${f.caution || "-"}
 
-#낚시 #채비팁 #${f.target || "낚시"} #장비추천 #피싱로그`;
+#낚시 #채비팁 #${f.target || "낚시"} #장비추천 #퐁당`;
 
     case "guide":
       return `📚 ${f.title || "입문 가이드"}
 
-안녕하세요, 피싱로그입니다 🎣
+안녕하세요, 퐁당입니다 🎣
 
 대상 독자: ${f.audience || "-"}
 
@@ -168,7 +168,7 @@ ${f.caution || "-"}
 💬 마무리
 ${f.closing || "-"}
 
-#낚시입문 #제주낚시 #낚시가이드 #피싱로그`;
+#낚시입문 #제주낚시 #낚시가이드 #퐁당`;
 
     default:
       return "";
@@ -179,7 +179,7 @@ function generateNaver(template: TemplateKey, f: Record<string, string>): string
   switch (template) {
     case "catch":
       return `<h2 style="color:#1a6b4a;font-size:22px;font-weight:900;margin:20px 0 10px;">📍 ${f.place || "장소"} 조황 후기</h2>
-<p style="color:#333;line-height:1.8;">안녕하세요, 피싱로그입니다 🎣</p>
+<p style="color:#333;line-height:1.8;">안녕하세요, 퐁당입니다 🎣</p>
 <p style="color:#333;line-height:1.8;">${f.date || "날짜"}에 <strong>${f.place || "장소"}</strong>에서 낚시를 다녀왔습니다.</p>
 <h3 style="background:#fff3cd;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">🐟 오늘의 조과</h3>
 <ul style="line-height:2;color:#333;">
@@ -198,11 +198,11 @@ function generateNaver(template: TemplateKey, f: Record<string, string>): string
 <p style="color:#333;line-height:1.8;">${(f.tip || "-").replace(/\n/g, "<br>")}</p>
 <h3 style="background:#f3e8ff;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">📝 후기</h3>
 <p style="color:#333;line-height:1.8;">${(f.memo || "-").replace(/\n/g, "<br>")}</p>
-<p style="color:#888;font-size:13px;">#낚시 #제주낚시 #${f.place || "제주"} #${f.species || "낚시"} #조황 #피싱로그</p>`;
+<p style="color:#888;font-size:13px;">#낚시 #제주낚시 #${f.place || "제주"} #${f.species || "낚시"} #조황 #퐁당</p>`;
 
     case "point":
       return `<h2 style="color:#1a6b4a;font-size:22px;font-weight:900;margin:20px 0 10px;">📍 ${f.name || "포인트명"} 포인트 소개</h2>
-<p style="color:#333;line-height:1.8;">안녕하세요, 피싱로그입니다 🎣</p>
+<p style="color:#333;line-height:1.8;">안녕하세요, 퐁당입니다 🎣</p>
 <p style="color:#333;line-height:1.8;">오늘은 ${f.region || ""}의 명소 <strong>${f.name || "포인트"}</strong>를 소개합니다.</p>
 <h3 style="background:#fff3cd;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">📌 포인트 정보</h3>
 <ul style="line-height:2;color:#333;">
@@ -218,11 +218,11 @@ function generateNaver(template: TemplateKey, f: Record<string, string>): string
 <p style="color:#333;line-height:1.8;">${(f.caution || "-").replace(/\n/g, "<br>")}</p>
 <h3 style="background:#dcfce7;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">⭐ 총평</h3>
 <p style="color:#333;line-height:1.8;">${(f.summary || "-").replace(/\n/g, "<br>")}</p>
-<p style="color:#888;font-size:13px;">#낚시 #제주낚시 #${f.region || "제주"} #${f.name || "포인트"} #포인트소개 #피싱로그</p>`;
+<p style="color:#888;font-size:13px;">#낚시 #제주낚시 #${f.region || "제주"} #${f.name || "포인트"} #포인트소개 #퐁당</p>`;
 
     case "gear":
       return `<h2 style="color:#1a6b4a;font-size:22px;font-weight:900;margin:20px 0 10px;">🎣 ${f.fishType || "낚시"} 채비/장비 팁</h2>
-<p style="color:#333;line-height:1.8;">안녕하세요, 피싱로그입니다 🎣</p>
+<p style="color:#333;line-height:1.8;">안녕하세요, 퐁당입니다 🎣</p>
 <p style="color:#333;line-height:1.8;"><strong>${f.target || "대상어"}</strong> 낚시를 위한 채비와 장비를 소개합니다.</p>
 <h3 style="background:#fff3cd;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">🎣 추천 세팅</h3>
 <ul style="line-height:2;color:#333;">
@@ -238,11 +238,11 @@ ${(f.tips || "-").split("\n").map(l => `  <li>${l}</li>`).join("\n")}
 </ol>
 <h3 style="background:#fee2e2;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">⚠️ 주의사항</h3>
 <p style="color:#333;line-height:1.8;">${(f.caution || "-").replace(/\n/g, "<br>")}</p>
-<p style="color:#888;font-size:13px;">#낚시 #채비팁 #${f.target || "낚시"} #장비추천 #피싱로그</p>`;
+<p style="color:#888;font-size:13px;">#낚시 #채비팁 #${f.target || "낚시"} #장비추천 #퐁당</p>`;
 
     case "guide":
       return `<h2 style="color:#1a6b4a;font-size:22px;font-weight:900;margin:20px 0 10px;">📚 ${f.title || "입문 가이드"}</h2>
-<p style="color:#333;line-height:1.8;">안녕하세요, 피싱로그입니다 🎣</p>
+<p style="color:#333;line-height:1.8;">안녕하세요, 퐁당입니다 🎣</p>
 <p style="color:#333;line-height:1.8;">대상 독자: <strong>${f.audience || "-"}</strong></p>
 <h3 style="background:#fff3cd;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">📋 핵심 내용</h3>
 <ol style="line-height:2;color:#333;">
@@ -254,7 +254,7 @@ ${(f.content || "-").split("\n").map(l => `  <li>${l}</li>`).join("\n")}
 <p style="color:#333;line-height:1.8;">${(f.caution || "-").replace(/\n/g, "<br>")}</p>
 <h3 style="background:#dcfce7;padding:12px 16px;border-radius:8px;margin:20px 0 10px;">💬 마무리</h3>
 <p style="color:#333;line-height:1.8;">${(f.closing || "-").replace(/\n/g, "<br>")}</p>
-<p style="color:#888;font-size:13px;">#낚시입문 #제주낚시 #낚시가이드 #피싱로그</p>`;
+<p style="color:#888;font-size:13px;">#낚시입문 #제주낚시 #낚시가이드 #퐁당</p>`;
 
     default:
       return "";

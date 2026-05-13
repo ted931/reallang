@@ -118,11 +118,11 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
               <h2 className="font-bold text-hook">에스크로 안전결제</h2>
             </div>
             <p className="text-sm text-slate-300 leading-relaxed mb-4">
-              결제 금액은 피싱로그가 안전하게 보관합니다. 출조 완료 확인 후 업체에 정산되며, 문제 발생 시 전액 보호받으실 수 있습니다.
+              결제 금액은 퐁당가 안전하게 보관합니다. 출조 완료 확인 후 업체에 정산되며, 문제 발생 시 전액 보호받으실 수 있습니다.
             </p>
             <div className="space-y-3">
               {[
-                { icon: "1️⃣", title: "결제 후 에스크로 보관", desc: `${total.toLocaleString()}원이 피싱로그에 안전 보관` },
+                { icon: "1️⃣", title: "결제 후 에스크로 보관", desc: `${total.toLocaleString()}원이 퐁당에 안전 보관` },
                 { icon: "2️⃣", title: "출조 당일 업체 확인", desc: "출조 완료 시 자동으로 업체 정산 개시" },
                 { icon: "3️⃣", title: "D+2 업체 정산 완료", desc: `업체 수취 ${toOperator.toLocaleString()}원 (플랫폼 수수료 6% 차감)` },
               ].map((s) => (

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "업체 등록 — 피싱로그" };
+export const metadata = { title: "업체 등록 — 퐁당" };
 
 const BIZ_TYPES = ["좌대낚시", "선상낚시", "갯바위 도선", "낚시용품점", "낚시 체험·강습", "낚시 펜션·민박"];
 const FISH_OPTIONS = ["참돔", "감성돔", "벵에돔", "방어", "부시리", "볼락", "전갱이", "갈치", "넙치", "삼치", "돌돔", "농어"];
@@ -14,7 +14,7 @@ export default function BizRegisterPage() {
 
       <div className="mb-8">
         <h1 className="text-2xl font-black text-ocean-50 mb-2">업체 등록</h1>
-        <p className="text-slate-400 text-sm">기본 정보를 입력하면 피싱로그 팀이 1~2일 내 검토 후 승인합니다.</p>
+        <p className="text-slate-400 text-sm">기본 정보를 입력하면 퐁당 팀이 1~2일 내 검토 후 승인합니다.</p>
       </div>
 
       {/* 진행 단계 표시 */}
@@ -149,7 +149,7 @@ export default function BizRegisterPage() {
 
         {/* 동의 */}
         <div className="space-y-2">
-          {["피싱로그 업체 운영 정책에 동의합니다 (필수)", "마케팅 정보 수신에 동의합니다 (선택)"].map((text) => (
+          {["퐁당 업체 운영 정책에 동의합니다 (필수)", "마케팅 정보 수신에 동의합니다 (선택)"].map((text) => (
             <label key={text} className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
               <input type="checkbox" className="accent-hook w-4 h-4" />
               {text}

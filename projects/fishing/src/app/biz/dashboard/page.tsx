@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "업체 대시보드 — 피싱로그" };
+export const metadata = { title: "업체 대시보드 — 퐁당" };
 
 const MONTHLY_STATS = [
   { month: "1월", reservations: 42, revenue: 2310000, catchCount: 8 },

@@ -120,7 +120,7 @@ export default function DevNav() {
           );
         })}
 
-        <span className="ml-auto text-[10px] text-gray-600 pl-3 flex-shrink-0">🎣 피싱로그 dev</span>
+        <span className="ml-auto text-[10px] text-gray-600 pl-3 flex-shrink-0">🎣 퐁당 dev</span>
       </div>
     </nav>
   );
