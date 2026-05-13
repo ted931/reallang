@@ -505,7 +505,10 @@ export default function ShopPage() {
           }}
         >
           <button
-            onClick={() => alert(`장바구니 ${cartTotal}개 담겼습니다.\n주문 기능은 준비 중입니다.`)}
+            onClick={() => {
+              sessionStorage.setItem('fl-cart', JSON.stringify(cart));
+              router.push('/shop/cart');
+            }}
             style={{
               fontFamily: "inherit",
               width: 56,

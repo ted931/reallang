@@ -29,11 +29,12 @@ export default function StayPage() {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5" style={{ paddingTop: 24 }}>
         <div>
-          <h1 className="text-xl font-black text-ocean-50">🏠 낚시 숙소</h1>
+          <h1 className="text-xl font-black" style={{ color: "var(--text-strong)" }}>🏠 낚시 숙소</h1>
           <p className="text-xs text-slate-500 mt-0.5">포인트 바로 옆, 낚시꾼을 위한 숙소</p>
         </div>
         <Link href="/stay/share"
-          className="shrink-0 px-4 py-2 bg-ocean-800 hover:bg-ocean-700 text-slate-300 text-xs font-bold rounded-xl transition-colors border border-ocean-700">
+          className="shrink-0 px-4 py-2 text-slate-300 text-xs font-bold rounded-xl"
+          style={{ background: "var(--tint-08)", border: "1px solid var(--line)" }}>
           🤝 방 쉐어
         </Link>
       </div>
@@ -43,7 +44,8 @@ export default function StayPage() {
         <div style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", paddingBottom: 2, flexShrink: 0 }}>
           {TYPES.map((t) => (
             <button key={t} onClick={() => setType(t)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${type === t ? "bg-hook text-ocean-950" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold`}
+              style={type === t ? { background: "var(--hook)", color: "var(--ocean-950,#0a1628)" } : { background: "var(--tint-08)", color: "var(--text-dim)" }}>
               {t === "전체" ? "전체" : TYPE_LABEL_SHORT[t]}
             </button>
           ))}
@@ -52,7 +54,8 @@ export default function StayPage() {
         <div style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", paddingBottom: 2, flex: 1 }}>
           {REGIONS.map((r) => (
             <button key={r} onClick={() => setRegion(r)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-hook text-ocean-950" : "bg-ocean-900 border border-ocean-800 text-slate-500 hover:text-slate-300"}`}>
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold`}
+              style={region === r ? { background: "var(--hook)", color: "var(--ocean-950,#0a1628)" } : { background: "var(--tint-04)", border: "1px solid var(--line)", color: "var(--text-dim)" }}>
               {r}
             </button>
           ))}
@@ -66,7 +69,8 @@ export default function StayPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((s) => (
             <Link key={s.id} href={`/stay/${s.id}`}
-              className="block rounded-2xl border border-ocean-800 bg-ocean-900 p-5 hover:border-ocean-600 transition-colors">
+              className="block rounded-2xl p-5"
+              style={{ border: "1px solid var(--line)", background: "var(--tint-04)" }}>
               {/* 상단 */}
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -93,10 +97,10 @@ export default function StayPage() {
               {/* 편의시설 */}
               <div className="flex flex-wrap gap-1 mb-3">
                 {s.amenities.slice(0, 4).map(a => (
-                  <span key={a} className="text-[10px] px-2 py-0.5 bg-ocean-800 text-slate-400 rounded-full">{a}</span>
+                  <span key={a} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "var(--tint-08)", color: "var(--text-dim)" }}>{a}</span>
                 ))}
                 {s.amenities.length > 4 && (
-                  <span className="text-[10px] px-2 py-0.5 bg-ocean-800 text-slate-500 rounded-full">+{s.amenities.length - 4}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "var(--tint-08)", color: "var(--text-dim)" }}>+{s.amenities.length - 4}</span>
                 )}
               </div>
 

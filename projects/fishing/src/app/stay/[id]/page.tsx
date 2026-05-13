@@ -25,7 +25,7 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="max-w-5xl mx-auto px-4 lg:px-0 py-6 pb-32 lg:pb-6">
-      <Link href="/stay" className="text-sm text-ocean-400 hover:text-ocean-300 mb-6 inline-block">← 숙소 목록</Link>
+      <Link href="/stay" className="text-sm mb-6 inline-block" style={{ color: "var(--text-dim)" }}>← 숙소 목록</Link>
 
       <div className="lg:flex lg:gap-8">
         {/* 왼쪽: 메인 콘텐츠 */}
@@ -132,7 +132,7 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
             </div>
             <button
               onClick={() => router.push(`/stay/${id}/checkout?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)}
-              className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
+              className="w-full py-3 bg-hook font-black rounded-2xl text-sm" style={{ color: "var(--ocean-950,#0a1628)" }}>
               🏠 {nights}박 예약
             </button>
           </div>
@@ -166,7 +166,7 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
           </div>
           <button
             onClick={() => router.push(`/stay/${id}/checkout?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)}
-            className="w-full py-3 bg-hook hover:bg-hook-light text-ocean-950 font-black rounded-2xl transition-colors text-sm">
+            className="w-full py-3 bg-hook font-black rounded-2xl text-sm" style={{ color: "var(--ocean-950,#0a1628)" }}>
             🏠 {nights}박 예약 — {total.toLocaleString()}원
           </button>
         </div>

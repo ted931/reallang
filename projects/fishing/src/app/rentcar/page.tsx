@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const RC_CARS = [
   { id: 1, name: '아반떼 CN7', cls: '준중형', region: '제주공항', pickup: '제주공항 1층', orig: 65000, sale: 38000, off: 42, fishing: true, seats: 5, fuel: '가솔린', deadline: '오늘 17:00', features: ['낚시대 적재', '아이스박스 무료'], color: '#5fa3cf', plate: '63저 1234' },
@@ -69,9 +70,9 @@ function CarSVG({ color }: { color: string }) {
 }
 
 export default function RentCarPage() {
+  const router = useRouter();
   const [region, setRegion] = useState('전체');
   const [cls, setCls] = useState('전체');
-  const [reserved, setReserved] = useState<Set<number>>(new Set());
 
   const filtered = RC_CARS.filter(c => {
     if (region !== '전체' && c.region !== region) return false;
@@ -80,14 +81,6 @@ export default function RentCarPage() {
   });
 
   const fishingCount = filtered.filter(c => c.fishing).length;
-
-  function toggleReserve(id: number) {
-    setReserved(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  }
 
   return (
     <div className="fl-page-inner">
@@ -170,9 +163,7 @@ export default function RentCarPage() {
 
       {/* Car grid */}
       <div className="fl-rc-grid">
-        {filtered.map(car => {
-          const done = reserved.has(car.id);
-          return (
+        {filtered.map(car => (
             <article key={car.id} className="fl-rc-card">
               {/* Image area */}
               <div className="fl-rc-img" style={{ background: `linear-gradient(135deg, ${car.color}22, ${car.color}44)` }}>
@@ -207,16 +198,15 @@ export default function RentCarPage() {
                     </span>
                   </div>
                   <button
-                    className={`fl-rc-cta ${done ? 'done' : ''}`}
-                    onClick={() => toggleReserve(car.id)}
+                    className="fl-rc-cta"
+                    onClick={() => router.push(`/rentcar/${car.id}/checkout`)}
                   >
-                    {done ? '✓ 예약완료' : '땡처리 예약'}
+                    땡처리 예약
                   </button>
                 </div>
               </div>
             </article>
-          );
-        })}
+          ))}
       </div>
     </div>
   );
