@@ -467,6 +467,18 @@ function PointRow({ p }: { p: typeof TOP_POINTS[0] }) {
 }
 
 // ── 메인 페이지 ───────────────────────────────────
+function handleShare() {
+  if (typeof navigator !== "undefined" && navigator.share) {
+    navigator.share({
+      title: "제주 낚시 위클리 랭킹",
+      text: "제주 낚시 이번 주 랭킹을 확인해보세요!",
+      url: window.location.href,
+    }).catch(() => {});
+  } else {
+    alert("랭킹 링크가 복사되었습니다!\n" + window.location.href);
+  }
+}
+
 export default function RankingPage() {
   const [period, setPeriod] = useState<PeriodKey>("week");
   const [mainTab, setMainTab] = useState<MainTabKey>("전체");
@@ -489,6 +501,22 @@ export default function RankingPage() {
             <span>5.05 — 5.11</span>
             <span className="fl-cond-sep" />
             <span>2,184건 집계</span>
+            <span className="fl-cond-sep" />
+            <button
+              onClick={handleShare}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.7)",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                padding: "0 2px",
+                fontFamily: "inherit",
+              }}
+            >
+              공유 🔗
+            </button>
           </div>
         </div>
         <svg className="fl-wave fl-wave-2" viewBox="0 0 400 80" preserveAspectRatio="none">

@@ -260,7 +260,7 @@ html, body {
   0%, 100% { opacity: 0.2; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.4); }
 }
-.fl-hero-content { position: relative; z-index: 2; }
+.fl-hero-content { position: relative; z-index: 2; padding: 0 20px; }
 .fl-hero-greet {
   display: inline-block; font-size: 12px; color: rgba(255,255,255,0.8);
   background: rgba(255,255,255,0.08); padding: 5px 10px; border-radius: 999px;
@@ -1483,8 +1483,9 @@ html, body {
     padding: 0;
   }
 
-  /* 홈 히어로 — PC에서 좌우 여백 없이 (fl-main 패딩 담당) */
+  /* 홈 히어로 — PC에서 fl-hero 배경 full-bleed, 컨텐츠는 20px 안쪽 */
   .fl-hero { padding-left: 0; padding-right: 0; }
+  .fl-hero-content { padding: 0 0 0 20px; }
 
   /* 홈 통계 바 PC */
   .fl-stats {

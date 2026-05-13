@@ -257,6 +257,7 @@ function MatchCard({ post }: { post: MatchPost }) {
   const closed = post.status === '마감';
   const lvlKey = post.authorLevel.split(' ')[1] ?? '중급';
   const lvlStyle = LEVEL_BADGE[lvlKey] ?? LEVEL_BADGE['중급'];
+  const [applied, setApplied] = useState(false);
 
   return (
     <article
@@ -352,11 +353,12 @@ function MatchCard({ post }: { post: MatchPost }) {
         </div>
         <button
           disabled={closed}
+          onClick={() => !closed && setApplied((v) => !v)}
           style={{
             padding: '0 18px',
             minHeight: 44,
             borderRadius: 'var(--r-sm)',
-            background: closed ? 'var(--tint-08)' : 'var(--hook)',
+            background: closed ? 'var(--tint-08)' : applied ? '#22c55e' : 'var(--hook)',
             color: closed ? 'var(--text-mute)' : 'var(--ocean-950, #0a1628)',
             fontWeight: 700,
             fontSize: '0.8rem',
@@ -364,9 +366,10 @@ function MatchCard({ post }: { post: MatchPost }) {
             cursor: closed ? 'not-allowed' : 'pointer',
             whiteSpace: 'nowrap',
             fontFamily: 'inherit',
+            transition: 'background 0.2s',
           }}
         >
-          {closed ? '마감' : '참여 신청'}
+          {closed ? '마감' : applied ? '✓ 신청완료' : '참여 신청'}
         </button>
       </div>
     </article>

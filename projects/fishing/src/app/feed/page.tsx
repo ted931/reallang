@@ -165,6 +165,7 @@ function FishSvg({ color }: { color: string }) {
 type FeedPost = typeof FEED_POSTS[0];
 
 function FeedCard({ post }: { post: FeedPost }) {
+  const [liked, setLiked] = useState(false);
   return (
     <article
       style={{
@@ -296,11 +297,13 @@ function FeedCard({ post }: { post: FeedPost }) {
           🌊 {post.tide}
         </span>
         <button
+          onClick={() => setLiked((v) => !v)}
+          aria-label={liked ? '좋아요 취소' : '좋아요'}
           style={{
             marginLeft: 'auto',
             fontSize: '0.75rem',
             fontWeight: 700,
-            color: 'var(--hook)',
+            color: liked ? '#ef4444' : 'var(--text-mute)',
             cursor: 'pointer',
             background: 'none',
             border: 'none',
@@ -309,8 +312,27 @@ function FeedCard({ post }: { post: FeedPost }) {
             fontFamily: 'inherit',
           }}
         >
-          자세히 →
+          {liked ? '❤️' : '🤍'}
         </button>
+        <Link
+          href={`/feed/${post.id}`}
+          style={{
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: 'var(--hook)',
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            padding: '0 4px',
+            minHeight: 44,
+            display: 'inline-flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            fontFamily: 'inherit',
+          }}
+        >
+          자세히 →
+        </Link>
         <Link
           href="/booking"
           style={{
