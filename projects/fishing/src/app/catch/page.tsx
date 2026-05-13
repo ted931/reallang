@@ -184,41 +184,43 @@ export default function CatchPage() {
         </svg>
       </div>
 
-      <div className="fl-filters">
-        <div className="fl-filter-row">
-          <div className="fl-filter-label">📍 지역</div>
-          <FilterChips items={REGIONS} value={region} onChange={setRegion} />
-        </div>
-        <div className="fl-filter-row">
-          <div className="fl-filter-label">🐟 어종</div>
-          <FilterChips items={SPECIES} value={species} onChange={setSpecies} />
-        </div>
-        <div className="fl-filter-row">
-          <div className="fl-filter-label">정렬</div>
-          <div className="fl-sort">
-            {SORTS.map(s => (
-              <button key={s} className={`fl-sort-btn ${sort === s ? 'on' : ''}`} onClick={() => setSort(s)}>
-                {s}
-              </button>
-            ))}
+      <div style={{ maxWidth: 960, margin: "0 auto", paddingBottom: 100 }}>
+        <div className="fl-filters">
+          <div className="fl-filter-row">
+            <div className="fl-filter-label">📍 지역</div>
+            <FilterChips items={REGIONS} value={region} onChange={setRegion} />
+          </div>
+          <div className="fl-filter-row">
+            <div className="fl-filter-label">🐟 어종</div>
+            <FilterChips items={SPECIES} value={species} onChange={setSpecies} />
+          </div>
+          <div className="fl-filter-row">
+            <div className="fl-filter-label">정렬</div>
+            <div className="fl-sort">
+              {SORTS.map(s => (
+                <button key={s} className={`fl-sort-btn ${sort === s ? 'on' : ''}`} onClick={() => setSort(s)}>
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="fl-feed-result">
-        <span><strong>{filtered.length}</strong>건의 조황</span>
-        {(region !== '전체' || species !== '전체 어종') && (
-          <button className="fl-reset-btn" onClick={reset}>필터 초기화</button>
+        <div className="fl-feed-result">
+          <span><strong>{filtered.length}</strong>건의 조황</span>
+          {(region !== '전체' || species !== '전체 어종') && (
+            <button className="fl-reset-btn" onClick={reset}>필터 초기화</button>
+          )}
+        </div>
+
+        {filtered.length === 0 ? (
+          <CatchEmpty onReset={reset} />
+        ) : (
+          <div className="fl-feed-grid">
+            {filtered.map(c => <CatchFeedCard key={c.id} c={c} />)}
+          </div>
         )}
       </div>
-
-      {filtered.length === 0 ? (
-        <CatchEmpty onReset={reset} />
-      ) : (
-        <div className="fl-feed-grid">
-          {filtered.map(c => <CatchFeedCard key={c.id} c={c} />)}
-        </div>
-      )}
     </>
   );
 }

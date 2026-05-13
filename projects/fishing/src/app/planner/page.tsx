@@ -389,155 +389,178 @@ function ResultCard({ date, region, targetFish, people, onReset, onRegionChange 
         </div>
       </div>
 
-      {/* 제주 지도 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>포인트 위치</span>
-        <JejuMap region={region} onRegionChange={onRegionChange} />
-        <div style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: 'var(--hook-300)' }}>📍 {rec.point}</div>
-      </div>
-
-      {/* 날씨 예보 카드 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>날씨 예보</span>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-          {[
-            { icon: '🌡️', label: '기온', value: weather.temp },
-            { icon: '💨', label: '바람', value: weather.wind },
-            { icon: '🌊', label: '파고', value: weather.wave },
-            { icon: '🌤️', label: '날씨', value: weather.sky.replace(/^[^\s]+\s/, '').substring(0, 4) },
-          ].map((item) => (
-            <div key={item.label} style={{ textAlign: 'center', background: 'var(--tint-05)', borderRadius: 10, padding: '10px 4px' }}>
-              <div style={{ fontSize: 18, lineHeight: 1.2 }}>{item.icon}</div>
-              <div style={{ fontSize: 10, color: 'var(--text-mute)', marginTop: 4 }}>{item.label}</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-strong)', marginTop: 2 }}>{item.value}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text-dim)', textAlign: 'center' }}>
-          전체 날씨: <strong style={{ color: 'var(--text)' }}>{weather.sky}</strong>
-        </div>
-      </div>
-
-      {/* 물때 카드 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>물때 정보</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{
-            width: 64, height: 64, borderRadius: '50%',
-            background: tide.isGood ? 'rgba(233,78,59,0.15)' : 'var(--tint-08)',
-            border: `2px solid ${tide.isGood ? 'var(--hook)' : 'var(--line-2)'}`,
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
-            <span style={{ fontSize: 20, fontWeight: 900, color: tide.isGood ? 'var(--hook-300)' : 'var(--text-dim)', lineHeight: 1 }}>{tide.num}</span>
-            <span style={{ fontSize: 9, color: 'var(--text-mute)', marginTop: 1 }}>물</span>
+      {/* PC: 좌우 2컬럼, 모바일: 단일 컬럼 */}
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-planner-result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            align-items: start;
+          }
+          .fl-planner-full { grid-column: 1 / -1; }
+        }
+      `}</style>
+      <div className="fl-planner-result-grid">
+        {/* 왼쪽 컬럼: 지도, 날씨, 물때, 추천 포인트 */}
+        <div>
+          {/* 제주 지도 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>포인트 위치</span>
+            <JejuMap region={region} onRegionChange={onRegionChange} />
+            <div style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: 'var(--hook-300)' }}>📍 {rec.point}</div>
           </div>
-          <div>
-            <div style={valueStyle}>{tide.label}</div>
-            <div style={subStyle}>음력 기준 물때</div>
+
+          {/* 날씨 예보 카드 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>날씨 예보</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+              {[
+                { icon: '🌡️', label: '기온', value: weather.temp },
+                { icon: '💨', label: '바람', value: weather.wind },
+                { icon: '🌊', label: '파고', value: weather.wave },
+                { icon: '🌤️', label: '날씨', value: weather.sky.replace(/^[^\s]+\s/, '').substring(0, 4) },
+              ].map((item) => (
+                <div key={item.label} style={{ textAlign: 'center', background: 'var(--tint-05)', borderRadius: 10, padding: '10px 4px' }}>
+                  <div style={{ fontSize: 18, lineHeight: 1.2 }}>{item.icon}</div>
+                  <div style={{ fontSize: 10, color: 'var(--text-mute)', marginTop: 4 }}>{item.label}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-strong)', marginTop: 2 }}>{item.value}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text-dim)', textAlign: 'center' }}>
+              전체 날씨: <strong style={{ color: 'var(--text)' }}>{weather.sky}</strong>
+            </div>
+          </div>
+
+          {/* 물때 카드 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>물때 정보</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%',
+                background: tide.isGood ? 'rgba(233,78,59,0.15)' : 'var(--tint-08)',
+                border: `2px solid ${tide.isGood ? 'var(--hook)' : 'var(--line-2)'}`,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              }}>
+                <span style={{ fontSize: 20, fontWeight: 900, color: tide.isGood ? 'var(--hook-300)' : 'var(--text-dim)', lineHeight: 1 }}>{tide.num}</span>
+                <span style={{ fontSize: 9, color: 'var(--text-mute)', marginTop: 1 }}>물</span>
+              </div>
+              <div>
+                <div style={valueStyle}>{tide.label}</div>
+                <div style={subStyle}>음력 기준 물때</div>
+                <div style={{
+                  display: 'inline-block', marginTop: 8, padding: '3px 10px', borderRadius: 999,
+                  fontSize: 11, fontWeight: 800,
+                  background: tide.isGood ? 'rgba(233,78,59,0.15)' : 'var(--tint-08)',
+                  color: tide.isGood ? 'var(--hook-300)' : 'var(--text-dim)',
+                  border: `1px solid ${tide.isGood ? 'rgba(233,78,59,0.3)' : 'var(--line)'}`,
+                }}>
+                  {tide.isGood ? '✅ 출조 적합' : '⚠️ 주의 필요'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 추천 포인트 카드 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>추천 포인트</span>
+            <div style={{ fontSize: 16, fontWeight: 900, color: 'var(--hook-300)', marginBottom: 12 }}>
+              📍 {rec.point}
+            </div>
+            {[
+              { label: '수심', icon: '🌊', value: rec.depth },
+              { label: '채비', icon: '🎣', value: rec.tackle },
+              { label: '미끼', icon: '🦐', value: rec.bait },
+            ].map((row) => (
+              <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>{row.icon}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-mute)', width: 28, flexShrink: 0 }}>{row.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{row.value}</span>
+              </div>
+            ))}
             <div style={{
-              display: 'inline-block', marginTop: 8, padding: '3px 10px', borderRadius: 999,
-              fontSize: 11, fontWeight: 800,
-              background: tide.isGood ? 'rgba(233,78,59,0.15)' : 'var(--tint-08)',
-              color: tide.isGood ? 'var(--hook-300)' : 'var(--text-dim)',
-              border: `1px solid ${tide.isGood ? 'rgba(233,78,59,0.3)' : 'var(--line)'}`,
+              marginTop: 10, padding: '10px 12px',
+              background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
+              borderRadius: 10, fontSize: 12, color: 'var(--text)', lineHeight: 1.6,
             }}>
-              {tide.isGood ? '✅ 출조 적합' : '⚠️ 주의 필요'}
+              💡 {rec.tip}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 추천 포인트 카드 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>추천 포인트</span>
-        <div style={{ fontSize: 16, fontWeight: 900, color: 'var(--hook-300)', marginBottom: 12 }}>
-          📍 {rec.point}
-        </div>
-        {[
-          { label: '수심', icon: '🌊', value: rec.depth },
-          { label: '채비', icon: '🎣', value: rec.tackle },
-          { label: '미끼', icon: '🦐', value: rec.bait },
-        ].map((row) => (
-          <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 16, flexShrink: 0 }}>{row.icon}</span>
-            <span style={{ fontSize: 11, color: 'var(--text-mute)', width: 28, flexShrink: 0 }}>{row.label}</span>
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{row.value}</span>
+        {/* 오른쪽 컬럼: 비용, 스케줄 */}
+        <div>
+          {/* 예상 비용 카드 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>예상 비용 ({people}명 기준)</span>
+            {[
+              { label: '좌대/방파제', value: cost_jwaedae },
+              { label: `렌터카 (${people >= 4 ? '대형' : '소형'} 1대)`, value: cost_rentcar },
+              { label: '미끼+채비', value: cost_bait },
+            ].map((row) => (
+              <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>{row.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{row.value.toLocaleString()}원</span>
+              </div>
+            ))}
+            <div style={{ height: 1, background: 'var(--line-2)', margin: '10px 0' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-strong)' }}>합계</span>
+              <span style={{ fontSize: 17, fontWeight: 900, color: 'var(--hook-300)' }}>{total.toLocaleString()}원</span>
+            </div>
+            <div style={{ textAlign: 'right', marginTop: 4, fontSize: 11, color: 'var(--text-mute)' }}>
+              1인당 약 {perPerson.toLocaleString()}원
+            </div>
           </div>
-        ))}
-        <div style={{
-          marginTop: 10, padding: '10px 12px',
-          background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
-          borderRadius: 10, fontSize: 12, color: 'var(--text)', lineHeight: 1.6,
-        }}>
-          💡 {rec.tip}
-        </div>
-      </div>
 
-      {/* 예상 비용 카드 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>예상 비용 ({people}명 기준)</span>
-        {[
-          { label: '좌대/방파제', value: cost_jwaedae },
-          { label: `렌터카 (${people >= 4 ? '대형' : '소형'} 1대)`, value: cost_rentcar },
-          { label: '미끼+채비', value: cost_bait },
-        ].map((row) => (
-          <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>{row.label}</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{row.value.toLocaleString()}원</span>
+          {/* 시간별 스케줄 */}
+          <div style={cardStyle}>
+            <span style={labelStyle}>시간별 출조 스케줄</span>
+            <ScheduleCard targetFish={targetFish} date={date} />
           </div>
-        ))}
-        <div style={{ height: 1, background: 'var(--line-2)', margin: '10px 0' }} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-strong)' }}>합계</span>
-          <span style={{ fontSize: 17, fontWeight: 900, color: 'var(--hook-300)' }}>{total.toLocaleString()}원</span>
         </div>
-        <div style={{ textAlign: 'right', marginTop: 4, fontSize: 11, color: 'var(--text-mute)' }}>
-          1인당 약 {perPerson.toLocaleString()}원
-        </div>
-      </div>
 
-      {/* 시간별 스케줄 */}
-      <div style={cardStyle}>
-        <span style={labelStyle}>시간별 출조 스케줄</span>
-        <ScheduleCard targetFish={targetFish} date={date} />
-      </div>
+        {/* 풀폭: 바로가기 버튼 + 다시 계획 */}
+        <div className="fl-planner-full">
+          {/* 바로가기 버튼 */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            {[
+              { label: '좌대 예약', href: '/jwaedae', emoji: '🏝️' },
+              { label: '렌터카', href: '/rentcar', emoji: '🚗' },
+              { label: '숙소', href: '/stay', emoji: '🏠' },
+            ].map((btn) => (
+              <Link
+                key={btn.href}
+                href={btn.href}
+                style={{
+                  flex: 1, padding: '12px 8px', textAlign: 'center',
+                  background: 'var(--tint-06)', border: '1px solid var(--line)',
+                  borderRadius: 12, fontSize: 12, fontWeight: 700,
+                  color: 'var(--text)', textDecoration: 'none',
+                  transition: 'background 0.15s',
+                }}
+              >
+                <div style={{ fontSize: 20, marginBottom: 4 }}>{btn.emoji}</div>
+                {btn.label}
+              </Link>
+            ))}
+          </div>
 
-      {/* 바로가기 버튼 */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {[
-          { label: '좌대 예약', href: '/jwaedae', emoji: '🏝️' },
-          { label: '렌터카', href: '/rentcar', emoji: '🚗' },
-          { label: '숙소', href: '/stay', emoji: '🏠' },
-        ].map((btn) => (
-          <Link
-            key={btn.href}
-            href={btn.href}
+          {/* 다시 계획 버튼 */}
+          <button
+            onClick={onReset}
             style={{
-              flex: 1, padding: '12px 8px', textAlign: 'center',
-              background: 'var(--tint-06)', border: '1px solid var(--line)',
-              borderRadius: 12, fontSize: 12, fontWeight: 700,
-              color: 'var(--text)', textDecoration: 'none',
-              transition: 'background 0.15s',
+              width: '100%', padding: '14px', background: 'var(--tint-08)',
+              border: '1px solid var(--line-2)', borderRadius: 12,
+              fontSize: 14, fontWeight: 800, color: 'var(--text-dim)',
+              cursor: 'pointer', fontFamily: 'inherit',
             }}
           >
-            <div style={{ fontSize: 20, marginBottom: 4 }}>{btn.emoji}</div>
-            {btn.label}
-          </Link>
-        ))}
+            🔄 다시 계획하기
+          </button>
+        </div>
       </div>
-
-      {/* 다시 계획 버튼 */}
-      <button
-        onClick={onReset}
-        style={{
-          width: '100%', padding: '14px', background: 'var(--tint-08)',
-          border: '1px solid var(--line-2)', borderRadius: 12,
-          fontSize: 14, fontWeight: 800, color: 'var(--text-dim)',
-          cursor: 'pointer', fontFamily: 'inherit',
-        }}
-      >
-        🔄 다시 계획하기
-      </button>
     </div>
   );
 }
@@ -578,7 +601,7 @@ export default function PlannerPage() {
 
   if (showResult) {
     return (
-      <div style={{ maxWidth: 600, margin: '0 auto', paddingTop: 12 }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', paddingTop: 12, paddingBottom: 100 }}>
         <ResultCard
           date={date}
           region={region}
@@ -592,7 +615,7 @@ export default function PlannerPage() {
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto', paddingBottom: 40 }}>
+    <div style={{ maxWidth: 640, margin: '0 auto', paddingBottom: 100 }}>
       {/* 페이지 타이틀 */}
       <div style={{ padding: '16px 20px 0' }}>
         <div style={{ fontSize: 12, color: 'var(--hook-300)', fontWeight: 700, marginBottom: 4 }}>🗓️ 출조 플래너</div>

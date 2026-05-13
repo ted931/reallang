@@ -97,7 +97,7 @@ export default function BizDashboardPage() {
   }
 
   return (
-    <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 0 80px" }}>
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 0 100px" }}>
 
       {/* ── 상단 헤더 ── */}
       <div
@@ -211,8 +211,15 @@ export default function BizDashboardPage() {
       </div>
 
       {/* ── 핵심 지표 4개 ── */}
+      <style>{`
+        @media (min-width: 768px) {
+          .biz-kpi-grid { grid-template-columns: repeat(4, 1fr) !important; }
+          .biz-catch-form { max-width: 600px; }
+        }
+      `}</style>
       <div style={{ padding: "20px 16px 0" }}>
         <div
+          className="biz-kpi-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
@@ -283,6 +290,7 @@ export default function BizDashboardPage() {
       {/* 조황 등록 인라인 폼 */}
       {showCatchForm && (
         <div
+          className="biz-catch-form"
           style={{
             margin: "12px 16px 0",
             padding: "16px",

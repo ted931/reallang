@@ -164,7 +164,7 @@ export default function GatheringPage() {
 
         {/* 통계 바 */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 4 }}>
-          <div style={{ maxWidth: 800, margin: '0 auto', padding: '16px 0', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8, textAlign: 'center' }}>
+          <div style={{ maxWidth: 800, margin: '0 auto', padding: '16px 0', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 4, textAlign: 'center' }}>
             {[
               [total, "클럽"],
               [totalMembers, "총 회원"],
@@ -172,7 +172,7 @@ export default function GatheringPage() {
               [thisMonthOutings, "이달 출조"],
             ].map(([v, l]) => (
               <div key={String(l)}>
-                <div style={{ fontSize: 20, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{v}<span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginLeft: 2 }}>{l === "총 회원" || l === "이달 출조" ? "명" : "개"}</span></div>
+                <div style={{ fontSize: 'clamp(14px, 4vw, 20px)', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{v}<span style={{ fontSize: 'clamp(9px, 2.5vw, 12px)', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginLeft: 2 }}>{l === "총 회원" || l === "이달 출조" ? "명" : "개"}</span></div>
                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>{l}</div>
               </div>
             ))}
@@ -191,7 +191,7 @@ export default function GatheringPage() {
             </div>
             <button onClick={() => setSelectedCat("")} style={{ fontSize: 12, fontWeight: 700, color: 'var(--ocean-300)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>전체 보기 →</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, paddingBottom: 20 }}>
+          <div className="fg-cat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, paddingBottom: 20 }}>
             {FISH_CATS.map(c => {
               const count = DUMMY_GATHERINGS.filter(g =>
                 g.fishTypes.some(f => f.includes(c.label.split('·')[0])) ||
@@ -236,7 +236,7 @@ export default function GatheringPage() {
               </div>
               <button onClick={() => setTab("hot")} style={{ fontSize: 12, fontWeight: 700, color: 'var(--hook-300)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>더 보기 →</button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div className="fg-hot-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {hotClubs.map((c, i) => {
                 const accent = ACCENT_COLORS[i % ACCENT_COLORS.length];
                 const spotsLeft = c.maxMembers - c.memberCount;
@@ -378,7 +378,7 @@ export default function GatheringPage() {
           </div>
 
           {/* 클럽 카드 목록 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="fg-club-list" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
             {filtered.map((club, idx) => (
               <ClubCard key={club.id} club={club} idx={idx} />
             ))}
@@ -401,7 +401,7 @@ export default function GatheringPage() {
         <section style={{ padding: '32px 20px 0', borderTop: '1px solid var(--line)', marginTop: 32 }}>
           <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-strong)', letterSpacing: '-0.5px', marginBottom: 4 }}>먼저 다녀온 낚시인들</div>
           <div style={{ fontSize: 12, color: 'var(--text-mute)', marginBottom: 18 }}>평균 별점 4.8 · 후기 238건</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="fg-reviews-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
             {REVIEWS.map((r, i) => (
               <div key={i} style={{
                 background: 'var(--tint-04)', border: '1px solid var(--line)',
@@ -421,9 +421,9 @@ export default function GatheringPage() {
         <div style={{ height: 100 }} />
       </div>
 
-      {/* FAB */}
+      {/* FAB — bottom: 100px (바텀 네비 70px + 여유) */}
       <Link href="/gathering/new" style={{
-        position: 'fixed', bottom: 80, right: 20,
+        position: 'fixed', bottom: 100, right: 20,
         display: 'flex', alignItems: 'center', gap: 8,
         padding: '14px 20px', background: 'var(--hook)', color: 'white',
         borderRadius: 99, fontWeight: 800, fontSize: 14, textDecoration: 'none',
@@ -434,11 +434,17 @@ export default function GatheringPage() {
         <span>클럽 만들기</span>
       </Link>
 
-      {/* PC 4열 grid */}
+      {/* 반응형 스타일 */}
       <style>{`
         @media (min-width: 768px) {
+          /* 카테고리 그리드: 모바일 4열 → PC 8열 */
           .fg-cat-grid { grid-template-columns: repeat(8,1fr) !important; }
+          /* HOT 클럽: 모바일 2열 → PC 4열 */
           .fg-hot-grid { grid-template-columns: repeat(4,1fr) !important; }
+          /* 클럽 카드 목록: PC 2열 그리드 */
+          .fg-club-list { grid-template-columns: 1fr 1fr !important; }
+          /* 후기 섹션: PC 3열 그리드 */
+          .fg-reviews-grid { grid-template-columns: repeat(3,1fr) !important; }
         }
       `}</style>
     </>

@@ -499,93 +499,123 @@ export default function RankingPage() {
         </svg>
       </section>
 
-      {/* 기간 필터 */}
-      <div className="fl-filters">
-        <div className="fl-sort">
-          {([ ["day", "일간"], ["week", "주간"], ["month", "월간"] ] as const).map(([k, l]) => (
-            <button
-              key={k}
-              className={`fl-sort-btn${period === k ? " on" : ""}`}
-              onClick={() => setPeriod(k)}
-              style={{ fontFamily: "inherit" }}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* 콘텐츠 래퍼: maxWidth 960px 중앙정렬 */}
+      <div className="fl-rk-wrap">
 
-      {/* ── 이번주 TOP 조과 포디움 ── */}
-      <SectionHeader
-        kicker="THIS WEEK TOP"
-        title="이번주 TOP 조과"
-        subtitle="포인트 기준 이번 주 최고 낚시인"
-        accent="var(--hook)"
-      />
-      <CatchPodium />
-
-      {/* ── 메인 탭 ── */}
-      <div className="fl-cm-tabs">
-        {(["전체", "어종별", "지역별", "이달의신인"] as MainTabKey[]).map(t => (
-          <button
-            key={t}
-            className={`fl-cm-tab${mainTab === t ? " on" : ""}`}
-            onClick={() => setMainTab(t)}
-            style={{ fontFamily: "inherit" }}
-          >
-            {t === "이달의신인" ? "이달의 신인" : t}
-          </button>
-        ))}
-      </div>
-
-      {/* ── 전체 탭 ── */}
-      {mainTab === "전체" && (
-        <>
-          {/* 내 순위 카드 */}
-          <MyRankCard />
-
-          <div style={{
-            background: "var(--tint-04)",
-            border: "1px solid var(--line)",
-            borderRadius: "var(--r-card)",
-            margin: "0 16px 16px",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              padding: "12px 16px 10px",
-              borderBottom: "1px solid var(--line)",
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-            }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>전체 랭킹 TOP 10</span>
-              <span style={{ fontSize: 11, color: "var(--text-mute)" }}>포인트 기준</span>
-            </div>
-            {FULL_RANKING.map(item => <RankRow key={item.rank} item={item} />)}
-          </div>
-        </>
-      )}
-
-      {/* ── 어종별 탭 ── */}
-      {mainTab === "어종별" && (
-        <>
-          {/* 어종 칩 */}
-          <div className="fl-chips" style={{ padding: "8px 16px 16px" }}>
-            {FISH_TABS.map(ft => (
+        {/* 기간 필터 */}
+        <div className="fl-filters">
+          <div className="fl-sort">
+            {([ ["day", "일간"], ["week", "주간"], ["month", "월간"] ] as const).map(([k, l]) => (
               <button
-                key={ft}
-                className={`fl-chip${fishTab === ft ? " on" : ""}`}
-                onClick={() => setFishTab(ft)}
+                key={k}
+                className={`fl-sort-btn${period === k ? " on" : ""}`}
+                onClick={() => setPeriod(k)}
                 style={{ fontFamily: "inherit" }}
               >
-                {ft}
+                {l}
               </button>
             ))}
           </div>
+        </div>
 
+        {/* ── 이번주 TOP 조과 포디움 ── */}
+        <SectionHeader
+          kicker="THIS WEEK TOP"
+          title="이번주 TOP 조과"
+          subtitle="포인트 기준 이번 주 최고 낚시인"
+          accent="var(--hook)"
+        />
+        <CatchPodium />
+
+        {/* ── 메인 탭 ── */}
+        <div className="fl-cm-tabs" style={{ overflowX: "auto", scrollbarWidth: "none" }}>
+          {(["전체", "어종별", "지역별", "이달의신인"] as MainTabKey[]).map(t => (
+            <button
+              key={t}
+              className={`fl-cm-tab${mainTab === t ? " on" : ""}`}
+              onClick={() => setMainTab(t)}
+              style={{ fontFamily: "inherit", flexShrink: 0 }}
+            >
+              {t === "이달의신인" ? "이달의 신인" : t}
+            </button>
+          ))}
+        </div>
+
+        {/* ── 전체 탭 ── */}
+        {mainTab === "전체" && (
+          <>
+            {/* 내 순위 카드 */}
+            <MyRankCard />
+
+            <div style={{
+              background: "var(--tint-04)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--r-card)",
+              margin: "0 16px 16px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                padding: "12px 16px 10px",
+                borderBottom: "1px solid var(--line)",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>전체 랭킹 TOP 10</span>
+                <span style={{ fontSize: 11, color: "var(--text-mute)" }}>포인트 기준</span>
+              </div>
+              {FULL_RANKING.map(item => <RankRow key={item.rank} item={item} />)}
+            </div>
+          </>
+        )}
+
+        {/* ── 어종별 탭 ── */}
+        {mainTab === "어종별" && (
+          <>
+            {/* 어종 칩 — 모바일 가로 스크롤 */}
+            <div style={{
+              display: "flex", gap: 8, overflowX: "auto", scrollbarWidth: "none",
+              padding: "8px 16px 16px", flexWrap: "nowrap",
+            }}>
+              {FISH_TABS.map(ft => (
+                <button
+                  key={ft}
+                  className={`fl-chip${fishTab === ft ? " on" : ""}`}
+                  onClick={() => setFishTab(ft)}
+                  style={{ fontFamily: "inherit", flexShrink: 0, minHeight: 44 }}
+                >
+                  {ft}
+                </button>
+              ))}
+            </div>
+
+            <div style={{
+              background: "var(--tint-04)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--r-card)",
+              margin: "0 16px 16px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                padding: "12px 16px 10px",
+                borderBottom: "1px solid var(--line)",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>
+                  {fishTab} 랭킹 TOP 5
+                </span>
+                <span style={{ fontSize: 11, color: "var(--text-mute)" }}>포인트 기준</span>
+              </div>
+              {FISH_RANKING[fishTab].map(item => <RankRow key={item.rank} item={item} />)}
+            </div>
+          </>
+        )}
+
+        {/* ── 지역별 탭 ── */}
+        {mainTab === "지역별" && (
           <div style={{
             background: "var(--tint-04)",
             border: "1px solid var(--line)",
             borderRadius: "var(--r-card)",
-            margin: "0 16px 16px",
+            margin: "8px 16px 16px",
             overflow: "hidden",
           }}>
             <div style={{
@@ -593,109 +623,122 @@ export default function RankingPage() {
               borderBottom: "1px solid var(--line)",
               display: "flex", alignItems: "center", justifyContent: "space-between",
             }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>
-                {fishTab} 랭킹 TOP 5
-              </span>
-              <span style={{ fontSize: 11, color: "var(--text-mute)" }}>포인트 기준</span>
+              <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>지역별 랭킹</span>
+              <span style={{ fontSize: 11, color: "var(--text-mute)" }}>평균 포인트 기준</span>
             </div>
-            {FISH_RANKING[fishTab].map(item => <RankRow key={item.rank} item={item} />)}
+            {REGION_RANKING.map(item => <RegionRow key={item.rank} item={item} />)}
           </div>
-        </>
-      )}
+        )}
 
-      {/* ── 지역별 탭 ── */}
-      {mainTab === "지역별" && (
-        <div style={{
-          background: "var(--tint-04)",
-          border: "1px solid var(--line)",
-          borderRadius: "var(--r-card)",
-          margin: "8px 16px 16px",
-          overflow: "hidden",
-        }}>
-          <div style={{
-            padding: "12px 16px 10px",
-            borderBottom: "1px solid var(--line)",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>지역별 랭킹</span>
-            <span style={{ fontSize: 11, color: "var(--text-mute)" }}>평균 포인트 기준</span>
-          </div>
-          {REGION_RANKING.map(item => <RegionRow key={item.rank} item={item} />)}
-        </div>
-      )}
-
-      {/* ── 이달의 신인 탭 ── */}
-      {mainTab === "이달의신인" && (
-        <>
-          <div style={{
-            margin: "8px 16px 12px",
-            background: "rgba(245,158,11,0.08)",
-            border: "1px solid rgba(245,158,11,0.2)",
-            borderRadius: "var(--r-sm)",
-            padding: "10px 14px",
-            fontSize: 12, color: "var(--text-dim)",
-            lineHeight: 1.5,
-          }}>
-            이번달 신규 가입 후 가장 빠르게 성장한 낚시인을 소개합니다.
-          </div>
-          <div style={{
-            background: "var(--tint-04)",
-            border: "1px solid var(--line)",
-            borderRadius: "var(--r-card)",
-            margin: "0 16px 16px",
-            overflow: "hidden",
-          }}>
+        {/* ── 이달의 신인 탭 ── */}
+        {mainTab === "이달의신인" && (
+          <>
             <div style={{
-              padding: "12px 16px 10px",
-              borderBottom: "1px solid var(--line)",
-              display: "flex", alignItems: "center", gap: 6,
+              margin: "8px 16px 12px",
+              background: "rgba(245,158,11,0.08)",
+              border: "1px solid rgba(245,158,11,0.2)",
+              borderRadius: "var(--r-sm)",
+              padding: "10px 14px",
+              fontSize: 12, color: "var(--text-dim)",
+              lineHeight: 1.5,
             }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>
-                이달의 신인왕
-              </span>
-              <span style={{
-                fontSize: 9, fontWeight: 800,
-                background: "rgba(245,158,11,0.15)", color: "#f59e0b",
-                border: "1px solid rgba(245,158,11,0.3)",
-                padding: "2px 6px", borderRadius: 4,
-              }}>
-                5월
-              </span>
+              이번달 신규 가입 후 가장 빠르게 성장한 낚시인을 소개합니다.
             </div>
-            {ROOKIE_RANKING.map(item => <RookieRow key={item.rank} item={item} />)}
-          </div>
-        </>
-      )}
+            <div style={{
+              background: "var(--tint-04)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--r-card)",
+              margin: "0 16px 16px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                padding: "12px 16px 10px",
+                borderBottom: "1px solid var(--line)",
+                display: "flex", alignItems: "center", gap: 6,
+              }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text-strong)" }}>
+                  이달의 신인왕
+                </span>
+                <span style={{
+                  fontSize: 9, fontWeight: 800,
+                  background: "rgba(245,158,11,0.15)", color: "#f59e0b",
+                  border: "1px solid rgba(245,158,11,0.3)",
+                  padding: "2px 6px", borderRadius: 4,
+                }}>
+                  5월
+                </span>
+              </div>
+              {ROOKIE_RANKING.map(item => <RookieRow key={item.rank} item={item} />)}
+            </div>
+          </>
+        )}
 
-      {/* ── 기존 섹션: HOT 좌대 + 포인트 ── */}
-      <div className="fl-rk-podium-points-grid">
-        <div>
-          <SectionHeader kicker="HOT JWAEDAE" title="HOT 좌대 TOP 3" subtitle="이번 주 가장 핫한 좌대" accent="#fbbf24" />
-          <Podium />
-        </div>
-        <div>
-          <SectionHeader kicker="POINTS" title="포인트 랭킹" subtitle="조황이 잘 잡힌 포인트" accent="#86efac" />
-          <div className="fl-prow-list">
-            {TOP_POINTS.map(p => <PointRow key={p.rank} p={p} />)}
+        {/* ── 기존 섹션: HOT 좌대 + 포인트 ── */}
+        <div className="fl-rk-podium-points-grid">
+          <div>
+            <SectionHeader kicker="HOT JWAEDAE" title="HOT 좌대 TOP 3" subtitle="이번 주 가장 핫한 좌대" accent="#fbbf24" />
+            <Podium />
+          </div>
+          <div>
+            <SectionHeader kicker="POINTS" title="포인트 랭킹" subtitle="조황이 잘 잡힌 포인트" accent="#86efac" />
+            <div className="fl-prow-list">
+              {TOP_POINTS.map(p => <PointRow key={p.rank} p={p} />)}
+            </div>
           </div>
         </div>
+
+        {/* ── 기존 섹션: 어종 마릿수 + 빅피쉬 ── */}
+        <div className="fl-rk-fish-big-grid">
+          <div>
+            <SectionHeader kicker="FISH" title="어종별 마릿수" subtitle="가장 많이 잡힌 어종" accent="#5fa3cf" />
+            <div className="fl-fbar-list">
+              {TOP_FISH.map(f => <FishBar key={f.name} f={f} max={maxFish} />)}
+            </div>
+          </div>
+          <div>
+            <SectionHeader kicker="BIG FISH" title="이번 주 빅 피쉬" subtitle="가장 큰 사이즈 TOP 5" accent="#fbbf24" />
+            <div className="fl-big-list">
+              {BIG_FISH.map(b => <BigFishRow key={b.rank} b={b} />)}
+            </div>
+          </div>
+        </div>
+
+        {/* 하단 여백 — 모바일 바텀 네비 100px */}
+        <div style={{ height: 100 }} />
+
       </div>
 
-      {/* ── 기존 섹션: 어종 마릿수 + 빅피쉬 ── */}
-      <div className="fl-rk-fish-big-grid">
-        <div>
-          <SectionHeader kicker="FISH" title="어종별 마릿수" subtitle="가장 많이 잡힌 어종" accent="#5fa3cf" />
-          <div className="fl-fbar-list">
-            {TOP_FISH.map(f => <FishBar key={f.name} f={f} max={maxFish} />)}
-          </div>
-        </div>
-        <div>
-          <SectionHeader kicker="BIG FISH" title="이번 주 빅 피쉬" subtitle="가장 큰 사이즈 TOP 5" accent="#fbbf24" />
-          <div className="fl-big-list">
-            {BIG_FISH.map(b => <BigFishRow key={b.rank} b={b} />)}
-          </div>
-        </div>
-      </div>
+      {/* 반응형 스타일 */}
+      <style>{`
+        /* 콘텐츠 래퍼: maxWidth 960px 중앙정렬 */
+        .fl-rk-wrap {
+          max-width: 960px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        /* HOT 좌대 + 포인트 그리드: 모바일 1열 → PC 2열 */
+        .fl-rk-podium-points-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .fl-rk-podium-points-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        /* 어종 마릿수 + 빅피쉬 그리드: 모바일 1열 → PC 2열 */
+        .fl-rk-fish-big-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .fl-rk-fish-big-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+      `}</style>
     </>
   );
 }

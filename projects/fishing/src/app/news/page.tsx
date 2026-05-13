@@ -107,7 +107,7 @@ export default function NewsPage() {
     : "";
 
   return (
-    <div className="fl-content">
+    <div style={{ maxWidth: 960, margin: "0 auto", paddingBottom: 100 }}>
       {/* 히어로 */}
       <div className="fl-news-hero">
         <p className="fl-kicker">FISHING NEWS</p>
@@ -217,7 +217,6 @@ export default function NewsPage() {
             ) : (
               filtered.map((item) => {
                 const catColor = CAT_COLORS[item.cat] ?? "#5fa3cf";
-                const isLink = item.url && item.url !== "#";
                 return (
                   <Link
                     key={item.id}

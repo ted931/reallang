@@ -64,7 +64,21 @@ export default function AnalyticsPage() {
         </svg>
       </section>
 
-      <div style={{ padding: "0 20px", maxWidth: 720, margin: "0 auto" }}>
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-fish-stats-list {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            overflow-x: visible !important;
+            flex-wrap: unset !important;
+          }
+          .fl-fish-stats-list > div {
+            width: auto !important;
+            flex-shrink: unset !important;
+          }
+        }
+      `}</style>
+      <div style={{ padding: "0 20px", maxWidth: 960, margin: "0 auto" }}>
 
         {/* 프로필 요약 카드 */}
         <div style={{
@@ -77,8 +91,8 @@ export default function AnalyticsPage() {
               background: "var(--hook)", display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 22, fontWeight: 900, color: "#fff", flexShrink: 0,
             }}>T</div>
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text-strong)" }}>바다낚시꾼</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text-strong)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>바다낚시꾼</div>
               <div style={{ fontSize: 12, color: "var(--hook)", marginTop: 2, fontWeight: 700 }}>Lv.12 조사</div>
             </div>
           </div>
@@ -154,10 +168,13 @@ export default function AnalyticsPage() {
             어종별 통계
           </div>
         </div>
-        <div style={{
-          display: "flex", gap: 10, overflowX: "auto", paddingBottom: 8,
-          scrollbarWidth: "none", marginBottom: 16,
-        }}>
+        <div
+          className="fl-fish-stats-list"
+          style={{
+            display: "flex", gap: 10, overflowX: "auto", paddingBottom: 8,
+            scrollbarWidth: "none", marginBottom: 16,
+          }}
+        >
           {FISH_STATS.map((f) => (
             <div key={f.name} style={{
               flexShrink: 0, width: 140,
@@ -252,7 +269,7 @@ export default function AnalyticsPage() {
         {/* 5월 조황 캘린더 */}
         <div style={{
           background: "var(--ocean-900)", border: "1px solid var(--line-2)",
-          borderRadius: "var(--r-card)", padding: 20, marginBottom: 32,
+          borderRadius: "var(--r-card)", padding: 20, marginBottom: 100,
         }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text-dim)", marginBottom: 14, letterSpacing: 0.5 }}>
             5월 조황 캘린더

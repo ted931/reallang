@@ -73,7 +73,12 @@ export default function BookingPage() {
       </div>
 
       {/* 업체 카드 리스트 */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "0 20px" }}>
+      <style>{`
+        @media (min-width: 768px) {
+          .booking-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; max-width: 960px; margin: 0 auto; }
+        }
+      `}</style>
+      <div className="booking-grid" style={{ display: "flex", flexDirection: "column", gap: 12, padding: "0 20px" }}>
         {filtered.map((b) => (
           <div key={b.id} style={{
             background: "var(--ocean-900)", border: "1px solid var(--line-2)",
@@ -142,7 +147,8 @@ export default function BookingPage() {
 
       {/* 안내 배너 */}
       <div style={{
-        margin: "20px 20px 40px",
+        margin: "20px 20px 100px",
+        maxWidth: 960, marginLeft: "auto", marginRight: "auto",
         background: "var(--ocean-900)",
         border: "2px solid var(--hook)",
         borderRadius: "var(--r-card)", padding: 18,

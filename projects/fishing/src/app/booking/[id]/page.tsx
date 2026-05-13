@@ -48,7 +48,7 @@ export default function BookingDetailPage() {
 
   if (showConfirm) {
     return (
-      <div style={{ padding: "40px 20px", maxWidth: 480, margin: "0 auto" }}>
+      <div style={{ padding: "40px 20px 100px", maxWidth: 600, margin: "0 auto" }}>
         {/* 완료 헤더 */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <div style={{ fontSize: 56, marginBottom: 12 }}>✅</div>
@@ -110,7 +110,7 @@ export default function BookingDetailPage() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: "0 auto", padding: "0 20px 60px" }}>
+    <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 20px 100px" }}>
       {/* 뒤로가기 */}
       <Link href="/booking" style={{
         display: "inline-flex", alignItems: "center", gap: 4,
@@ -179,14 +179,14 @@ export default function BookingDetailPage() {
             <button
               onClick={() => setPeople((n) => Math.max(1, n - 1))}
               style={{
-                width: 40, height: 40, borderRadius: "var(--r-sm) 0 0 var(--r-sm)",
+                width: 44, height: 44, borderRadius: "var(--r-sm) 0 0 var(--r-sm)",
                 background: "var(--ocean-800)", border: "1px solid var(--line-2)",
                 color: "var(--text-strong)", fontSize: 18, cursor: "pointer",
                 fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center",
               }}
             >−</button>
             <div style={{
-              flex: 1, height: 40, display: "flex", alignItems: "center", justifyContent: "center",
+              flex: 1, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
               background: "var(--tint-05)", borderTop: "1px solid var(--line-2)", borderBottom: "1px solid var(--line-2)",
               fontSize: 16, fontWeight: 800, color: "var(--text-strong)",
             }}>
@@ -195,7 +195,7 @@ export default function BookingDetailPage() {
             <button
               onClick={() => setPeople((n) => Math.min(20, n + 1))}
               style={{
-                width: 40, height: 40, borderRadius: "0 var(--r-sm) var(--r-sm) 0",
+                width: 44, height: 44, borderRadius: "0 var(--r-sm) var(--r-sm) 0",
                 background: "var(--ocean-800)", border: "1px solid var(--line-2)",
                 color: "var(--text-strong)", fontSize: 18, cursor: "pointer",
                 fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center",

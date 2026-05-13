@@ -336,13 +336,13 @@ function CameraFAB() {
 
 export default function HomePage() {
   return (
-    <>
+    <div className="fl-home-pad">
       <Hero/>
       <StatsBar/>
       <div className="fl-section"><HotCatchCarousel/></div>
       <div className="fl-section"><SeatSection/></div>
       <div className="fl-section"><GatheringSection/></div>
       <CameraFAB/>
-    </>
+    </div>
   );
 }

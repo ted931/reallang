@@ -265,7 +265,6 @@ function MatchCard({ post }: { post: MatchPost }) {
         border: '1px solid var(--line)',
         borderRadius: 'var(--r-card)',
         padding: '16px',
-        marginBottom: 12,
         opacity: closed ? 0.55 : 1,
         filter: closed ? 'grayscale(0.4)' : 'none',
         position: 'relative',
@@ -354,7 +353,8 @@ function MatchCard({ post }: { post: MatchPost }) {
         <button
           disabled={closed}
           style={{
-            padding: '7px 18px',
+            padding: '0 18px',
+            minHeight: 44,
             borderRadius: 'var(--r-sm)',
             background: closed ? 'var(--tint-08)' : 'var(--hook)',
             color: closed ? 'var(--text-mute)' : 'var(--ocean-950, #0a1628)',
@@ -395,6 +395,12 @@ export default function MatchPage() {
 
   return (
     <>
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-match-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .fl-match-form { max-width: 600px !important; }
+        }
+      `}</style>
       {/* 히어로 */}
       <section className="fl-hero">
         <div className="fl-catch-hero-glow" />
@@ -456,6 +462,7 @@ export default function MatchPage() {
         {/* 토글 폼 */}
         {showForm && (
           <div
+            className="fl-match-form"
             style={{
               background: 'var(--tint-05)',
               border: '1px solid var(--line-2)',
@@ -660,14 +667,21 @@ export default function MatchPage() {
             해당 조건의 모집글이 없습니다
           </div>
         ) : (
-          <div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(1, 1fr)',
+              gap: 12,
+            }}
+            className="fl-match-grid"
+          >
             {filtered.map((post) => (
               <MatchCard key={post.id} post={post} />
             ))}
           </div>
         )}
 
-        <div style={{ height: 40 }} />
+        <div style={{ height: 100 }} />
       </div>
     </>
   );

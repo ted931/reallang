@@ -309,7 +309,13 @@ export default function ShopPage() {
       </div>
 
       {/* 상품 그리드 */}
+      <style>{`
+        @media (min-width: 768px) {
+          .shop-grid { grid-template-columns: repeat(4, 1fr) !important; max-width: 960px; margin-left: auto; margin-right: auto; }
+        }
+      `}</style>
       <div
+        className="shop-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",

@@ -172,7 +172,6 @@ function FeedCard({ post }: { post: FeedPost }) {
         border: '1px solid var(--line)',
         borderRadius: 'var(--r-card)',
         overflow: 'hidden',
-        marginBottom: 16,
       }}
     >
       {/* 카드 상단: 업체명 + 지역 배지 + 날짜 */}
@@ -296,23 +295,31 @@ function FeedCard({ post }: { post: FeedPost }) {
         >
           🌊 {post.tide}
         </span>
-        <span
+        <button
           style={{
             marginLeft: 'auto',
             fontSize: '0.75rem',
             fontWeight: 700,
             color: 'var(--hook)',
             cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            padding: '0 4px',
+            minHeight: 44,
+            fontFamily: 'inherit',
           }}
         >
           자세히 →
-        </span>
+        </button>
         <Link
           href="/booking"
           style={{
             fontSize: '0.78rem',
             fontWeight: 700,
-            padding: '6px 16px',
+            padding: '0 16px',
+            minHeight: 44,
+            display: 'inline-flex',
+            alignItems: 'center',
             borderRadius: 'var(--r-sm)',
             background: 'var(--hook)',
             color: 'var(--ocean-950, #0a1628)',
@@ -342,6 +349,11 @@ export default function FeedPage() {
 
   return (
     <>
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-feed-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
       {/* 히어로 */}
       <section className="fl-hero">
         <div className="fl-catch-hero-glow" />
@@ -425,7 +437,14 @@ export default function FeedPage() {
             해당 조건의 조황이 없습니다
           </div>
         ) : (
-          <div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(1, 1fr)',
+              gap: 16,
+            }}
+            className="fl-feed-grid"
+          >
             {filtered.map((post) => (
               <FeedCard key={post.id} post={post} />
             ))}
@@ -440,7 +459,7 @@ export default function FeedPage() {
             borderRadius: 'var(--r-card)',
             padding: '20px 24px',
             marginTop: 12,
-            marginBottom: 40,
+            marginBottom: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',

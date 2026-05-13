@@ -205,7 +205,12 @@ export default function CouponHubPage() {
       </div>
 
       {/* 쿠폰 카드 목록 */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "0 16px 12px" }}>
+      <style>{`
+        @media (min-width: 768px) {
+          .coupon-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; max-width: 960px; margin-left: auto; margin-right: auto; }
+        }
+      `}</style>
+      <div className="coupon-grid" style={{ display: "flex", flexDirection: "column", gap: 10, padding: "0 16px 12px" }}>
         {filtered.map(c => {
           const isCopied = copied === c.id;
           return (
@@ -327,7 +332,7 @@ export default function CouponHubPage() {
       </div>
 
       {/* 하단 업체 입점 배너 */}
-      <div style={{ padding: "8px 16px 32px" }}>
+      <div style={{ padding: "8px 16px 100px", maxWidth: 960, margin: "0 auto" }}>
         <Link href="/biz" style={{ textDecoration: "none" }}>
           <div style={{
             background: "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.12))",

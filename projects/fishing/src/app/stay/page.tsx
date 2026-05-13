@@ -25,9 +25,9 @@ export default function StayPage() {
   });
 
   return (
-    <div className="max-w-2xl lg:max-w-5xl mx-auto px-4 py-6">
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 16px", paddingBottom: 100 }}>
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-5" style={{ paddingTop: 24 }}>
         <div>
           <h1 className="text-xl font-black text-ocean-50">🏠 낚시 숙소</h1>
           <p className="text-xs text-slate-500 mt-0.5">포인트 바로 옆, 낚시꾼을 위한 숙소</p>
@@ -38,24 +38,25 @@ export default function StayPage() {
         </Link>
       </div>
 
-      {/* 유형 필터 */}
-      <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
-        {TYPES.map((t) => (
-          <button key={t} onClick={() => setType(t)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${type === t ? "bg-hook text-ocean-950" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
-            {t === "전체" ? "전체" : TYPE_LABEL_SHORT[t]}
-          </button>
-        ))}
-      </div>
-
-      {/* 지역 필터 */}
-      <div className="flex gap-1.5 mb-5 overflow-x-auto pb-1">
-        {REGIONS.map((r) => (
-          <button key={r} onClick={() => setRegion(r)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-hook text-ocean-950" : "bg-ocean-900 border border-ocean-800 text-slate-500 hover:text-slate-300"}`}>
-            {r}
-          </button>
-        ))}
+      {/* 필터 영역 — PC에서 한 행, 모바일에서 각 행 overflow-x scroll */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", paddingBottom: 2, flexShrink: 0 }}>
+          {TYPES.map((t) => (
+            <button key={t} onClick={() => setType(t)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${type === t ? "bg-hook text-ocean-950" : "bg-ocean-800 text-slate-400 hover:text-slate-200"}`}>
+              {t === "전체" ? "전체" : TYPE_LABEL_SHORT[t]}
+            </button>
+          ))}
+        </div>
+        <div style={{ width: 1, height: 20, background: "var(--line-2)", flexShrink: 0 }} className="hidden lg:block" />
+        <div style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", paddingBottom: 2, flex: 1 }}>
+          {REGIONS.map((r) => (
+            <button key={r} onClick={() => setRegion(r)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${region === r ? "bg-hook text-ocean-950" : "bg-ocean-900 border border-ocean-800 text-slate-500 hover:text-slate-300"}`}>
+              {r}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 목록 */}
