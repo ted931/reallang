@@ -1991,6 +1991,14 @@ html, body {
 /* ═══════════════════════════════════════
    뉴스 페이지 (fl-news-*)
 ═══════════════════════════════════════ */
+.fl-kicker {
+  font-size: 11px; font-weight: 800; letter-spacing: 2px;
+  color: var(--hook-300); text-transform: uppercase; margin: 0 0 4px;
+}
+.fl-page-title {
+  font-size: 26px; font-weight: 900; color: var(--text-strong);
+  letter-spacing: -0.6px; margin: 0 0 4px; line-height: 1.2;
+}
 .fl-news-hero { padding: 28px 20px 16px; }
 .fl-news-list { display: flex; flex-direction: column; gap: 1px; padding: 0 20px 24px; }
 .fl-news-card { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--ocean-800); text-decoration: none; color: inherit; cursor: pointer; transition: all 0.15s; }
