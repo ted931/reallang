@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   DUMMY_RESERVATIONS,
@@ -29,6 +30,7 @@ const PHASE_MAP: Record<EscrowStatus, number> = {
 };
 
 export default function MyPage() {
+  const router = useRouter();
   const [tab, setTab] = useState<TabKey>("reserve");
 
   const escrowItems = DUMMY_RESERVATIONS.filter((r) => r.escrowStatus === "holding");
@@ -49,7 +51,7 @@ export default function MyPage() {
             <div className="fl-mp-name">태드 <span>Lv.12</span></div>
             <div className="fl-mp-stats">조획 47마리 · 출조 18회 · 리뷰 6</div>
           </div>
-          <button className="fl-mp-edit" aria-label="프로필 편집">→</button>
+          <button className="fl-mp-edit" aria-label="프로필 편집" onClick={() => router.push("/mypage/edit")}>→</button>
         </div>
         <div className="fl-mp-summary">
           <div>
@@ -98,6 +100,17 @@ export default function MyPage() {
             <div className="fl-empty-sub">새로운 활동을 시작해보세요</div>
           </div>
         )}
+      </div>
+
+      {/* 로그아웃 */}
+      <div style={{ padding: "20px 20px 40px", textAlign: "center" }}>
+        <button
+          className="fl-mp-btn"
+          style={{ background: "rgba(248,113,113,0.07)", borderColor: "rgba(248,113,113,0.25)", color: "#f87171", padding: "10px 28px", fontSize: 13 }}
+          onClick={() => alert("로그아웃 처리됩니다")}
+        >
+          로그아웃
+        </button>
       </div>
     </>
   );

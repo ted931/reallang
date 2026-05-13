@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DUMMY_RESERVATIONS } from "@/lib/dummy-reservations";
 
 // 낚시 일지 더미 데이터
@@ -61,6 +62,7 @@ const STATS = {
 };
 
 export default function LogbookPage() {
+  const router = useRouter();
   const [tab, setTab] = useState<"log" | "stats">("log");
 
   // 어종 집계
@@ -98,7 +100,7 @@ export default function LogbookPage() {
             const totalFish = log.fish.reduce((a, f) => a + f.count, 0);
             const bigFish = log.fish.reduce((a, f) => (f.size > a ? f.size : a), 0);
             return (
-              <div key={log.id} className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5">
+              <div key={log.id} className="rounded-2xl border border-ocean-800 bg-ocean-900 p-5 cursor-pointer" onClick={() => router.push(`/logbook/${log.id}`)}>
                 {/* 날짜 + 기분 */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-sm font-black text-ocean-50">{log.date}</div>

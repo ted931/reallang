@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const FISH_OPTIONS = ["갈치", "감성돔", "참돔", "벵에돔", "볼락", "광어", "방어", "한치", "참치", "쥐치", "농어", "고등어", "직접입력"];
 const WEATHER_OPTIONS = ["☀️ 맑음", "⛅ 흐림", "🌧️ 비", "💨 강풍", "🌫️ 안개"];
@@ -12,6 +13,7 @@ const TIDE_OPTIONS = ["1물", "2물", "3물", "4물", "5물", "6물", "7물", "8
 interface FishEntry { name: string; count: string; size: string; }
 
 export default function LogbookWritePage() {
+  const router = useRouter();
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [location, setLocation] = useState("");
   const [weather, setWeather] = useState("☀️ 맑음");
@@ -209,6 +211,11 @@ export default function LogbookWritePage() {
           📓 일지 저장하기
         </button>
         {!canSubmit && <p style={{ fontSize: 12, color: "var(--text-dim)", textAlign: "center", marginTop: 8 }}>장소를 입력해 주세요</p>}
+        <button
+          onClick={() => router.back()}
+          style={{ width: "100%", marginTop: 10, padding: "12px", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--ocean-700)", borderRadius: 14, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+          취소
+        </button>
       </div>
     </div>
   );

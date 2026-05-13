@@ -88,10 +88,12 @@ export default function MapClient() {
   const [showProhibited, setShowProhibited] = useState(false);
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
   const [hoveredPin, setHoveredPin] = useState<number | null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<number | null>(null);
   const svgContainerRef = useRef<HTMLDivElement>(null);
 
   const activeZone = PROHIBITED_ZONES.find(z => z.id === selectedZone);
   const hoveredCatch = RECENT_CATCHES.find(c => c.id === hoveredPin);
+  const activePoint = DUMMY_POINTS.find(p => p.id === selectedPoint);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -214,9 +216,10 @@ export default function MapClient() {
               {DUMMY_POINTS.map((point) => {
                 const { x, y } = toSVG(point.lat, point.lng);
                 const color = MARKER_COLORS[point.spotType] ?? "#2485be";
+                const isSelected = selectedPoint === point.id;
                 return (
-                  <g key={point.id} style={{ cursor: "pointer" }}>
-                    <circle cx={x} cy={y} r="7" fill={color} opacity="0.8" stroke="white" strokeWidth="0.8" />
+                  <g key={point.id} style={{ cursor: "pointer" }} onClick={() => setSelectedPoint(isSelected ? null : point.id)}>
+                    <circle cx={x} cy={y} r={isSelected ? 10 : 7} fill={color} opacity="0.9" stroke="white" strokeWidth={isSelected ? 2 : 0.8} />
                     <text x={x} y={y + 14} textAnchor="middle" fill="white" fontSize="6" fontFamily="sans-serif" opacity="0.85">
                       {point.name.replace(/\s.+/, "").slice(0, 4)}
                     </text>
@@ -267,6 +270,28 @@ export default function MapClient() {
 
         {/* 우측 패널 */}
         <div className="space-y-3">
+          {/* 선택된 포인트 상세 */}
+          {activePoint && (
+            <div className="rounded-xl border p-4" style={{ borderColor: MARKER_COLORS[activePoint.spotType] + "66", background: MARKER_COLORS[activePoint.spotType] + "11" }}>
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="text-[10px] font-bold px-2 py-0.5 rounded-full border inline-block mb-1"
+                    style={{ color: MARKER_COLORS[activePoint.spotType], borderColor: MARKER_COLORS[activePoint.spotType] + "55", background: MARKER_COLORS[activePoint.spotType] + "22" }}>
+                    {SPOT_TYPE_ICON[activePoint.spotType]} {activePoint.spotType}
+                  </div>
+                  <h3 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>{activePoint.name}</h3>
+                  <p className="text-xs mt-0.5" style={{ color: "var(--text-dim)" }}>{activePoint.region} · 난이도: {activePoint.difficulty}</p>
+                </div>
+                <button onClick={() => setSelectedPoint(null)} className="text-xs" style={{ color: "var(--text-dim)" }}>✕</button>
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {activePoint.targetFish.map((f) => <FishBadge key={f} name={f} />)}
+              </div>
+              <p className="text-xs" style={{ color: "var(--text-dim)" }}>{activePoint.description}</p>
+              <div className="mt-2 text-xs font-bold" style={{ color: "#2dd4bf" }}>최근 7일 조황 {activePoint.recentCatchCount}건</div>
+            </div>
+          )}
+
           {/* 선택된 금지구역 상세 */}
           {showProhibited && activeZone && (
             <div className="rounded-xl border border-rose-300 bg-rose-50 p-4">
@@ -306,7 +331,7 @@ export default function MapClient() {
           <div className="space-y-3 max-h-[400px] lg:max-h-none overflow-y-auto">
             <h2 className="text-sm font-bold sticky top-0 py-1" style={{ color: "var(--text-strong)", background: "var(--ocean-950)" }}>포인트 목록 (조황순)</h2>
             {[...DUMMY_POINTS].sort((a, b) => b.recentCatchCount - a.recentCatchCount).map((point, i) => (
-              <div key={point.id} className="rounded-xl border border-ocean-800 bg-ocean-900 p-3 hover:border-ocean-600 transition-colors cursor-pointer">
+              <div key={point.id} className="rounded-xl border border-ocean-800 bg-ocean-900 p-3 hover:border-ocean-600 transition-colors cursor-pointer" onClick={() => setSelectedPoint(selectedPoint === point.id ? null : point.id)}>
                 <div className="flex items-start gap-2 mb-2">
                   <span className="text-lg">{SPOT_TYPE_ICON[point.spotType]}</span>
                   <div className="flex-1 min-w-0">

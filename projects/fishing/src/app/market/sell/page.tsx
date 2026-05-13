@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MARKET_CATEGORY_LABEL, MARKET_CATEGORY_ICON, type MarketCategory } from "@/lib/dummy-market";
 
 const CATEGORIES: MarketCategory[] = ["rod", "reel", "lure", "line", "hook", "box", "wear", "etc"];
@@ -46,6 +47,7 @@ async function convertToWebP(file: File): Promise<{ dataUrl: string; webpSize: n
 interface PhotoItem { id: string; dataUrl: string; webpSize: number; originalSize: number; }
 
 export default function MarketSellPage() {
+  const router = useRouter();
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [converting, setConverting] = useState(false);
   const [title, setTitle] = useState("");
@@ -237,6 +239,11 @@ export default function MarketSellPage() {
               {!photos.length ? "사진" : !title.trim() ? "제목" : !category ? "카테고리" : !condition ? "상품상태" : !price ? "가격" : !region ? "지역" : "거래방식"}을 입력해주세요
             </p>
           )}
+          <button
+            onClick={() => router.back()}
+            className="w-full mt-2 py-3 font-bold text-sm rounded-2xl border border-ocean-700 text-slate-500 hover:text-slate-300 transition-colors bg-transparent">
+            취소
+          </button>
         </div>
       </div>
     </div>

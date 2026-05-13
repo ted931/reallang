@@ -175,7 +175,7 @@ export default function CommunityPage() {
       </div>
 
       {/* FAB */}
-      <Link href="/community/new" className="fl-cm-fab">
+      <Link href="/community/write" className="fl-cm-fab">
         ✏ 글쓰기
       </Link>
     </>

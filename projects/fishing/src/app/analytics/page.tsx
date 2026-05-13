@@ -34,8 +34,19 @@ const BADGES = [
 // May 2026 calendar — days with catches
 const MAY_CATCHES = new Set([2, 4, 5, 9, 11, 14, 16, 17, 22, 23, 25, 28, 30]);
 
+const PERIODS = ["1개월", "3개월", "6개월", "1년", "전체"] as const;
+type Period = typeof PERIODS[number];
+
+const FISH_TABS = FISH_STATS.map((f) => f.name);
+
 export default function AnalyticsPage() {
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>("전체");
+  const [selectedFish, setSelectedFish] = useState<string>("전체");
   const maxBar = Math.max(...MONTHLY_DATA.map((d) => d.count));
+
+  const filteredFishStats = selectedFish === "전체"
+    ? FISH_STATS
+    : FISH_STATS.filter((f) => f.name === selectedFish);
 
   // Build May 2026 calendar grid (1st = Friday → offset 5)
   const firstDayOffset = 5; // 0=Mon … 6=Sun (May 1, 2026 = Friday)
@@ -63,6 +74,40 @@ export default function AnalyticsPage() {
           <path d="M0,60 C70,50 140,75 210,62 C280,48 340,68 400,58 L400,80 L0,80 Z" />
         </svg>
       </section>
+
+      {/* 기간 필터 */}
+      <div style={{ display: "flex", gap: 6, padding: "16px 20px 0", overflowX: "auto", scrollbarWidth: "none" }}>
+        {PERIODS.map((p) => (
+          <button
+            key={p}
+            onClick={() => setSelectedPeriod(p)}
+            style={{
+              flexShrink: 0, padding: "6px 14px", borderRadius: 99,
+              fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              background: selectedPeriod === p ? "var(--hook)" : "var(--tint-06)",
+              color: selectedPeriod === p ? "var(--ocean-950)" : "var(--text-dim)",
+              border: selectedPeriod === p ? "none" : "1px solid var(--line)",
+            }}
+          >{p}</button>
+        ))}
+      </div>
+
+      {/* 어종 탭 */}
+      <div style={{ display: "flex", gap: 6, padding: "10px 20px 0", overflowX: "auto", scrollbarWidth: "none" }}>
+        {["전체", ...FISH_TABS].map((f) => (
+          <button
+            key={f}
+            onClick={() => setSelectedFish(f)}
+            style={{
+              flexShrink: 0, padding: "6px 14px", borderRadius: 99,
+              fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              background: selectedFish === f ? "var(--ocean-900)" : "transparent",
+              color: selectedFish === f ? "var(--text-strong)" : "var(--text-dim)",
+              border: selectedFish === f ? "1px solid var(--line-2)" : "1px solid transparent",
+            }}
+          >{f}</button>
+        ))}
+      </div>
 
       <style>{`
         @media (min-width: 768px) {
@@ -175,7 +220,7 @@ export default function AnalyticsPage() {
             scrollbarWidth: "none", marginBottom: 16,
           }}
         >
-          {FISH_STATS.map((f) => (
+          {filteredFishStats.map((f) => (
             <div key={f.name} style={{
               flexShrink: 0, width: 140,
               background: "var(--ocean-900)", border: "1px solid var(--line-2)",

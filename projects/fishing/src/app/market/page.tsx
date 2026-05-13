@@ -59,6 +59,19 @@ function AlbumIcon() {
 
 type MarketItem = typeof DUMMY_MARKET[0];
 
+function FollowButton() {
+  const [following, setFollowing] = useState(false);
+  return (
+    <button
+      className="fl-mk-seller-fol"
+      onClick={() => setFollowing(v => !v)}
+      style={following ? { background: 'rgba(96,165,250,0.15)', borderColor: 'rgba(96,165,250,0.4)', color: '#60a5fa' } : undefined}
+    >
+      {following ? "팔로잉" : "팔로우"}
+    </button>
+  );
+}
+
 function SectionHeader({ kicker, title, subtitle, accent }: {
   kicker: string; title: string; subtitle: string; accent?: string;
 }) {
@@ -137,6 +150,7 @@ function MarketCard({ it, onOpen }: { it: MarketItem; onOpen: (it: MarketItem) =
 }
 
 function MarketDetail({ it, onClose }: { it: MarketItem; onClose: () => void }) {
+  const [liked, setLiked] = useState(false);
   const catMeta = CATS_META[it.category] ?? CATS_META.etc;
   const cond = CONDITION_LABEL[it.condition];
   const off = Math.round((1 - it.price / it.originalPrice) * 100);
@@ -171,7 +185,7 @@ function MarketDetail({ it, onClose }: { it: MarketItem; onClose: () => void }) 
             <div className="fl-mk-seller-name">{it.sellerName}</div>
             <div className="fl-mk-seller-sub">매너온도 36.5° · 거래 12회</div>
           </div>
-          <button className="fl-mk-seller-fol">팔로우</button>
+          <FollowButton />
         </div>
 
         <div className="fl-mk-detail-desc">
@@ -198,7 +212,9 @@ function MarketDetail({ it, onClose }: { it: MarketItem; onClose: () => void }) 
       </div>
 
       <div className="fl-mk-bottom-bar">
-        <button className="fl-mk-fav-btn"><span>♡</span></button>
+        <button className="fl-mk-fav-btn" onClick={() => setLiked(v => !v)} aria-label="찜하기">
+          <span style={{ color: liked ? '#f87171' : undefined }}>{liked ? '♥' : '♡'}</span>
+        </button>
         <div className="fl-mk-bottom-price">
           {off > 0 && (
             <div className="fl-mk-bottom-was">
@@ -207,7 +223,7 @@ function MarketDetail({ it, onClose }: { it: MarketItem; onClose: () => void }) 
           )}
           <div className="fl-mk-bottom-now">{it.price.toLocaleString()}<span>원</span></div>
         </div>
-        <button className="fl-mk-chat">채팅하기</button>
+        <button className="fl-mk-chat" onClick={() => alert(`${it.sellerName}에게 채팅을 요청합니다`)}>채팅하기</button>
       </div>
     </>
   );

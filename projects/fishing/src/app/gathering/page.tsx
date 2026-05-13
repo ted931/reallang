@@ -453,6 +453,7 @@ export default function GatheringPage() {
 
 function ClubCard({ club, idx }: { club: FishingClub; idx: number }) {
   const router = useRouter();
+  const [joined, setJoined] = useState(false);
   const full = club.memberCount >= club.maxMembers;
   const pct = Math.min((club.memberCount / club.maxMembers) * 100, 100);
   const spotsLeft = club.maxMembers - club.memberCount;
@@ -582,17 +583,28 @@ function ClubCard({ club, idx }: { club: FishingClub; idx: number }) {
         {/* 가입 신청 버튼 */}
         <button
           disabled={!club.openRecruiting}
-          onClick={e => { e.stopPropagation(); if (club.openRecruiting) router.push(`/gathering/${club.id}`); }}
+          onClick={e => {
+            e.stopPropagation();
+            if (club.openRecruiting) setJoined(v => !v);
+          }}
           style={{
             width: '100%', padding: '12px', borderRadius: 12, fontWeight: 800, fontSize: 14,
             border: 'none', cursor: club.openRecruiting ? 'pointer' : 'not-allowed',
-            background: club.openRecruiting ? 'var(--hook)' : 'var(--tint-08)',
-            color: club.openRecruiting ? 'white' : 'var(--text-mute)',
+            background: joined
+              ? 'rgba(134,239,172,0.15)'
+              : club.openRecruiting
+              ? 'var(--hook)'
+              : 'var(--tint-08)',
+            color: joined
+              ? '#86efac'
+              : club.openRecruiting
+              ? 'white'
+              : 'var(--text-mute)',
             opacity: club.openRecruiting ? 1 : 0.6,
             fontFamily: 'inherit', transition: 'background 0.15s',
           }}
         >
-          {club.openRecruiting ? "가입 신청하기 →" : "모집 마감"}
+          {!club.openRecruiting ? "모집 마감" : joined ? "✓ 신청 완료" : "가입 신청하기 →"}
         </button>
       </div>
     </article>

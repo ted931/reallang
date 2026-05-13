@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const CATEGORIES = ["조황", "자유", "질문", "장터", "후기"] as const;
 type Category = typeof CATEGORIES[number];
@@ -43,6 +44,7 @@ async function convertToWebP(file: File): Promise<{ dataUrl: string }> {
 }
 
 export default function CommunityWritePage() {
+  const router = useRouter();
   const [category, setCategory] = useState<Category | "">("");
   const [region, setRegion] = useState("전체");
   const [title, setTitle] = useState("");
@@ -194,6 +196,12 @@ export default function CommunityWritePage() {
               {!category ? "카테고리를" : title.trim().length < 2 ? "제목을 (2자 이상)" : "내용을 (10자 이상)"} 입력해주세요
             </p>
           )}
+          <button
+            onClick={() => router.back()}
+            className="w-full mt-2 py-3 font-bold text-sm rounded-2xl border border-ocean-700 bg-transparent hover:border-ocean-500 transition-colors"
+            style={{ color: 'var(--text-dim)' }}>
+            취소
+          </button>
         </div>
       </div>
     </div>

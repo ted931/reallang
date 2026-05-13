@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Category = "전체" | "미끼" | "채비·소품" | "장비" | "소모품";
 type DeliveryOption = "픽업 가능" | "당일 배달" | "전국 배송";
@@ -158,6 +159,7 @@ const OPTION_BADGE_STYLE: Record<string, React.CSSProperties> = {
 };
 
 export default function ShopPage() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<Category>("전체");
   const [activeDelivery, setActiveDelivery] = useState<DeliveryOption | null>(null);
   const [cart, setCart] = useState<Record<number, number>>({});
@@ -473,24 +475,23 @@ export default function ShopPage() {
           </div>
           <div style={{ fontSize: 12, color: "var(--text-dim)" }}>상품 올리고 주문 받기</div>
         </div>
-        <Link href="/biz">
-          <button
-            style={{
-              fontFamily: "inherit",
-              flexShrink: 0,
-              padding: "8px 16px",
-              borderRadius: "var(--r-sm, 10px)",
-              border: "1px solid var(--hook)",
-              background: "transparent",
-              color: "var(--hook)",
-              fontWeight: 700,
-              fontSize: 13,
-              cursor: "pointer",
-            }}
-          >
-            입점 신청 →
-          </button>
-        </Link>
+        <button
+          onClick={() => router.push("/biz")}
+          style={{
+            fontFamily: "inherit",
+            flexShrink: 0,
+            padding: "8px 16px",
+            borderRadius: "var(--r-sm, 10px)",
+            border: "1px solid var(--hook)",
+            background: "transparent",
+            color: "var(--hook)",
+            fontWeight: 700,
+            fontSize: 13,
+            cursor: "pointer",
+          }}
+        >
+          입점 신청 →
+        </button>
       </div>
 
       {/* 장바구니 플로팅 버튼 */}
