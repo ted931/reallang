@@ -90,12 +90,12 @@ export default function SideNav() {
   return (
     <aside className="fl-side-nav">
       <Link href="/" className="fl-side-brand">
-        <svg width="44" height="44" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-          <g transform="rotate(-8 30 30)">
-            <circle cx="30" cy="30" r="26" fill="#dc2626"/>
-            <circle cx="30" cy="30" r="23" fill="none" stroke="#fff" strokeWidth="2"/>
-            <text x="30" y="37" textAnchor="middle" fontFamily="'Noto Sans KR',system-ui" fontWeight="900" fontSize="20" letterSpacing="-1" fill="#fff">퐁당</text>
-          </g>
+        <svg width="40" height="36" viewBox="0 0 46 42" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="13" cy="32" rx="11" ry="3.5" fill="#5fa3cf" opacity="0.4"/>
+          <circle cx="13" cy="14" r="10" fill="#fbbf24"/>
+          <circle cx="10" cy="11" r="2.4" fill="#fff" opacity="0.85"/>
+          <path d="M28 18 Q 36 10 42 18 Q 38 22 32 22 Q 28 22 28 18 Z" fill="#1e6595"/>
+          <path d="M42 18 L 46 14 L 46 22 Z" fill="#1e6595"/>
         </svg>
         <div>
           <div className="fl-logo-1">퐁당</div>
