@@ -78,7 +78,7 @@ export default function ChallengesPage() {
         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-strong)', marginBottom: 14 }}>
           🏅 뱃지 월드
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+        <div className="fl-badge-grid">
           {CHALLENGES.map(c => (
             <div key={c.id} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
@@ -252,6 +252,25 @@ export default function ChallengesPage() {
           </div>
         </div>
       </section>
+      <style>{`
+        /* 뱃지 그리드: 모바일 2열 → PC 4열 */
+        .fl-badge-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+          overflow-x: hidden;
+        }
+        @media (min-width: 480px) {
+          .fl-badge-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        @media (min-width: 768px) {
+          .fl-badge-grid {
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+      `}</style>
     </div>
   );
 }

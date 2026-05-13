@@ -55,6 +55,62 @@ export default function CommunityPage() {
 
   return (
     <>
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-cm-pc-wrap {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+          }
+          .fl-cm-hero {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 24px;
+            padding-right: 24px;
+            padding-top: 40px;
+            padding-bottom: 24px;
+          }
+          .fl-cm-search {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .fl-cm-tabs {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .fl-cm-list {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 24px 80px !important;
+          }
+          .fl-cm-hot {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .fl-cm-hot-label {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 24px !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          .fl-cm-list {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+        }
+      `}</style>
+
       {/* Hero */}
       <div className="fl-cm-hero">
         <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1px", color: "#5fa3cf", marginBottom: 6 }}>COMMUNITY</div>
@@ -96,11 +152,11 @@ export default function CommunityPage() {
       {/* HOT section — only when all */}
       {activeCat === "all" && !search && (
         <>
-          <div style={{ padding: "0 20px 10px", fontSize: 11, fontWeight: 800, color: "#f87171", letterSpacing: "0.5px" }}>
+          <div className="fl-cm-hot-label" style={{ padding: "0 20px 10px", fontSize: 11, fontWeight: 800, color: "#f87171", letterSpacing: "0.5px" }}>
             🔥 HOT POSTS
           </div>
           <div className="fl-cm-hot">
-            {hotPosts.map((post, idx) => (
+            {hotPosts.map((post) => (
               <Link key={post.id} href={`/community/${post.id}`} className="fl-cm-hot-card">
                 <div
                   className="fl-cm-hot-rank"
@@ -126,7 +182,7 @@ export default function CommunityPage() {
       {/* Post list */}
       <div className="fl-cm-list">
         {filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "40px 0", color: "var(--text-dim)", fontSize: 14 }}>
+          <div style={{ textAlign: "center", padding: "40px 0", color: "var(--text-dim)", fontSize: 14, gridColumn: "1 / -1" }}>
             검색 결과가 없습니다
           </div>
         ) : (

@@ -200,7 +200,7 @@ export default function ShopPage() {
               "repeating-linear-gradient(45deg, var(--hook) 0px, var(--hook) 1px, transparent 1px, transparent 50px)",
           }}
         />
-        <div style={{ position: "relative", maxWidth: 600, margin: "0 auto" }}>
+        <div style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}>
           <div
             style={{
               display: "inline-flex",
@@ -245,7 +245,7 @@ export default function ShopPage() {
 
       {/* 카테고리 탭 */}
       <div
-        className="fl-cm-tabs"
+        className="fl-cm-tabs fl-shop-pc-wrap"
         style={{
           display: "flex",
           gap: 6,
@@ -280,7 +280,7 @@ export default function ShopPage() {
 
       {/* 배달 옵션 칩 */}
       <div
-        className="fl-chips"
+        className="fl-chips fl-shop-pc-wrap"
         style={{ display: "flex", gap: 8, padding: "10px 20px 16px", overflowX: "auto", scrollbarWidth: "none" }}
       >
         {DELIVERY_OPTIONS.map((opt) => (
@@ -313,7 +313,9 @@ export default function ShopPage() {
       {/* 상품 그리드 */}
       <style>{`
         @media (min-width: 768px) {
-          .shop-grid { grid-template-columns: repeat(4, 1fr) !important; max-width: 960px; margin-left: auto; margin-right: auto; }
+          .fl-shop-pc-wrap { max-width: 960px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+          .shop-grid { grid-template-columns: repeat(4, 1fr) !important; max-width: 960px; margin-left: auto; margin-right: auto; padding-left: 24px !important; padding-right: 24px !important; }
+          .fl-shop-bottom-wrap { max-width: 960px; margin-left: auto; margin-right: auto; }
         }
       `}</style>
       <div
@@ -457,6 +459,7 @@ export default function ShopPage() {
 
       {/* 하단 낚시점 입점 안내 */}
       <div
+        className="fl-shop-bottom-wrap"
         style={{
           margin: "0 16px 32px",
           padding: "16px 20px",

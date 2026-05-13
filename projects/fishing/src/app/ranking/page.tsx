@@ -146,7 +146,7 @@ function CatchPodium() {
   const podiumHeights = [80, 110, 65]; // 2위, 1위, 3위 높이
 
   return (
-    <div style={{
+    <div className="fl-rk-catch-podium-wrap" style={{
       display: "flex", alignItems: "flex-end", justifyContent: "center",
       gap: 8, padding: "0 16px 20px",
     }}>
@@ -169,7 +169,7 @@ function CatchPodium() {
               textAlign: "center",
               boxShadow: isFirst ? `0 4px 20px ${color}40` : undefined,
             }}>
-              <div style={{ fontSize: isFirst ? 28 : 22, marginBottom: 4 }}>{p.avatar}</div>
+              <div className={isFirst ? "podium-avatar-1" : "podium-avatar-other"} style={{ fontSize: isFirst ? 28 : 22, marginBottom: 4 }}>{p.avatar}</div>
               <div style={{
                 fontSize: 11, fontWeight: 800,
                 color: "var(--text-strong)",
@@ -571,7 +571,7 @@ export default function RankingPage() {
 
         {/* ── 전체 탭 ── */}
         {mainTab === "전체" && (
-          <>
+          <div className="fl-rk-myrank-list">
             {/* 내 순위 카드 */}
             <MyRankCard />
 
@@ -592,7 +592,7 @@ export default function RankingPage() {
               </div>
               {FULL_RANKING.map(item => <RankRow key={item.rank} item={item} />)}
             </div>
-          </>
+          </div>
         )}
 
         {/* ── 어종별 탭 ── */}
@@ -743,6 +743,7 @@ export default function RankingPage() {
           max-width: 960px;
           margin: 0 auto;
           width: 100%;
+          overflow-x: hidden;
         }
 
         /* HOT 좌대 + 포인트 그리드: 모바일 1열 → PC 2열 */
@@ -764,6 +765,55 @@ export default function RankingPage() {
         @media (min-width: 768px) {
           .fl-rk-fish-big-grid {
             grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        /* 전체/어종별 랭킹 목록: PC에서 2컬럼 카드 그리드 */
+        .fl-rk-list-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .fl-rk-list-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 16px;
+          }
+          .fl-rk-list-grid > div {
+            margin: 0 !important;
+          }
+        }
+
+        /* 포디움: PC에서 더 크게 */
+        @media (min-width: 768px) {
+          .fl-rk-catch-podium-wrap {
+            padding: 0 40px 28px;
+          }
+          .fl-rk-catch-podium-wrap .podium-avatar-1 {
+            font-size: 40px !important;
+          }
+          .fl-rk-catch-podium-wrap .podium-avatar-other {
+            font-size: 32px !important;
+          }
+        }
+
+        /* 내 순위 카드 + 랭킹 박스: PC에서 나란히 */
+        .fl-rk-myrank-list {
+          display: block;
+        }
+        @media (min-width: 768px) {
+          .fl-rk-myrank-list {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 12px;
+            padding: 0 16px;
+            align-items: start;
+          }
+          .fl-rk-myrank-list > *:first-child {
+            margin: 0 !important;
+          }
+          .fl-rk-myrank-list > *:last-child {
+            margin: 0 !important;
           }
         }
       `}</style>

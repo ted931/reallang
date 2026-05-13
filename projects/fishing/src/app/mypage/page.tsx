@@ -43,6 +43,48 @@ export default function MyPage() {
 
   return (
     <>
+      <style>{`
+        @media (min-width: 768px) {
+          .fl-mp-pc-outer {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+          }
+          .fl-mp-hero {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .fl-tabs {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .fl-mp-pc-body {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            padding: 0 24px 60px;
+            align-items: start;
+          }
+          .fl-mp-pc-sidebar {
+            display: block;
+          }
+          .fl-mp-list {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .fl-mp-logout {
+            padding: 20px 24px 40px;
+            max-width: 960px;
+            margin: 0 auto;
+            text-align: center;
+          }
+        }
+      `}</style>
+
       {/* 프로필 히어로 */}
       <section className="fl-mp-hero">
         <div className="fl-mp-prof">
@@ -90,20 +132,79 @@ export default function MyPage() {
         ))}
       </div>
 
-      {/* 예약 목록 */}
-      <div className="fl-mp-list">
-        {displayed.length > 0 ? (
-          displayed.map((r) => <ReserveCard key={r.id} r={r} />)
-        ) : (
-          <div className="fl-empty">
-            <div className="fl-empty-title">표시할 항목이 없어요</div>
-            <div className="fl-empty-sub">새로운 활동을 시작해보세요</div>
+      {/* PC 2컬럼 바디: 사이드바(좌) + 예약목록(우) */}
+      <div className="fl-mp-pc-body">
+        {/* 좌: 요약 사이드바 (PC에서만 노출) */}
+        <aside
+          className="fl-mp-pc-sidebar"
+          style={{
+            display: "none",
+            background: "var(--tint-04)",
+            border: "1px solid var(--line)",
+            borderRadius: "var(--r-card, 16px)",
+            padding: "20px",
+          }}
+        >
+          <div style={{ fontSize: 11, fontWeight: 800, color: "var(--text-dim)", letterSpacing: "0.5px", marginBottom: 14 }}>
+            계정 요약
           </div>
-        )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>에스크로 보관</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>{escrowItems.length}건</span>
+            </div>
+            <div style={{ height: 1, background: "var(--line)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>보관 금액</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>
+                {totalEscrow >= 10000 ? `${Math.round(totalEscrow / 1000)}K` : `${totalEscrow.toLocaleString()}원`}
+              </span>
+            </div>
+            <div style={{ height: 1, background: "var(--line)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>예정 출조</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>
+                {DUMMY_RESERVATIONS.filter((r) => r.escrowStatus !== "completed" && r.escrowStatus !== "cancelled" && r.escrowStatus !== "refunded").length}회
+              </span>
+            </div>
+            <div style={{ height: 1, background: "var(--line)" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>조획</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>47마리</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>출조 횟수</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>18회</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "var(--text-dim)" }}>리뷰</span>
+              <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text-strong)" }}>6개</span>
+            </div>
+          </div>
+          <button
+            className="fl-mp-btn"
+            style={{ marginTop: 20, width: "100%", background: "rgba(248,113,113,0.07)", borderColor: "rgba(248,113,113,0.25)", color: "#f87171", padding: "10px 0", fontSize: 13 }}
+            onClick={() => alert("로그아웃 처리됩니다")}
+          >
+            로그아웃
+          </button>
+        </aside>
+
+        {/* 우: 예약 목록 */}
+        <div className="fl-mp-list">
+          {displayed.length > 0 ? (
+            displayed.map((r) => <ReserveCard key={r.id} r={r} />)
+          ) : (
+            <div className="fl-empty">
+              <div className="fl-empty-title">표시할 항목이 없어요</div>
+              <div className="fl-empty-sub">새로운 활동을 시작해보세요</div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* 로그아웃 */}
-      <div style={{ padding: "20px 20px 40px", textAlign: "center" }}>
+      {/* 로그아웃 (모바일 전용) */}
+      <div className="fl-mp-logout" style={{ padding: "20px 20px 40px", textAlign: "center" }}>
         <button
           className="fl-mp-btn"
           style={{ background: "rgba(248,113,113,0.07)", borderColor: "rgba(248,113,113,0.25)", color: "#f87171", padding: "10px 28px", fontSize: 13 }}

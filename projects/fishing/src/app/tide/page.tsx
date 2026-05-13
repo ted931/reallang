@@ -144,19 +144,24 @@ export default function TidePage() {
         })}
       </div>
 
-      <SectionHeader kicker="TIDE GRAPH" title="조석 예보" subtitle={`${cur.date} 만조·간조 그래프`} accent="#5fa3cf" />
-      <TideWaveSVG />
-
-      <SectionHeader kicker="WEATHER" title="기상 정보" subtitle="출조 컨디션 한눈에 확인" accent="#5fa3cf" />
-      <div className="fl-tide-weather">
-        {WEATHER_STATIC.map(w => (
-          <div key={w.k} className="fl-tide-wx">
-            <div className="fl-tide-wx-icon">{w.icon}</div>
-            <div className="fl-tide-wx-l">{w.l}</div>
-            <div className="fl-tide-wx-v">{w.v}</div>
-            <div className="fl-tide-wx-s">{w.s}</div>
+      <div className="fl-tide-pc-grid">
+        <div>
+          <SectionHeader kicker="TIDE GRAPH" title="조석 예보" subtitle={`${cur.date} 만조·간조 그래프`} accent="#5fa3cf" />
+          <TideWaveSVG />
+        </div>
+        <div>
+          <SectionHeader kicker="WEATHER" title="기상 정보" subtitle="출조 컨디션 한눈에 확인" accent="#5fa3cf" />
+          <div className="fl-tide-weather">
+            {WEATHER_STATIC.map(w => (
+              <div key={w.k} className="fl-tide-wx">
+                <div className="fl-tide-wx-icon">{w.icon}</div>
+                <div className="fl-tide-wx-l">{w.l}</div>
+                <div className="fl-tide-wx-v">{w.v}</div>
+                <div className="fl-tide-wx-s">{w.s}</div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
 
       <SectionHeader kicker="JWAEDAE" title="이 날 좌대 추천" subtitle="물때와 잘 맞는 좌대" accent="#fbbf24" />
@@ -179,6 +184,71 @@ export default function TidePage() {
         ))}
       </div>
       <div style={{ height: 32 }} />
+
+      <style>{`
+        /* tide: 콘텐츠 maxWidth + 중앙정렬 */
+        .fl-tide-hero,
+        .fl-tide-dates,
+        .fl-sec-head,
+        .fl-tide-wave-wrap,
+        .fl-carousel {
+          /* 개별 섹션은 그대로, 래퍼로 감싸지 않으므로 각 요소는 현상 유지 */
+        }
+
+        /* 날씨 그리드: 모바일 wrap → PC 2컬럼 레이아웃 */
+        .fl-tide-weather {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 12px 20px;
+          max-width: 960px;
+          margin: 0 auto;
+          box-sizing: border-box;
+        }
+        .fl-tide-wx {
+          flex: 1 1 calc(33.333% - 10px);
+          min-width: 100px;
+          box-sizing: border-box;
+        }
+
+        /* PC: 날씨 정보 + 물때 그래프 2컬럼 */
+        .fl-tide-pc-grid {
+          display: block;
+          max-width: 960px;
+          margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+          .fl-tide-pc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            align-items: start;
+            padding: 0 20px;
+          }
+          .fl-tide-weather {
+            padding: 12px 0;
+          }
+          .fl-tide-wx {
+            flex: 1 1 calc(50% - 10px);
+          }
+          .fl-tide-wave-wrap {
+            margin: 0 !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          .fl-tide-wx {
+            flex: 1 1 calc(33.333% - 10px);
+          }
+        }
+
+        /* 날짜 탭: 모바일 overflow-x 방지 */
+        .fl-tide-dates {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .fl-tide-dates::-webkit-scrollbar { display: none; }
+      `}</style>
     </>
   );
 }
