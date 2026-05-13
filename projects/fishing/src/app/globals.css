@@ -583,8 +583,15 @@ html, body {
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 .fl-chip.on {
-  background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4);
+  background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.45);
   color: var(--hook-300);
+}
+[data-theme="coastal"] .fl-chip {
+  background: var(--ocean-900); border-color: var(--line-2);
+}
+[data-theme="coastal"] .fl-chip.on {
+  background: var(--ocean-500); border-color: var(--ocean-400);
+  color: #fff;
 }
 .fl-sort { display: flex; gap: 4px; flex-wrap: wrap; }
 .fl-sort-btn {
@@ -623,8 +630,8 @@ html, body {
 .fl-jw-hero-inner { position: relative; z-index: 2; }
 .fl-catch-hero-kicker {
   display: inline-block; font-size: 11px; font-weight: 800;
-  letter-spacing: 2px; margin-bottom: 6px; opacity: 0.9;
-  color: rgba(255,255,255,0.65);
+  letter-spacing: 2px; margin-bottom: 6px;
+  color: var(--hook);
 }
 .fl-catch-hero-title {
   font-size: 26px; font-weight: 800; letter-spacing: -0.7px;
@@ -962,9 +969,9 @@ html, body {
 .fl-catch-hero-inner { position: relative; z-index: 2; }
 .fl-catch-hero-meta {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--ocean-200);
-  background: var(--tint-06); padding: 6px 12px;
-  border-radius: 999px; border: 1px solid var(--line-2);
+  font-size: 12px; color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.1); padding: 6px 12px;
+  border-radius: 999px; border: 1px solid rgba(255,255,255,0.15);
 }
 .fl-cond-sep {
   width: 1px; height: 12px; background: var(--tint-15); display: inline-block;
