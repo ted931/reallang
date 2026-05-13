@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import Link from "next/link";
 
 type MatchStatus = '모집중' | '마감임박' | '마감';
 
@@ -257,9 +258,9 @@ function MatchCard({ post }: { post: MatchPost }) {
   const closed = post.status === '마감';
   const lvlKey = post.authorLevel.split(' ')[1] ?? '중급';
   const lvlStyle = LEVEL_BADGE[lvlKey] ?? LEVEL_BADGE['중급'];
-  const [applied, setApplied] = useState(false);
 
   return (
+    <Link href={`/match/${post.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
     <article
       style={{
         background: 'var(--tint-04)',
@@ -270,6 +271,8 @@ function MatchCard({ post }: { post: MatchPost }) {
         filter: closed ? 'grayscale(0.4)' : 'none',
         position: 'relative',
         overflow: 'hidden',
+        cursor: 'pointer',
+        transition: 'border-color 0.15s',
       }}
     >
       {/* 상단: D-day 배지 + 마감여부 */}
@@ -351,28 +354,25 @@ function MatchCard({ post }: { post: MatchPost }) {
         <div style={{ flex: 1 }}>
           <ProgressBar taken={post.takenSlots} total={post.totalSlots} status={post.status} />
         </div>
-        <button
-          disabled={closed}
-          onClick={() => !closed && setApplied((v) => !v)}
+        <span
           style={{
             padding: '0 18px',
             minHeight: 44,
             borderRadius: 'var(--r-sm)',
-            background: closed ? 'var(--tint-08)' : applied ? '#22c55e' : 'var(--hook)',
+            background: closed ? 'var(--tint-08)' : 'var(--hook)',
             color: closed ? 'var(--text-mute)' : 'var(--ocean-950, #0a1628)',
             fontWeight: 700,
             fontSize: '0.8rem',
-            border: 'none',
-            cursor: closed ? 'not-allowed' : 'pointer',
             whiteSpace: 'nowrap',
-            fontFamily: 'inherit',
-            transition: 'background 0.2s',
+            display: 'inline-flex',
+            alignItems: 'center',
           }}
         >
-          {closed ? '마감' : applied ? '✓ 신청완료' : '참여 신청'}
-        </button>
+          {closed ? '마감' : '자세히 →'}
+        </span>
       </div>
     </article>
+    </Link>
   );
 }
 
