@@ -11,7 +11,6 @@ const GROUPS = [
       { href: '/', label: '홈', emoji: '🏠' },
       { href: '/explore', label: '탐색', emoji: '🔍' },
       { href: '/shop/sunset-cafe-a1b2c3', label: '가게 상세', emoji: '🏪' },
-      { href: '/rentcar', label: '렌터카', emoji: '🚗' },
     ],
   },
   {
