@@ -40,6 +40,8 @@
     "build:party": "npm run build -w jeju-party",
     "dev:fishing": "npm run dev -w fishing",
     "build:fishing": "npm run build -w fishing",
+    "dev:travel-pick": "npm run dev -w travel-pick",
+    "build:travel-pick": "npm run build -w travel-pick",
     "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather & npm run dev:travel & npm run dev:course & npm run dev:dashboard & npm run dev:chatbot"
   }
 }

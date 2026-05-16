@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jeju-50:  var(--jeju-50);
+  --color-jeju-100: var(--jeju-100);
+  --color-jeju-200: var(--jeju-200);
+  --color-jeju-300: var(--jeju-300);
+  --color-jeju-400: var(--jeju-400);
+  --color-jeju-500: var(--jeju-500);
+  --color-jeju-600: var(--jeju-600);
+  --color-jeju-700: var(--jeju-700);
+  --color-jeju-800: var(--jeju-800);
+  --color-jeju-900: var(--jeju-900);
+  --color-accent:   var(--accent);
+}
+
+:root {
+  --jeju-50:  #f0faf7;
+  --jeju-100: #d9f2eb;
+  --jeju-200: #b4e5d7;
+  --jeju-300: #80cfb9;
+  --jeju-400: #4db39b;
+  --jeju-500: #2a9a82;
+  --jeju-600: #1e7d6a;
+  --jeju-700: #196457;
+  --jeju-800: #165047;
+  --jeju-900: #11403a;
+  --accent: #e94e3b;
+  --text: #1c3a33;
+  --text-dim: #4a7268;
+  --text-mute: #8aada7;
+  --bg: #f8fdfb;
+  --bg-card: #ffffff;
+  --line: rgba(28,58,51,0.08);
+  --r: 16px;
+}
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  font-family: 'Noto Sans KR', -apple-system, system-ui, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+* { box-sizing: border-box; }
+
+.page { min-height: 100dvh; }
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+}
+
+.btn-primary {
+  background: var(--jeju-500);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--jeju-600); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition: border-color 0.15s;
+}
+.btn-ghost:hover { border-color: var(--jeju-400); color: var(--jeju-600); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--jeju-100);
+  color: var(--jeju-700);
+}
+
+/* Dev nav spacing */
+body { padding-top: 36px; }

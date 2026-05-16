@@ -50,6 +50,8 @@ jobs:
                 cs-chatbot) npm run build:chatbot && pm2 restart chatbot ;;
                 # 피싱로그
                 fishing) npm run build:fishing && pm2 restart fishing ;;
+                # 여행 성향 추천
+                travel-pick) npm run build:travel-pick && pm2 restart travel-pick ;;
                 # 공통 모듈 변경 시 전체 재빌드
                 common) pm2 restart all ;;
               esac
