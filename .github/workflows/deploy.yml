@@ -24,6 +24,12 @@ jobs:
             cd /home/ubuntu/reallang
             git pull origin main
 
+            # 루트 포털 변경 시 재빌드
+            ROOT_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^src/" | head -1)
+            if [ -n "$ROOT_CHANGED" ]; then
+              npm run build && pm2 restart portal
+            fi
+
             CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^projects/" | cut -d/ -f2 | sort -u)
 
             for proj in $CHANGED; do

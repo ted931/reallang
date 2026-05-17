@@ -146,6 +146,14 @@ const PLAYGROUND_PROJECTS = [
     merged: "jeju-biz",
   },
   {
+    emoji: "🧳",
+    name: "여행 성향 추천",
+    desc: "대기·인파·경치 vs 맛으로 딱 맞는 제주 추천",
+    href: "/travel-pick/",
+    status: "BETA",
+    merged: null,
+  },
+  {
     emoji: "🎉",
     name: "취미 파티",
     desc: "제주 소셜 모임 매칭",
