@@ -162,6 +162,14 @@ const PLAYGROUND_PROJECTS = [
     merged: "jeju-car",
   },
   {
+    emoji: "✨",
+    name: "콘텐츠 스튜디오",
+    desc: "렌터카·카페패스·리뷰 기반 블로그·인스타 초안 자동 생성",
+    href: "/content-studio/",
+    status: "BETA",
+    merged: null,
+  },
+  {
     emoji: "🎉",
     name: "취미 파티",
     desc: "제주 소셜 모임 매칭",

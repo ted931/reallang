@@ -60,6 +60,8 @@ jobs:
                 travel-pick) npm run build:travel-pick && pm2 restart travel-pick ;;
                 # 렌터카 가성비 리포트
                 car-report) npm run build:car-report && pm2 restart car-report ;;
+                # 콘텐츠 스튜디오
+                content-studio) npm run build:content-studio && pm2 restart content-studio ;;
                 # 공통 모듈 변경 시 전체 재빌드
                 common) pm2 restart all ;;
               esac

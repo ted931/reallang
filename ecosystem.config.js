@@ -24,6 +24,7 @@
 //   3014  fishing             → /fishing
 //   3015  travel-pick         → /travel-pick
 //   3016  car-report          → /car-report
+//   3017  content-studio      → /content-studio
 
 module.exports = {
   apps: [
@@ -56,6 +57,9 @@ module.exports = {
 
     // ── 렌터카 가성비 리포트 ──
     { name: "car-report", cwd: "./projects/car-report", script: "node_modules/.bin/next", args: "start -p 3016", env: { NODE_ENV: "production" } },
+
+    // ── 콘텐츠 스튜디오 ──
+    { name: "content-studio", cwd: "./projects/content-studio", script: "node_modules/.bin/next", args: "start -p 3017", env: { NODE_ENV: "production" } },
 
     // ── 도구 & 내부 ──
     { name: "mini-xd", cwd: "./projects/mini-xd", script: "node_modules/.bin/next", args: "start -p 3002", env: { NODE_ENV: "production" } },
