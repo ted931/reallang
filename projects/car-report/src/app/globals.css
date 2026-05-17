@@ -1,0 +1,28 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0d1117;
+  --ink-60: rgba(13,17,23,0.60);
+  --ink-30: rgba(13,17,23,0.30);
+  --ink-10: rgba(13,17,23,0.10);
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --accent: #1a6b4a;
+  --accent-light: #e8f5ee;
+  --red: #c0392b;
+  --red-light: #fdecea;
+  --yellow: #e67e22;
+  --yellow-light: #fef6ec;
+  --border: #e5e7eb;
+}
+
+body {
+  font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }

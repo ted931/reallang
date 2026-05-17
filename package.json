@@ -42,6 +42,8 @@
     "build:fishing": "npm run build -w fishing",
     "dev:travel-pick": "npm run dev -w travel-pick",
     "build:travel-pick": "npm run build -w travel-pick",
+    "dev:car-report": "npm run dev -w car-report",
+    "build:car-report": "npm run build -w car-report",
     "build": "node_modules/.bin/next build",
     "dev": "node_modules/.bin/next dev -p 3000",
     "dev:all": "npm run dev:jejupass & npm run dev:mini-xd & npm run dev:sandbox & npm run dev:weather & npm run dev:travel & npm run dev:course & npm run dev:dashboard & npm run dev:chatbot"

@@ -154,6 +154,14 @@ const PLAYGROUND_PROJECTS = [
     merged: null,
   },
   {
+    emoji: "📊",
+    name: "렌터카 가성비 리포트",
+    desc: "차종별 가격 등락률 AI 분석 · 매주 자동 발행",
+    href: "/car-report/",
+    status: "BETA",
+    merged: "jeju-car",
+  },
+  {
     emoji: "🎉",
     name: "취미 파티",
     desc: "제주 소셜 모임 매칭",

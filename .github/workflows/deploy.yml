@@ -58,6 +58,8 @@ jobs:
                 fishing) npm run build:fishing && pm2 restart fishing ;;
                 # 여행 성향 추천
                 travel-pick) npm run build:travel-pick && pm2 restart travel-pick ;;
+                # 렌터카 가성비 리포트
+                car-report) npm run build:car-report && pm2 restart car-report ;;
                 # 공통 모듈 변경 시 전체 재빌드
                 common) pm2 restart all ;;
               esac

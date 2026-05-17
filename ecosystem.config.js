@@ -23,6 +23,7 @@
 //   3022  jeju-biz (통합)     → /biz
 //   3014  fishing             → /fishing
 //   3015  travel-pick         → /travel-pick
+//   3016  car-report          → /car-report
 
 module.exports = {
   apps: [
@@ -52,6 +53,9 @@ module.exports = {
 
     // ── 여행 성향 추천 ──
     { name: "travel-pick", cwd: "./projects/travel-pick", script: "node_modules/.bin/next", args: "start -p 3015", env: { NODE_ENV: "production" } },
+
+    // ── 렌터카 가성비 리포트 ──
+    { name: "car-report", cwd: "./projects/car-report", script: "node_modules/.bin/next", args: "start -p 3016", env: { NODE_ENV: "production" } },
 
     // ── 도구 & 내부 ──
     { name: "mini-xd", cwd: "./projects/mini-xd", script: "node_modules/.bin/next", args: "start -p 3002", env: { NODE_ENV: "production" } },
