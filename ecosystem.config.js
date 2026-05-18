@@ -10,7 +10,7 @@
 //   3003  creative-sandbox    → /sandbox
 //   3004  jeju-weather        → /weather
 //   3005  jeju-map            → /map
-//   3006  jeju-travel-planner → /travel-planner (아카이브)
+//   3018  jeju-travel-planner → /travel-planner (아카이브, 3006→3018 포트 충돌 회피)
 //   3007  jeju-course-maker   → /course
 //   3008  dashboard           → /dashboard
 //   3009  cs-chatbot          → /chatbot
@@ -40,7 +40,7 @@ module.exports = {
     { name: "jejupass", cwd: "./projects/jejupass-promo", script: "node_modules/.bin/next", args: "start -p 3001", env: { NODE_ENV: "production" } },
     { name: "weather", cwd: "./projects/jeju-weather", script: "node_modules/.bin/next", args: "start -p 3004", env: { NODE_ENV: "production" } },
     { name: "map", cwd: "./projects/jeju-map", script: "node_modules/.bin/next", args: "start -p 3005", env: { NODE_ENV: "production" } },
-    { name: "travel-planner", cwd: "./projects/jeju-travel-planner", script: "node_modules/.bin/next", args: "start -p 3006", env: { NODE_ENV: "production" } },
+    { name: "travel-planner", cwd: "./projects/jeju-travel-planner", script: "node_modules/.bin/next", args: "start -p 3018", env: { NODE_ENV: "production" } },
     { name: "course-maker", cwd: "./projects/jeju-course-maker", script: "node_modules/.bin/next", args: "start -p 3007", env: { NODE_ENV: "production" } },
     { name: "party", cwd: "./projects/jeju-party", script: "node_modules/.bin/next", args: "start -p 3010", env: { NODE_ENV: "production" } },
 

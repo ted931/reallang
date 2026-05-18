@@ -178,6 +178,22 @@ const PLAYGROUND_PROJECTS = [
     merged: null,
   },
   {
+    emoji: "🎣",
+    name: "퐁당 낚시",
+    desc: "제주 낚시 커뮤니티 · 조황 피드·좌대예약·합동출조",
+    href: "https://fishing.realang.store/",
+    status: "BETA",
+    merged: null,
+  },
+  {
+    emoji: "📝",
+    name: "블로그",
+    desc: "렌터카·카페패스·여행 SEO 콘텐츠 허브",
+    href: "/blog/",
+    status: "LIVE",
+    merged: null,
+  },
+  {
     emoji: "🎨",
     name: "Mini XD",
     desc: "디자인 → 코드 변환",
