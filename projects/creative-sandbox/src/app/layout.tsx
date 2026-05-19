@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import { DevNav } from "@/components/dev-nav";
 import { DevFeaturePanel } from "@/components/dev-feature-panel";
