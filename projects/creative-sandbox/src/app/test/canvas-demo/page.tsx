@@ -1,12 +1,14 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
-import dynamic from "next/dynamic";
+import lazyLoad from "next/dynamic";
 import { CanvasToolbar } from "@/components/canvas/canvas-toolbar";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { useCanvasStore } from "@/store/use-canvas-store";
 
-const CreativeCanvasDemo = dynamic(
+const CreativeCanvasDemo = lazyLoad(
   () => import("./demo-canvas").then((m) => m.DemoCanvas),
   {
     ssr: false,
