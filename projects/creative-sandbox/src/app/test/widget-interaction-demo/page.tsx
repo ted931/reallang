@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useCanvasStore } from "@/store/use-canvas-store";
